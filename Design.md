@@ -1,7 +1,8 @@
 ## Task Management Bot
 
 ## 1. Problem Statement:  
-**What is the problem:** 
+**What is the problem?:**  
+**Why is it a problem?:**  
 
 ## 2. Bot Description:  
   * The task management bot is Slack based interactive bot which simplifies our job to manage the Slack channel and 
@@ -27,7 +28,22 @@ from the Slack desktop application or web browser to manage their tasks without 
   within the Slack in an interactive manner.
 
 
-## 3. Three Use Cases 
+## 3. Three Use Cases:  
+##### (I) Creating templates for new message board  
+  (i) *Preconditions:*  
+  User must have a team created on the Trello and should have invited the bot into the channel for their Trello team.
+  (ii) *Main Flow:*  
+  User will request to create a new board with specific name [S1].   
+  Bot will provide  possible pre-defined options for the different templates for the board [S2].   
+  Bot further asks for the modifications required to in the template [S3].
+  Bot then creates the board and returns the url of the board [S4].  
+  (iii) *Subflows*
+  [S1] User writes that he/she want to create a new board with specific name.
+  [S2] Bot shows a list of options for the templates and user can pick any one of them.
+  [S3] Bot will ask if there is any modificaiton needs to be done and user replies which type of lists he/she wants to add and delete.  
+  [S4] 
+  (iv) *Alternative Flows*
+  [E1] User doesn't select any pre-defined template and choose to create the new board with their specific lists.
 
 ## 4. Design Sketches  
 
