@@ -1,8 +1,10 @@
 ## Task Management Bot
 
 ## 1. Problem Statement:  
-**What is the problem?:**  
-**Why is it a problem?:**  
+ Time and task tracking in agile projects is a controversially discussed topic in many project teams.Though agile techniques are being used in a variety of unique ways, scrum based project planning is the widely discussed and hot topic in current software development era.
+
+In a Scrum process, we typically have the standard stages TO DO, IN PROGRESS, and DONE for our tasks in addition to product backlog, Sprint Planning, Current Sprint, In Progress and work done. We also need to keep track of development tasks such as, Work Item Types, Acceptance Criteria, Prioritization, Task Owners, and Sub-tasks. It’s overly confusing to keep track of so many things. We are planning to solve this problem using a slack bot that will help us to fetch the status of an ongoing sprint and will help to complete story on time.
+ 
 
 ## 2. Bot Description:  
   * The task management bot is Slack based interactive bot which simplifies our job to manage the Slack channel and 
