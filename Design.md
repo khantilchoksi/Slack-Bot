@@ -58,8 +58,10 @@ Main application in the system where the slack messages are received and sent to
 * Wit.AI :  
 Slack messages are parsed into keywords and sent back to the NodeJS Application to perform required actions. 
 * Trello :  
-Trello API will then perform the required actions and send the feedback/response to application and it is then forwarded to Slack UI via API calls.
-## 6. Additional Patterns
+Trello API will then perform the required actions and send the feedback/response to application and it is then forwarded to Slack UI via API calls.  
+## 6. Design Pattern: Conversationists Bot  
+Our bot will converse with the user and keep the conversational state intact. Since the Bot will learn from what the user wishes to do and react accordingly, we will follow the Conversationist Bot pattern.The Bot will have to remember the knowledge of the conversation in terms of what has been said from the previous conversation, in order to carry out some subtasks in some use cases.
+
 
 ## Guidelines:
   We will also provide basic trello functionalities like:  
