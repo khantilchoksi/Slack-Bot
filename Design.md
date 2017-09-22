@@ -1,10 +1,11 @@
 ## Task Management Bot
 
 ## 1. Problem Statement:  
- Time and task tracking in agile projects is a controversially discussed topic in many project teams.Though agile techniques are being used in a variety of unique ways, scrum based project planning is the widely discussed and hot topic in current software development era.
-
-In a Scrum process, we typically have the standard stages TO DO, IN PROGRESS, and DONE for our tasks in addition to product backlog, Sprint Planning, Current Sprint, In Progress and work done. We also need to keep track of development tasks such as, Work Item Types, Acceptance Criteria, Prioritization, Task Owners, and Sub-tasks. It’s overly confusing to keep track of so many things. We are planning to solve this problem using a slack bot that will help us to fetch the status of an ongoing sprint and will help to complete story on time.
- 
+Slack is one of the team collaboration tools. Thousands of leading companies are now using Slack for better communication within the team.   
+Trello is a web application that helps with project management in the sense of giving a visual overview of tasks that need to be managed in the team.  
+While teams communicate on Slack, and then go on to Trello to manage their task activities, we thought that bridging the gap between these two apps would make project management handy by providing Trello related functionality right there in Slack.There could be times when task specific details are needed while in an ongoing conversation/ discussion in Slack within the team. Imagine the swiftness and control one experiences, when he receives the relevant information like getting the due date of a particular task there itself in Slack.
+Thus, managing tasks in Trello can now be done without having to move away from Slack.  
+We plan to solve this problem using a Task Management bot that will help us with usecases defined below.We hope that this bot increases the productivity within the team by decreasing the number of times a developer/manager needs to visit the Trello site and instead work his way through, from Slack.   
 
 ## 2. Bot Description:  
   * The task management bot is Slack based interactive bot which simplifies our job to manage the Slack channel and 
