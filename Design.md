@@ -51,13 +51,13 @@ from the Slack desktop application or web browser to manage their tasks without 
 
 
 ## 5. Architecture Design  
-* Slack – chatbot
+* Slack – chatbot :  
 Slack user interface where the user interacts with the chat bot. User can input the commands in a natural conversational language. The messages on slack are sent to Node-JS application via slack’s API calls.
-* NodeJS Application
+* NodeJS Application :  
 Main application in the system where the slack messages are received and sent to Wit.AI module. Wit.AI output is processed and corresponding trigger is sent to Trello via API calls. 
-* Wit.AI
+* Wit.AI :  
 Slack messages are parsed into keywords and sent back to the NodeJS Application to perform required actions. 
-* Trello
+* Trello :  
 Trello API will then perform the required actions and send the feedback/response to application and it is then forwarded to Slack UI via API calls.
 ## 6. Additional Patterns
 
