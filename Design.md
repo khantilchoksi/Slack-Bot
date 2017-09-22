@@ -57,19 +57,33 @@ from the Slack desktop application or web browser to manage their tasks without 
   * User will request to show their or others tasks according to different parameters like priority, deadline, back-logs.[S1]   
   * Assign a member to the task.[S2]
   * Set/update the priority and deadline of the task.[S3]
-  * 
+  
  **(iii) Sub Flows:**  
   * [S1] User requests that "Which tasks are due tomorrow?", "Which tasks @user1 completed today?", "Task XYZ is assigned to which team-mates?", "Which tasks are running in backlog and 
   * [S2] User can ask that "Please assign @user2(slack mention) to task ABC?"
   * [S3] User requests that "I want to extend the deadline of task ABC to next Monday.", "I want to increase the priority of the task XYZ to highest."  
  
-
+#### Use Case III : Attachment to the tasks 
+ **(i) Preconditions:**  
+  User should have already created a card and 
+ 
+ **(ii) Main Flow:**  
+  * User will request to show their or others tasks according to different parameters like priority, deadline, back-logs.[S1]   
+  * Assign a member to the task.[S2]
+  * Set/update the priority and deadline of the task.[S3]
+  * 
+ **(iii) Sub Flows:**  
+  * [S1] User requests that "Which tasks are due tomorrow?", "Which tasks @user1 completed today?", "Task XYZ is assigned to which team-mates?", "Which tasks are running in backlog and 
+  * [S2] User can ask that "Please assign @user2(slack mention) to task ABC?"
+  * [S3] User requests that "I want to extend the deadline of task ABC to next Monday.", "I want to increase the priority of the task XYZ to highest."   
+  
 ## 4. Design Sketches  
 
 ### Architecture Design Diagram  
 ![img](TaskSlackBot_ArchitectureDesign.jpg)  
 
-#### Wireframe   
+
+### Wireframe   
 ![img](SlackBot_WireFrame.gif)
 
 
