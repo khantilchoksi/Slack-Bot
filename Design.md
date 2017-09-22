@@ -54,8 +54,19 @@ from the Slack desktop application or web browser to manage their tasks without 
 
 ## 6. Additional Patterns
 
-##
-Constraints:  
-  * **Slack:** At any point of time, there can be only one Trello board connected to Slack channel.
+## Guidelines:
+  We will also provide basic trello functionalities like:  
+  * Adding a member to a task
+  * Adding a new list in the story board
+  * Adding a new task in the list
+  * Setting a due date for the task
+  * Setting the story board
+  
+   
+
+## Constraints:  
+  * **Slack:**
+  * At any point of time, there can be only one Trello board connected to Slack channel.
    So, if we want to manage different boards simultaneously, we should set the particular board apriori through the bot.
+  * To add a member in a task, that member should be a Slack member of the team also.
    * **Trello:** There should be a team already created in Trello.
