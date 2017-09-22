@@ -56,6 +56,6 @@ from the Slack desktop application or web browser to manage their tasks without 
 
 ##
 Constraints:  
-  * **Slack:** At any point of time, we can connect only one Trello board to one Slack channel.
-   So, if we want to manage different boards simultaneously, we should have the respective slack channel for each of the board  
-   * **Trello:** 
+  * **Slack:** At any point of time, there can be only one Trello board connected to Slack channel.
+   So, if we want to manage different boards simultaneously, we should set the particular board apriori through the bot.
+   * **Trello:** There should be a team already created in Trello.
