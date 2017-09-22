@@ -48,6 +48,9 @@ from the Slack desktop application or web browser to manage their tasks without 
   [E1] User doesn't select any pre-defined template and choose to create the new board with their specific lists.
 
 ## 4. Design Sketches  
+
+* Architecture Design Diagram  
+![img](TaskSlackBot_ArchitectureDesign.jpg)  
 * Wireframe   
 ![img](SlackBot_WireFrame.gif)
 
