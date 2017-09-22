@@ -1,12 +1,9 @@
 ## Task Management Bot
 
 ## 1. Problem Statement:  
-Slack is one of the team collaboration tools. Thousands of leading companies are now using Slack for better communication within the team.  
-Trello is a web application that helps with project management in the sense of giving a visual overview of tasks
-that need to be managed in the team.   
-While teams communicate on Slack, and then go on to Trello to manage their task activities, we thought that bridging the gap between these two apps would make project management handy, by providing Trello related functionality right there in Slack.There could be times when task specific details are needed while in an ongoing conversation/ discussion in Slack within the team. Imagine the swiftness and control one experiences, when he receives the relevant information like getting the due date of a particular task there itself in Slack.
-Thus, managing tasks in Trello can now be done without having to move away from Slack. We plan to solve this problem using a Task Management bot that will help us with usecases defined below.  
-We hope that this bot increases the productivity within the team by decreasing the number of times a developer/manager needs to visit the Trello site and instead work his way through, from Slack.
+ Time and task tracking in agile projects is a controversially discussed topic in many project teams.Though agile techniques are being used in a variety of unique ways, scrum based project planning is the widely discussed and hot topic in current software development era.
+
+In a Scrum process, we typically have the standard stages TO DO, IN PROGRESS, and DONE for our tasks in addition to product backlog, Sprint Planning, Current Sprint, In Progress and work done. We also need to keep track of development tasks such as, Work Item Types, Acceptance Criteria, Prioritization, Task Owners, and Sub-tasks. It’s overly confusing to keep track of so many things. We are planning to solve this problem using a slack bot that will help us to fetch the status of an ongoing sprint and will help to complete story on time.
  
 
 ## 2. Bot Description:  
@@ -45,12 +42,24 @@ from the Slack desktop application or web browser to manage their tasks without 
  * Bot then creates the board and returns the url of the board [S4].  
 
 **(iii) Subflows**  
-   [S1] User writes that he/she want to create a new board with specific name.  
-   [S2] Bot shows a list of options for the templates and user can pick any one of them.  
-   [S3] Bot will ask if there is any modificaiton needs to be done and user replies which type of lists he/she wants to add and delete.  
-   [S4] Bot creates the new board and return the url of the board for the reference.  
+   [S1] User writes that "I want to create a new board with my team for module 2".  
+   [S2] Bot shows a list of options for the templates in the from of drop-down list and user can pick any one of them.  
+   [S3] Bot will ask if there is any modificaiton needs to be done in the template and user replies that " I want to add 'On Hold' list to be added and delete the 'Next-Up' list".  
+   [S4] Bot creates the new board with the personalized board and return the url of the newly created board.  
  **(iv) Alternative Flows:**
-   [E1] User doesn't select any pre-defined template and choose to create the new board with their specific lists.
+   [E1] User doesn't select any pre-defined template and choose to create the new board with their specific lists. (So, after that, he can tell the bot that he wants to create some particular lists. Use Case 2)  
+  
+#### Use Case II : Creating / Managing Tasks  
+ **(i) Preconditions:**  
+  User should have the url for the board in which they wants to create/manage tasks and the list on which taks to be added should be configured.
+ 
+ **(ii) Main Flow:**  
+  * User will request to show their or others tasks according to different parameters.[S1]  
+  * Assign a member to the task.[S2]
+  * Set/update the priority and deadline of the task.[S3]
+ 
+ **(iii) Sub Flows:**  
+  * [S1] User requests that "I want to create a task
 
 ## 4. Design Sketches  
 
