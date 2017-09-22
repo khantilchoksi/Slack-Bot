@@ -3,10 +3,10 @@
 ## 1. Problem Statement:  
 Slack is one of the team collaboration tools. Thousands of leading companies are now using Slack for better communication within the team.  
 Trello is a web application that helps with project management in the sense of giving a visual overview of tasks
-that need to be managed in the team. While teams communicate on Slack, and then go on to Trello to manage their task
-activities, we thought that bridging the gap between these two apps would make project management handy by providing Trello related functionality right there in Slack. 
-Managing tasks in Trello can now be done without having to move away from Slack. We plan to solve this problem using a task management bot that will help us with usecases defined below.
-We hope that this bot increases the productivity within the team by decreasing the number of times a developer needs to visit the Trello site and instead work his way through, from Slack.
+that need to be managed in the team.   
+While teams communicate on Slack, and then go on to Trello to manage their task activities, we thought that bridging the gap between these two apps would make project management handy, by providing Trello related functionality right there in Slack.There could be times when task specific details are needed while in an ongoing conversation/ discussion in Slack within the team. Imagine the swiftness and control one experiences, when he receives the relevant information like getting the due date of a particular task there itself in Slack.
+Thus, managing tasks in Trello can now be done without having to move away from Slack. We plan to solve this problem using a Task Management bot that will help us with usecases defined below.  
+We hope that this bot increases the productivity within the team by decreasing the number of times a developer/manager needs to visit the Trello site and instead work his way through, from Slack.
  
 
 ## 2. Bot Description:  
