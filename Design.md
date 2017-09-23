@@ -60,7 +60,6 @@ We plan to solve this problem using a Task Management bot that will help us with
   * User will request to show their or others tasks according to different parameters like priority, deadline, back-logs.[S1]   
   * Assign a member to the task.[S2]
   * Set/update the priority and deadline of the task.[S3]
-  * 
  **(iii) Sub Flows:**  
   * [S1] User requests that "Which tasks are due tomorrow?", "Which tasks @user1 completed today?", "Task XYZ is assigned to which team-mates?", "Which tasks are running in backlog and 
   * [S2] User can ask that "Please assign @user2(slack mention) to task ABC?"
@@ -71,7 +70,8 @@ We plan to solve this problem using a Task Management bot that will help us with
 ### Architecture Design Diagram  
 ![img](TaskSlackBot_ArchitectureDesign.jpg)  
 
-
+### Storyboard
+![img](StoryBoard.png)
 ### Wireframe   
 ![img](SlackBot_WireFrame.gif)
 
@@ -100,8 +100,9 @@ Our bot will converse with the user and keep the conversational state intact. Si
    
 
 ## Constraints:  
-  * **Slack:**
-  * At any point of time, there can be only one Trello board connected to Slack channel.
-   So, if we want to manage different boards simultaneously, we should set the particular board apriori through the bot.
-  * To add a member in a task, that member should be a Slack member of the team also.
+  * **Slack:**  
+  At any point of time, there can be only one Trello board connected to Slack channel.
+   So, if we want to manage different boards simultaneously, we should set the particular board apriori through the bot.  
+     
+    To add a member in a task, that member should be a Slack member of the team also.
    * **Trello:** There should be a team already created in Trello.
