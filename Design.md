@@ -88,11 +88,11 @@
 ### Architecture Components  
  * **Slackbot :**  
 Slack user interface where the user interacts with the chat bot. User can input the commands in a natural conversational language.
- * **NodeJS Application :**  
+ * **NodeJS Application :**
 This application will be connected to the slack channel via botkit using slackbot API token. It uses Slack's Real Time Messaging API(RTM). The inputs from slack will be forwarded to Wit.AI module. Wit.AI output is received, processed and corresponding trigger is sent to Trello via API calls. 
  * **Wit.ai :**  
 Wit is a semantic analysis tool. In our use case, when user enters a sentence (slack message) about performing certain action in trello, it will interpret the meaning and the intent of the statement. Wit will take care of parsing sentences to work out the intent as well as any entities that are referred to. This data is forwarded back to the NodeJS application. 
- * **Trello : ** 
+ * **Trello :** 
 Trello API will then perform the required actions and send the feedback/response to application and it is then forwarded to Slack UI via API calls.  
 
 ### Guidelines:
