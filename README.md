@@ -1,4 +1,4 @@
-## CSC-510 Project Fall 2017 Abhay, Khantil, Khelan, Prashant, Swati
+## CSC-510 Project Fall 2017 Abhay, Khantil, Khelan, Prashanth, Swati
 
 ## [Milestone : Design](./Design.md)  
 
