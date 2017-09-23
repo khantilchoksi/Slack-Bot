@@ -82,7 +82,7 @@
 ## 5. Architecture Design: 
 
 ### Architecture Design Diagram  
-![img](TaskSlackBot_ArchitectureDesign.jpg) 
+![img](ArchitectureDesign.jpg) 
 
 
 ### Architecture Components  
