@@ -35,7 +35,7 @@ We plan to solve this problem using a Task Management bot that will help us with
    [S2] Bot shows a list of options for the templates in the from of drop-down list and user can pick any one of them.  
    [S3] Bot will ask if there is any modificaiton needs to be done in the template and user replies that " I want to add 'On Hold' list to be added and delete the 'Next-Up' list".  
    [S4] Bot creates the new board with the personalized board and return the url of the newly created board.  
- **(iv) Alternative Flows:**
+ **(iv) Alternative Flows:**  
    [E1] User doesn't select any pre-defined template and choose to create the new board with their specific lists. (So, after that, he can tell the bot that he wants to create some particular lists. Use Case 2)  
   
 #### Use Case II : Creating / Managing Tasks  
@@ -54,16 +54,16 @@ We plan to solve this problem using a Task Management bot that will help us with
  
 #### Use Case III : Attachment to the tasks 
  **(i) Preconditions:**  
-  User should have already created a card and 
- 
+  User should have already created a card and always have to refer the cards to insert, remove or comment on the link.  
+
  **(ii) Main Flow:**  
-  * User will request to show their or others tasks according to different parameters like priority, deadline, back-logs.[S1]   
-  * Assign a member to the task.[S2]
-  * Set/update the priority and deadline of the task.[S3]
+  * User can add the links which they have referred to accomplish the task.[S1]    
+  * User can change the status of the task to completed by providing the commit link on GitHub or related links to show the completion of the task.[S2]
+  * User can fetch all the links and comments on the particular links.[S3]  
  **(iii) Sub Flows:**  
-  * [S1] User requests that "Which tasks are due tomorrow?", "Which tasks @user1 completed today?", "Task XYZ is assigned to which team-mates?", "Which tasks are running in backlog and 
-  * [S2] User can ask that "Please assign @user2(slack mention) to task ABC?"
-  * [S3] User requests that "I want to extend the deadline of task ABC to next Monday.", "I want to increase the priority of the task XYZ to highest."   
+  * [S1] User can log that “I have used https://abc.xyz link to solve my bug while working on task ABC.”  
+  * [[S2] User can say that "I have completed task XYZ and here is my commit link: https://abc.xyz."  
+  * [S3] User requests that "Which links @user1 had referred to complete the task?”, “Which link @user2 had given while completing the task XYZ?”.  
   
 ## 4. Design Sketches  
 
