@@ -17,15 +17,15 @@
 ### Bot's Design Pattern: Conversationists Bot  
   * Our bot will converse with the user and keep the conversational state intact. Since the Bot will learn from what the user wishes to do and react accordingly, we will follow the Conversationist Bot pattern.The Bot will have to remember the knowledge of the conversation in terms of what has been said from the previous conversation, in order to carry out some subtasks in some use cases.
 
-## 3. Three Use Cases:  
+## 3. Use Cases:  
 ### Use Case I : Creating templates for new message board  
   **(i) Preconditions:**  
    User must have a team created on the Trello and should have invited the bot into the channel for their Trello team.  
   
   **(ii) Main Flow:**  
  * User will request to create a new board with specific name [S1].   
- * Bot will provide  possible pre-defined options for the different templates for the board [S2].   
- * Bot further asks for the modifications required to in the template [S3].  
+ * Bot will provide possible pre-defined options for different templates for the board [S2].   
+ * Bot further asks for the modifications required to the template [S3].  
  * Bot then creates the board and returns the url of the board [S4].  
 
 **(iii) Subflows**  
@@ -35,11 +35,11 @@
    * [S4] Bot creates the new board with the personalized board and return the url of the newly created board.    
    
  **(iv) Alternative Flows:**  
-   * [E1] User doesn't select any pre-defined template and choose to create the new board with their specific lists. (So, after that, he can tell the bot that he wants to create some particular lists. Use Case 2)  
+   * [E1] User doesn't select any pre-defined template and chooses to create the new board with their specific lists. (So, after that, he can tell the bot that he wants to create some particular lists. Use Case 2)  
   
 ### Use Case II : Creating / Managing Tasks  
  **(i) Preconditions:**  
-  User should have the url for the board in which they wants to create/manage tasks and the list on which taks to be added should be configured.
+  User should have the url for the board in which they want to create/manage tasks and the list on which tasks to be added should be configured.
  
  **(ii) Main Flow:**  
   * User will request to show their or others tasks according to different parameters like priority, deadline, back-logs.[S1]   
@@ -86,13 +86,13 @@
 
 
 ### Architecture Components  
- * Slackbot :  
+ * **Slackbot :**  
 Slack user interface where the user interacts with the chat bot. User can input the commands in a natural conversational language.
- * NodeJS Application :  
+ * **NodeJS Application :**
 This application will be connected to the slack channel via botkit using slackbot API token. It uses Slack's Real Time Messaging API(RTM). The inputs from slack will be forwarded to Wit.AI module. Wit.AI output is received, processed and corresponding trigger is sent to Trello via API calls. 
- * Wit.AI :  
+ * **Wit.ai :**  
 Wit is a semantic analysis tool. In our use case, when user enters a sentence (slack message) about performing certain action in trello, it will interpret the meaning and the intent of the statement. Wit will take care of parsing sentences to work out the intent as well as any entities that are referred to. This data is forwarded back to the NodeJS application. 
- * Trello :  
+ * **Trello : ** 
 Trello API will then perform the required actions and send the feedback/response to application and it is then forwarded to Slack UI via API calls.  
 
 ### Guidelines:
@@ -127,7 +127,7 @@ Trello API will then perform the required actions and send the feedback/response
    
  **(iii) Factory**  
  
-* When the user requests a certain change in the project management board, the user/client need not be exposed, to the underlying objects responsible for different functionalities. Thus abstractions that are offered by the Factory pattern may also apply for our bot.
+* When the user requests a certain change in the project management board, the user/client need not be exposed to the underlying objects responsible for different functionalities. Thus abstractions that are offered by the Factory pattern may also apply for our bot.
 
 ## Additional Patterns:
  * We will be using the Pipe and Filter Architecture pattern for our bot. Since, our data flows from Slack to Trello through different components in between and simulates stream processing of data, we believe Pipe and Filter architecture will be the most suitable pattern for our bot.
