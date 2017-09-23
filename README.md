@@ -6,9 +6,9 @@
 
 #### Team members
 
-Swati Jhawar; srjhawar <br>
-Khantil Choksi; khchoksi <br>
-Abhay Soni; asoni3 <br>
-Prashanth Ramesh; pramesh2 <br>
-Khelan Patel; kjpatel4 <br>
+Swati Jhawar; &nvsp; &nvsp; &nvsp; srjhawar <br>
+Khantil Choksi; &nvsp; &nvsp; khchoksi <br>
+Abhay Soni; &nvsp; &nvsp; asoni3 <br>
+Prashanth Ramesh; &nvsp; &nvsp; pramesh2 <br>
+Khelan Patel; &nvsp; &nvsp; kjpatel4 <br>
     
