@@ -87,14 +87,13 @@ This application will be connected to the slack channel via botkit using slackbo
 Wit is a semantic analysis tool. In our use case, when user enters a sentence (slack message) about performing certain action in trello, it will interpret the meaning and the intent of the statement. Wit will take care of parsing sentences to work out the intent as well as any entities that are referred to. This data is forwarded back to the NodeJS application. 
  * Trello :  
 Trello API will then perform the required actions and send the feedback/response to application and it is then forwarded to Slack UI via API calls.  
-## 6. Design Pattern:  
+**Design Pattern:**    
 **(i) Observer**  
  * The most relevant design pattern would be “Observer” pattern. The project consists of different components whose properties are interrelated with each other. Change in one object’s state would have a direct impact on another, and hence the observer pattern would be the most appropriate.  
   
 Ex:  
 If a ticket’s status is changed from In Progress to Completed, correspondingly the items in both the list objects (In Progress, Completed) containing the tickets need to be modified.
 
-### Additional Patterns  
  **(ii) Mediator**  
  A mediator object that defines how other objects interact could also be useful.  
    
@@ -104,6 +103,9 @@ If a ticket’s status is changed from In Progress to Completed, correspondingly
  **(iii) Factory**  
  
 When the user requests a certain change in the project management board, the user/client need not be exposed, to the underlying objects responsible for different functionalities. Thus abstractions that are offered by the Factory pattern may also apply for our bot.
+
+**Additional Patterns** 
+ * We will be using the Pipe and Filter Architecture pattern for our bot. Since, our data flows from Slack to Trello through different components in between and simulates stream processing of data we believe Pipe and Filter architecture will be the most suitable pattern for our bot.
 
 
 ## Guidelines:
