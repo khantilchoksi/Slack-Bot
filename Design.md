@@ -17,7 +17,8 @@ We plan to solve this problem using a Task Management bot that will help us with
   In addition to this, the software engineer can also look for the highly prioritized tasks which he/she needs to complete with 
   highest priority. This way, the manager and other members also get updated about the task activity of team members.
   * Now, when the user has completed the task and they want to show their completed work,  they can simply attach the link (drive link/ github link) by telling the bot that they have completed with this reference. This way team lead / other team-mates can look for it to track the record when required in an organized way.  
-
+### Bot's Design Pattern: Conversationists Bot  
+Our bot will converse with the user and keep the conversational state intact. Since the Bot will learn from what the user wishes to do and react accordingly, we will follow the Conversationist Bot pattern.The Bot will have to remember the knowledge of the conversation in terms of what has been said from the previous conversation, in order to carry out some subtasks in some use cases.
 
 ## 3. Three Use Cases:  
 ### Use Case I : Creating templates for new message board  
@@ -69,18 +70,18 @@ We plan to solve this problem using a Task Management bot that will help us with
   
   
  
-## 4. Design Sketches  
+## 4. Design Sketches:  
 
 ### Architecture Design Diagram  
 ![img](TaskSlackBot_ArchitectureDesign.jpg)  
 
 ### Storyboard
-![img](StoryBoard.png)
+![img](StoryBoard.PNG)
 ### Wireframe   
 ![img](SlackBot_WireFrame.gif)
 
 
-## 5. Architecture Design  
+## 5. Architecture Design:  
 * Slackbot :  
 Slack user interface where the user interacts with the chat bot. User can input the commands in a natural conversational language.
 * NodeJS Application :  
@@ -89,8 +90,23 @@ This application will be connected to the slack channel via botkit using slackbo
 Wit is a semantic analysis tool. In our use case, when user enters a sentence (slack message) about performing certain action in trello, it will interpret the meaning and the intent of the statement. Wit will take care of parsing sentences to work out the intent as well as any entities that are referred to. This data is forwarded back to the NodeJS application. 
 * Trello :  
 Trello API will then perform the required actions and send the feedback/response to application and it is then forwarded to Slack UI via API calls.  
-## 6. Design Pattern: Conversationists Bot  
-Our bot will converse with the user and keep the conversational state intact. Since the Bot will learn from what the user wishes to do and react accordingly, we will follow the Conversationist Bot pattern.The Bot will have to remember the knowledge of the conversation in terms of what has been said from the previous conversation, in order to carry out some subtasks in some use cases.
+## 6. Design Pattern:  
+**(i) Observer**  
+The most relevant design pattern would be “Observer” pattern. The project consists of different components whose properties are interrelated with each other. Change in one object’s state would have a direct impact on another, and hence the observer pattern would be the most appropriate.  
+  
+Ex:  
+If a ticket’s status is changed from In Progress to Completed, correspondingly the items in both the list objects (In Progress, Completed) containing the tickets need to be modified.
+
+### Additional Patterns  
+ **(ii) Mediator**  
+ A mediator object that defines how other objects interact could also be useful.  
+   
+ Ex:  
+ The object responsible for parsing the input sentence(wit.ai), need not have any	 direct interaction with the object creating trello cards. Thus there needs to be a mediator that acts as a central interface between different objects/modules in the bot.  
+   
+ **(iii) Factory**  
+ 
+When the user requests a certain change in the project management board, the user/client need not be exposed, to the underlying objects responsible for different functionalities. Thus abstractions that are offered by the Factory pattern may also apply for our bot.
 
 
 ## Guidelines:
