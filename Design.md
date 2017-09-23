@@ -20,7 +20,7 @@ We plan to solve this problem using a Task Management bot that will help us with
 
 
 ## 3. Three Use Cases:  
-#### Use Case I : Creating templates for new message board  
+### Use Case I : Creating templates for new message board  
   **(i) Preconditions:**  
    User must have a team created on the Trello and should have invited the bot into the channel for their Trello team.  
   
@@ -31,14 +31,15 @@ We plan to solve this problem using a Task Management bot that will help us with
  * Bot then creates the board and returns the url of the board [S4].  
 
 **(iii) Subflows**  
-   [S1] User writes that "I want to create a new board with my team for module 2".  
-   [S2] Bot shows a list of options for the templates in the from of drop-down list and user can pick any one of them.  
-   [S3] Bot will ask if there is any modificaiton needs to be done in the template and user replies that " I want to add 'On Hold' list to be added and delete the 'Next-Up' list".  
-   [S4] Bot creates the new board with the personalized board and return the url of the newly created board.  
+   * [S1] User writes that "I want to create a new board with my team for module 2".  
+   * [S2] Bot shows a list of options for the templates in the from of drop-down list and user can pick any one of them.  
+   * [S3] Bot will ask if there is any modificaiton needs to be done in the template and user replies that " I want to add 'On Hold' list to be added and delete the 'Next-Up' list".  
+   * [S4] Bot creates the new board with the personalized board and return the url of the newly created board.    
+   
  **(iv) Alternative Flows:**  
-   [E1] User doesn't select any pre-defined template and choose to create the new board with their specific lists. (So, after that, he can tell the bot that he wants to create some particular lists. Use Case 2)  
+   * [E1] User doesn't select any pre-defined template and choose to create the new board with their specific lists. (So, after that, he can tell the bot that he wants to create some particular lists. Use Case 2)  
   
-#### Use Case II : Creating / Managing Tasks  
+### Use Case II : Creating / Managing Tasks  
  **(i) Preconditions:**  
   User should have the url for the board in which they wants to create/manage tasks and the list on which taks to be added should be configured.
  
@@ -52,19 +53,22 @@ We plan to solve this problem using a Task Management bot that will help us with
   * [S2] User can ask that "Please assign @user2(slack mention) to task ABC?"
   * [S3] User requests that "I want to extend the deadline of task ABC to next Monday.", "I want to increase the priority of the task XYZ to highest."  
  
-#### Use Case III : Attachment to the tasks 
+### Use Case III : Attachment to the tasks 
  **(i) Preconditions:**  
-  User should have already created a card and always have to refer the cards to insert, remove or comment on the link.  
+   User should have already created a card and always have to refer the cards to insert, remove or comment on the link.  
 
  **(ii) Main Flow:**  
   * User can add the links which they have referred to accomplish the task.[S1]    
   * User can change the status of the task to completed by providing the commit link on GitHub or related links to show the completion of the task.[S2]
   * User can fetch all the links and comments on the particular links.[S3]  
+  
  **(iii) Sub Flows:**  
   * [S1] User can log that “I have used https://abc.xyz link to solve my bug while working on task ABC.”  
-  * [[S2] User can say that "I have completed task XYZ and here is my commit link: https://abc.xyz."  
+  * [S2] User can say that "I have completed task XYZ and here is my commit link: https://abc.xyz."  
   * [S3] User requests that "Which links @user1 had referred to complete the task?”, “Which link @user2 had given while completing the task XYZ?”.  
   
+  
+ 
 ## 4. Design Sketches  
 
 ### Architecture Design Diagram  
