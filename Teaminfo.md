@@ -1,6 +1,6 @@
-Team Name : 
+Team Name : Task Management Bot
 
-####Team members
+#### Team members
 
 Swati Jhawar; srjhawar@ncsu.edu <br>
 Khantil Choksi; khchoksi@ncsu.edu <br>
