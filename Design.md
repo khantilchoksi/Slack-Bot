@@ -114,7 +114,7 @@ Trello API will then perform the required actions and send the feedback/response
    * **Trello:** There should be a team already created in Trello.
    
    
-**Design Pattern:**    
+### Design Pattern:    
 **(i) Observer**  
  * The most relevant design pattern would be “Observer” pattern. The project consists of different components whose properties are interrelated with each other. Change in one object’s state would have a direct impact on another, and hence the observer pattern would be the most appropriate.  
   
@@ -122,16 +122,16 @@ Ex:
 If a ticket’s status is changed from In Progress to Completed, correspondingly the items in both the list objects (In Progress, Completed) containing the tickets need to be modified.
 
  **(ii) Mediator**  
- A mediator object that defines how other objects interact could also be useful.  
+ * A mediator object that defines how other objects interact could also be useful.  
    
  Ex:  
  The object responsible for parsing the input sentence(wit.ai), need not have any	 direct interaction with the object creating trello cards. Thus there needs to be a mediator that acts as a central interface between different objects/modules in the bot.  
    
  **(iii) Factory**  
  
-When the user requests a certain change in the project management board, the user/client need not be exposed, to the underlying objects responsible for different functionalities. Thus abstractions that are offered by the Factory pattern may also apply for our bot.
+* When the user requests a certain change in the project management board, the user/client need not be exposed, to the underlying objects responsible for different functionalities. Thus abstractions that are offered by the Factory pattern may also apply for our bot.
 
-**Additional Patterns** 
+## Additional Patterns:
  * We will be using the Pipe and Filter Architecture pattern for our bot. Since, our data flows from Slack to Trello through different components in between and simulates stream processing of data we believe Pipe and Filter architecture will be the most suitable pattern for our bot.
 
 
