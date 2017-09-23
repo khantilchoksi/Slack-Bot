@@ -67,18 +67,25 @@
   
   
  
-## 4. Design Sketches:  
-
-### Architecture Design Diagram  
-![img](TaskSlackBot_ArchitectureDesign.jpg)  
+## 4. Design Sketches:   
 
 ### Storyboard
 ![img](StoryBoard.PNG)
-### Wireframe   
-![img](SlackBot_WireFrame.gif)
+
+### Wireframe Part 1   
+![img](SlackBot_WireFrame.gif)  
+
+### Wireframe Part 2  
+![img](Wireframe_2.gif)
 
 
-## 5. Architecture Design:  
+## 5. Architecture Design: 
+
+### Architecture Design Diagram  
+![img](TaskSlackBot_ArchitectureDesign.jpg) 
+
+
+### Architecture Components  
  * Slackbot :  
 Slack user interface where the user interacts with the chat bot. User can input the commands in a natural conversational language.
  * NodeJS Application :  
@@ -87,6 +94,26 @@ This application will be connected to the slack channel via botkit using slackbo
 Wit is a semantic analysis tool. In our use case, when user enters a sentence (slack message) about performing certain action in trello, it will interpret the meaning and the intent of the statement. Wit will take care of parsing sentences to work out the intent as well as any entities that are referred to. This data is forwarded back to the NodeJS application. 
  * Trello :  
 Trello API will then perform the required actions and send the feedback/response to application and it is then forwarded to Slack UI via API calls.  
+
+### Guidelines:
+  We will also provide basic trello functionalities like:  
+  * Adding a member to a task
+  * Adding a new list in the story board
+  * Adding a new task in the list
+  * Setting a due date for the task
+  * Setting the story board
+  
+   
+
+### Constraints:  
+  * **Slack:**  
+  At any point of time, there can be only one Trello board connected to Slack channel.
+   So, if we want to manage different boards simultaneously, we should set the particular board apriori through the bot.  
+     
+    To add a member in a task, that member should be a Slack member of the team also.
+   * **Trello:** There should be a team already created in Trello.
+   
+   
 **Design Pattern:**    
 **(i) Observer**  
  * The most relevant design pattern would be “Observer” pattern. The project consists of different components whose properties are interrelated with each other. Change in one object’s state would have a direct impact on another, and hence the observer pattern would be the most appropriate.  
@@ -108,23 +135,6 @@ When the user requests a certain change in the project management board, the use
  * We will be using the Pipe and Filter Architecture pattern for our bot. Since, our data flows from Slack to Trello through different components in between and simulates stream processing of data we believe Pipe and Filter architecture will be the most suitable pattern for our bot.
 
 
-## Guidelines:
-  We will also provide basic trello functionalities like:  
-  * Adding a member to a task
-  * Adding a new list in the story board
-  * Adding a new task in the list
-  * Setting a due date for the task
-  * Setting the story board
-  
-   
-
-## Constraints:  
-  * **Slack:**  
-  At any point of time, there can be only one Trello board connected to Slack channel.
-   So, if we want to manage different boards simultaneously, we should set the particular board apriori through the bot.  
-     
-    To add a member in a task, that member should be a Slack member of the team also.
-   * **Trello:** There should be a team already created in Trello.
    
 ## [Team Information] 
 Team information can be found [here!](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Teaminfo.md)
