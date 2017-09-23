@@ -130,7 +130,7 @@ Trello API will then perform the required actions and send the feedback/response
 * When the user requests a certain change in the project management board, the user/client need not be exposed, to the underlying objects responsible for different functionalities. Thus abstractions that are offered by the Factory pattern may also apply for our bot.
 
 ## Additional Patterns:
- * We will be using the Pipe and Filter Architecture pattern for our bot. Since, our data flows from Slack to Trello through different components in between and simulates stream processing of data we believe Pipe and Filter architecture will be the most suitable pattern for our bot.
+ * We will be using the Pipe and Filter Architecture pattern for our bot. Since, our data flows from Slack to Trello through different components in between and simulates stream processing of data, we believe Pipe and Filter architecture will be the most suitable pattern for our bot.
 
 
    
