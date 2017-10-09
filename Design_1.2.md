@@ -20,7 +20,7 @@
   * Our bot will converse with the user and keep the conversational state intact. Since the Bot will learn from what the user wishes to do and react accordingly, we will follow the Conversationist Bot pattern.The Bot will have to remember the knowledge of the conversation in terms of what has been said from the previous conversation, in order to carry out some subtasks in some use cases.
 
 ## 3. Use Cases:  
-### Use Case I : Creating templates for new message board  
+### Use Case I : Creating story board from a template
   **(i) Preconditions:**  
    User must have a team created on the Trello and should have invited the bot into the channel for their Trello team.  
   
@@ -42,26 +42,52 @@
         * Bot: (Displays all Trello Storyboard lists in dropdown list)
         * User: (Can click on any one of them)
         * Bot: What is the new name that you want to keep for this list?
-        * User: <X> is the new name for this list.
+        * User: <X> is the new name for this list.  
         * Bot : List name has been modified.
-
-   
+   * Delete a list
+        * Bot: (Displays all Trello Storyboard lists in dropdown list)  
+        * User: (Clicks on any one of them)  
+        * Bot: List has been deleted.  
+   * Add a new list with some name
+        * Bot: (Will show pop up with a text box.)
+        * User: Gives list name.
+        * Bot: Successful added list.  
+   * Add text to colors for labels (for ex: User can add “High Priority” to color red and this label can be added to the cards.  
+       * Bot: (Shows a popup window to give name to a colored label.)
+       * User: Will type in the name of the label for each color. 
+   * Add more members to the storyboard
+      * Bot: (Shows a popup window to insert email ids of trello users to invite in board.)
+      * User: Will type in the email address of the users they want to invite.
+      * Bot: Invitations successfully sent.
    
  **(iv) Alternative Flows:**  
-   * [E1] User doesn't select any pre-defined template and chooses to create the new board with their specific lists. (So, after that, he can tell the bot that he wants to create some particular lists. Use Case 2)  
+   * [E1] User doesn't want to do any modifications in the given template.  
   
 ### Use Case II : Creating / Managing Tasks  
  **(i) Preconditions:**  
-  User should have the url for the board in which they want to create/manage tasks and the list on which tasks to be added should be configured.
+  User should have already linked slack channel with the storyboard which they want to work on.
  
  **(ii) Main Flow:**  
-  * User will request to show their or others tasks according to different parameters like priority, deadline, back-logs.[S1]   
-  * Assign a member to the task.[S2]
+  * Bot will provide the possible list of actions user can do after having created the storyboard [S1]
+  * User will request to show their or others tasks according to different parameters like priority, deadline, back-logs.[S2] 
   * Set/update the priority and deadline of the task.[S3]
   
  **(iii) Sub Flows:**  
-  * [S1] User requests that "Which tasks are due tomorrow?", "Which tasks @user1 completed today?", "Task XYZ is assigned to which team-mates?", "Which tasks are running in backlog and 
-  * [S2] User can ask that "Please assign @user2(slack mention) to task ABC?"
+  * [S1] Bot will respond with “You have successfully setup your personalized board! Here is what you can do next: ” (Below options will come in a dropdown menu)  
+     * Add a new task to a list
+       * Bot: (Shows all lists in dropdown menu)
+       * User: Selects one list from the dropdown and gives a name to new task.  
+    * Add a due date to a task
+      * Bot: (Shows all lists in dropdown menu)
+      * User: Select a list from dropdown.
+      * Bot: (Shows all tasks in selected list)
+      * User: Select a task and sets the deadline for that task.
+    * Add members to a task
+      * Bot: (Shows all lists in dropdown menu)
+      * User: Select a list from dropdown.
+      * Bot: (Shows all tasks in selected list)
+      * User: Select a task and gives name of the members.  
+  * [S2] User requests that "Which tasks are due tomorrow?", "Which tasks @user1 completed today?", "Task XYZ is assigned to which team-mates?", "Which tasks are running in backlog and 
   * [S3] User requests that "I want to extend the deadline of task ABC to next Monday.", "I want to increase the priority of the task XYZ to highest."  
  
 ### Use Case III : Attachment to the tasks 
