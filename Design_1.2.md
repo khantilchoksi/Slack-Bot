@@ -70,7 +70,7 @@
  **(ii) Main Flow:**  
   * Bot will provide the possible list of actions user can do after having created the storyboard [S1]
   * User will request to show their or others tasks according to different parameters like priority, deadline, back-logs.[S2] 
-  * Set/update the priority and deadline of the task.[S3]
+  * Set/update the labels of the tasks.[S3]
   
  **(iii) Sub Flows:**  
   * [S1] Bot will respond with “You have successfully setup your personalized board! Here is what you can do next: ” (Below options will come in a dropdown menu)  
@@ -88,7 +88,7 @@
       * Bot: (Shows all tasks in selected list)
       * User: Select a task and gives name of the members.  
   * [S2] User requests that "Which tasks are due tomorrow?", "Which tasks @user1 completed today?", "Task XYZ is assigned to which team-mates?", "Which tasks are running in backlog and 
-  * [S3] User requests that "I want to extend the deadline of task ABC to next Monday.", "I want to increase the priority of the task XYZ to highest."  
+  * [S3] User requests that "I want to set RED label to task XYZ."  
  
 ### Use Case III : Attachment to the tasks 
  **(i) Preconditions:**  
@@ -101,7 +101,7 @@
   
  **(iii) Sub Flows:**  
   * [S1] User can log that “I have used https://abc.xyz link to solve my bug while working on task ABC.”  
-  * [S2] User can say that "I have completed task XYZ and here is my commit link: https://abc.xyz."  
+  * [S2] User can say that "I have completed task XYZ and here is my commit id: 8c897ffs897"  
   * [S3] User requests that "Which links @user1 had referred to complete the task?”, “Which link @user2 had given while completing the task XYZ?”.  
   
   
@@ -133,15 +133,6 @@ This application will be connected to the slack channel via botkit using slackbo
 Wit is a semantic analysis tool. In our use case, when user enters a sentence (slack message) about performing certain action in trello, it will interpret the meaning and the intent of the statement. Wit will take care of parsing sentences to work out the intent as well as any entities that are referred to. This data is forwarded back to the NodeJS application. 
  * **Trello :**   
 Trello API will then perform the required actions and send the feedback/response to application and it is then forwarded to Slack UI via API calls.  
-
-### Guidelines:
-  We will also provide basic trello functionalities like:  
-  * Adding a member to a task
-  * Adding a new list in the story board
-  * Adding a new task in the list
-  * Setting a due date for the task
-  * Setting the story board
-  
    
 
 ### Constraints:  
