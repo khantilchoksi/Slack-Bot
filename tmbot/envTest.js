@@ -1,0 +1,1 @@
+console.log("TMBOTSLACKTOKEN", process.env.TMBOTSLACKTOKEN);
