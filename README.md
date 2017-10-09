@@ -1,7 +1,7 @@
 ## CSC-510 Project Fall 2017 Abhay, Khantil, Khelan, Prashanth, Swati
 
-## [Milestone : Design](./Design.md) 
-## [After feedback given by professor](./Design_1.2.md)
+## [Milestone : Initial Design](./Design.md) 
+## [Revised Design](./Design_1.2.md)
 
 ## Team Name : Task Management Bot
 
