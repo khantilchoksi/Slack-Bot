@@ -1,7 +1,7 @@
 ## Task Management Bot
 
 ----------------------------------------------------
-### Feedback given by profeesor:
+### Feedback given by professor:
  * 1. Use case 1 needs support for creating template for board and card prototypes(like color).    
  * 2. Better integration functionality of use case 1 and 2. 
  * 3. Reduce scope of non-essential management tasks in guidelines.    
