@@ -1,5 +1,11 @@
 ## Task Management Bot
 
+----------------------------------------------------
+### Feedback given by profeesor:
+ * 1. Use case 1 needs support for creating template for board and card prototypes(like color).    
+ * 2. Better integration functionality of use case 1 and 2. 
+ * 3. Reduce scope of non-essential management tasks in guidelines.    
+
 ## This is the revised design after feedback given by professor.
 
 ## 1. Problem Statement:  
@@ -36,7 +42,7 @@
 * [S1] User writes that "Hey @bot, can you please create a storyboard”.  
 * [S2] Bot provides a list of options for the templates in the form of drop-down list having Scrum-board, Waterfall-board, …, Blank-board.  
 * [S3] User can pick any one of them by selecting the list from drop-down list.  
-* [S4] Bot will provide all the lists created by default in the template selected by the user.  
+* [S4] Bot will provide all the lists created by default (e.g. Resources, Sprint Planning, Current Sprint,... ) in the template selected by the user.  
 * [S5] Bot will further ask if user wants to do any of the following actions: 
     * Modify the name of the list
         * Bot: (Displays all Trello Storyboard lists in dropdown list)
