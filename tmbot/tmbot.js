@@ -21,5 +21,60 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
 controller.hears('template',['mention', 'direct_mention','direct_message'], function(bot,message) 
 {
   console.log(message);
-  bot.reply(message,"Wow! You want to work on Templates with me. Great and heard from !"+message.channel+" channel");
+  bot.reply(message,{
+    "text": "Following are templates of storyboards:",
+    "attachments": [
+        {
+            "title": "Select one template you want to create.",
+            "text": "Select one template from the dropdown: "
+        },
+		{	
+			"text": "Choose a game to play",
+            "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+            "color": "#3AA3E3",
+            "attachment_type": "default",
+            "callback_id": "template_selection",
+            "actions": [
+                {
+                    "name": "templates_list",
+                    "text": "Select a template...",
+                    "type": "select",
+                    "options": [
+                        {
+                            "text": "Scrum Board",
+                            "value": "scrum"
+                        },
+						{
+                            "text": "Waterfall Board",
+                            "value": "waterfall"
+                        }
+						]
+				}
+				]
+				},
+		
+		
+        {
+            "fallback": "Would you like to add more lists?",
+            "title": "Would you like to add more lists in this template?",
+            "callback_id": "comic_1234_xyz",
+            "color": "#CBCFF1",
+            "attachment_type": "default",
+            "actions": [
+                {
+                    "name": "recommend",
+                    "text": "Yes",
+                    "type": "button",
+                    "value": "yes"
+                },
+                {
+                    "name": "no",
+                    "text": "No",
+                    "type": "button",
+                    "value": "bad"
+                }
+            ]
+        }
+    ]
+});
 });
