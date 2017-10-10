@@ -1,0 +1,48 @@
+{
+    "created_storyboard" :
+    {
+        "id": "59dd1fd063c0942d8a843542",
+        "name": "Scrum",
+        "desc": "",
+        "descData": null,
+        "closed": false,
+        "idOrganization": null,
+        "pinned": false,
+        "url": "https://trello.com/b/zGA35tkV/scrum",
+        "shortUrl": "https://trello.com/b/zGA35tkV",
+        "prefs": {
+          "permissionLevel": "private",
+          "voting": "disabled",
+          "comments": "members",
+          "invitations": "members",
+          "selfJoin": true,
+          "cardCovers": true,
+          "cardAging": "regular",
+          "calendarFeedEnabled": false,
+          "background": "blue",
+          "backgroundImage": null,
+          "backgroundImageScaled": null,
+          "backgroundTile": false,
+          "backgroundBrightness": "dark",
+          "backgroundColor": "#0079BF",
+          "backgroundBottomColor": "#0079BF",
+          "backgroundTopColor": "#0079BF",
+          "canBePublic": true,
+          "canBeOrg": true,
+          "canBePrivate": true,
+          "canInvite": true
+        },
+        "labelNames": {
+          "green": "",
+          "yellow": "",
+          "orange": "",
+          "red": "",
+          "purple": "",
+          "blue": "",
+          "sky": "",
+          "lime": "",
+          "pink": "",
+          "black": ""
+        }
+    }
+}
