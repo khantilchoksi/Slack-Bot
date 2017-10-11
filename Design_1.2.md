@@ -35,7 +35,9 @@
  * Bot will provide list of different templates for the storyboards[S2].  
  * User selects the template for the board from the list provided earlier.[S3]  
  * After the template is chosen by the user, bot creates the template board and provides the trello lists created in the board. [S4]  
- * Bot further asks for the modifications required in the template [S5].
+ * Bot also provides default template cards(i.e. tasks) inside each list in the template.[S5]  
+  * If the user provides already created storyboard id, then the newly created storyboard will contain all the lists duplicated from the previous storyboard. [S6]   
+ * Bot further asks for the modifications required in the template [S7].   
 
 
 **(iii) Subflows**  
@@ -43,7 +45,12 @@
 * [S2] Bot provides a list of options for the templates in the form of drop-down list having Scrum-board, Waterfall-board, …, Blank-board.  
 * [S3] User can pick any one of them by selecting the list from drop-down list.  
 * [S4] Bot will provide all the lists created by default (e.g. Resources, Sprint Planning, Current Sprint,... ) in the template selected by the user.  
-* [S5] Bot will further ask if user wants to do any of the following actions: 
+* [S5] Bot will provide cards added by default in each list to the user e.g. Acceptance Testing, Integration Testing in QA list.  
+* [S6] Do you want to create storyboard from the previously created storyboard?  
+     * Bot: (Displays users’ all storyboards)  
+     * User: (Can select anyone of their previously selected storyboard)  
+     * Bot: I have duplicated all the lists from your previous storyboard in your new storyboard.  
+* [S7] Bot will further ask if user wants to do any of the following actions: 
     * Modify the name of the list
         * Bot: (Displays all Trello Storyboard lists in dropdown list)
         * User: (Can click on any one of them)
@@ -64,7 +71,9 @@
    * Add more members to the storyboard
       * Bot: (Shows a popup window to insert email ids of trello users to invite in board.)
       * User: Will type in the email address of the users they want to invite.
-      * Bot: Invitations successfully sent.
+      * Bot: Invitations successfully sent.  
+
+
    
  **(iv) Alternative Flows:**  
    * [E1] User doesn't want to do any modifications in the given template.  
