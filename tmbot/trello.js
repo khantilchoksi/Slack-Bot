@@ -35,4 +35,34 @@ function createNewStoryBoard()
 	});
 }
 
+function createNewList(list_name)
+{
+    var new_list = {
+        "name" : list_name
+    };
+
+	var options = {
+        url: urlRoot + "/1/lists",
+        method: 'POST',
+        json: new_list,
+		headers: {
+			"content-type": "application/json",
+			"Authorization": token
+		}
+	};
+
+	return new Promise(function (resolve, reject) 
+	{
+		// Send a http request to url and specify a callback that will be called upon its return.
+		request(options, function (error, response, body) 
+		{
+            console.log("Inside trello.js");
+            console.log(body);
+			//var obj = JSON.parse(body);
+            resolve(body);
+		});
+	});
+}
+
 exports.createNewStoryBoard = createNewStoryBoard;
+exports.createNewList = createNewList;

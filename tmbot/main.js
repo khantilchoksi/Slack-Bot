@@ -24,4 +24,20 @@ function getNewStoryBoard()
 	});
 }
 
+function getNewList(list_name)
+{
+    return new Promise(function (resolve, reject) 
+	{
+		// mock data needs .
+		trello.createNewList(list_name).then(function (created_list) 
+		{
+            console.log("Is this json");
+            console.log(created_list);
+			resolve(created_list);
+		});
+	});
+
+}
+
 exports.getNewStoryBoard = getNewStoryBoard;
+exports.getNewList = getNewList;
