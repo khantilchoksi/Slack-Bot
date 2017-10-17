@@ -27,9 +27,15 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
 {
   console.log(message);
   //Calling 
-  var storyboardlink = main.getNewStoryBoard();
+  var storyboardlink = '';
+  return main.getNewStoryBoard().then(function(results){
+    
+    storyboardlink = results;
+    console.log('In here!!! '+storyboardlink);
+  });
 
   console.log('In too here!!! '+storyboardlink);
+  
   bot.reply(message,{
     "text": "Following are templates of storyboards:",
     "attachments": [
@@ -86,6 +92,5 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
         }
     ]
 });
-  
 });
 
