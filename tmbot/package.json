@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "bluebird": "^3.5.1",
+    "botkit": "^0.6.4",
+    "jfs": "^0.2.6",
     "request": "^2.75.0",
     "underscore": "^1.8.3"
   }

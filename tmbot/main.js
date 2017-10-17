@@ -3,14 +3,23 @@ var chai = require("chai");
 var expect = chai.expect;
 var nock = require("nock");
 var _ = require("underscore");
+var new_storyboard = {
+	"name" : "Scrum"
+  };
+var data = require('./mock.json');
 //var data = require("mock.json")
 var trello = require("./trello.js");
 
 
 // Which person is assigned to most to issues?
+var mockService = nock("https://api.trello.com")
+.persist() // This will persist mock interception for lifetime of program.
+.post("/1/boards", new_storyboard)
+.reply(200, JSON.stringify(data.created_storyboard));
 
 function getNewStoryBoard()
 {
+	return "https://trello.com/b/zGA35tkV/scrum";
 	return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
