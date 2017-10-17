@@ -1,3 +1,4 @@
+//Work on SE_Project_CSC510 Slack channel tmbot and it has been linked to slack's testing_bot_channel
 //API token for tmbot : xoxb-253260289844-0I3ZOtHXGmZVXynApxZ8AiEF
 var Botkit = require('botkit');
 
@@ -78,3 +79,4 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
     ]
 });
 });
+
