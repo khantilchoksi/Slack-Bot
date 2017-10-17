@@ -28,9 +28,11 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
   console.log(message);
   //Calling 
   var storyboardlink = '';
-  return main.getNewStoryBoard().then(function(results){
+  var boardName= "Scrum";
+  var list_lists = ['list1'];
+  promise1 = main.getNewStoryBoard(list_lists, boardName).then(function(results){
     
-    storyboardlink = results;
+    storyboardlink = results[0];
     console.log('In here!!! '+storyboardlink);
   });
 
