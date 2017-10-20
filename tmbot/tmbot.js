@@ -6,16 +6,46 @@ var main = require('./main.js');
 var chai = require("chai");
 var expect = chai.expect;
 
+var webhook_url = "https://hooks.slack.com/services/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";
+
 var controller = Botkit.slackbot({
-    debug: false
+    debug: true
     //include "log: false" to disable logging
     //or a "logLevel" integer from 0 to 7 to adjust logging verbosity
   });
   
 // connecting the bot to a stream of messages
-controller.spawn({
+var bott = controller.spawn({
     token: process.env.TMBOTSLACKTOKEN,
+    // incoming_webhook: {
+    //     url: my_webhook_url
+    //   }
 }).startRTM()
+
+// send webhooks
+bott.configureIncomingWebhook({url: webhook_url});
+
+
+// function myincomingwebhook(owner,repoName, repoObj)
+// {
+// 	var options = {
+// 		url: urlRoot + `/repos/${owner}/${repoName}`,
+// 		method: 'PATCH',
+// 		json: payload={"text": "Trying to send message via webhook and Slack web API"},
+// 		headers: {
+// 			"User-Agent": "EnableIssues",
+// 			"content-type": "application/json",
+// 			"Authorization": token
+// 		}
+// 	};
+
+// 	// Send a http request to url and specify a callback that will be called upon its return.
+// 	request(options, function (error, response, body) 
+// 	{
+// 		console.log(body);
+// 	});
+	
+// }
 
 controller.hears('task',['mention', 'direct_mention','direct_message'], function(bot,message) 
 {
@@ -25,19 +55,19 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
 
 controller.hears('template',['mention', 'direct_mention','direct_message'], function(bot,message) 
 {
-  console.log(message);
+  console.log("RECEIVED MESSAGE: "+message.text);
   //Calling 
   var storyboardlink = '';
   var boardName= "Scrum";
   var list_lists = ['list1'];
-  var promise1 = main.getNewStoryBoard(list_lists, boardName).then(function(results){
+  
+  main.getNewStoryBoard(list_lists, boardName).then(function(results){
     
     storyboardlink = results[0];
     console.log('In here!!! '+storyboardlink);
-    console.log('In too here!!! '+storyboardlink);
-    
+        
     bot.reply(message,{
-      "text": "Following are templates of storyboards:",
+      "text": "Khantil Following are templates of storyboards:",
       "attachments": [
           {
               "title": storyboardlink,
@@ -70,7 +100,7 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
       
       
           {
-              "fallback": "Would you like to add more lists?",
+              "callback": "Would you like to add more lists?",
               "title": "Would you like to add more lists in this template?",
               "callback_id": "comic_1234_xyz",
               "color": "#CBCFF1",
@@ -93,7 +123,71 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
       ]
   });
   });
-  
- 
 });
+
+controller.hears('interactive', 'direct_message', function(bot, message) {
+  
+      bot.reply(message, {
+          attachments:[
+              {
+                  title: 'Do you want to interact with my buttons?',
+                  callback_id: '123',
+                  attachment_type: 'default',
+                  actions: [
+                      {
+                          "name":"yes",
+                          "text": "Yes",
+                          "value": "yes",
+                          "type": "button",
+                      },
+                      {
+                          "name":"no",
+                          "text": "No",
+                          "value": "no",
+                          "type": "button",
+                      }
+                  ]
+              }
+          ]
+      });
+  });
+
+//receive an interactive message, and reply with a message that will replace the original
+controller.on('interactive_message_callback', function(bot, message) {
+        console.log("interactive messgae callback");
+        // check message.actions and message.callback_id to see what action to take...
+    
+        bot.replyInteractive(message, {
+            text: '...',
+            attachments: [
+                {
+                    title: 'My buttons',
+                    callback_id: '123',
+                    attachment_type: 'default',
+                    actions: [
+                        {
+                            "name":"yes",
+                            "text": "Yes!",
+                            "value": "yes",
+                            "type": "button",
+                        },
+                        {
+                           "text": "No!",
+                            "name": "no",
+                            "value": "delete",
+                            "style": "danger",
+                            "type": "button",
+                            "confirm": {
+                              "title": "Are you sure?",
+                              "text": "This will do something!",
+                              "ok_text": "Yes",
+                              "dismiss_text": "No"
+                            }
+                        }
+                    ]
+                }
+            ]
+        });
+    
+    });
 

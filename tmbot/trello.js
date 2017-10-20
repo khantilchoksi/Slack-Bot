@@ -10,6 +10,7 @@ var new_storyboard = {
     "name" : "Scrum"
 };
 
+
 function createNewStoryBoard(boardName)
 {
 	var options = {
@@ -27,8 +28,8 @@ function createNewStoryBoard(boardName)
 		// Send a http request to url and specify a callback that will be called upon its return.
 		request(options, function (error, response, body) 
 		{
-            console.log("Inside trello.js");
-            console.log(body);
+            //console.log("Inside trello.js");
+            //console.log(body);
 			//var obj = JSON.parse(body);
             resolve(body);
 		});
@@ -57,8 +58,8 @@ function createNewList(list_name, boardId)
 		// Send a http request to url and specify a callback that will be called upon its return.
 		request(options, function (error, response, body) 
 		{
-            console.log("Inside create new list");
-            console.log(body);
+            //console.log("Inside create new list");
+            //console.log(body);
 			//var obj = JSON.parse(body);
             resolve(body);
 		});
