@@ -9,8 +9,8 @@ var expect = chai.expect;
 
 // Store our app's ID and Secret. These we got from Step 1. 
 // For this tutorial, we'll keep your API credentials right here. But for an actual app, you'll want to  store them securely in environment variables. 
-var clientId = '242175471667.260972372135';
-var clientSecret = 'bc75f2893363d5aeb5b178c1b68c9ac1';
+var clientid = '242175471667.260972372135';
+var clientsecret = 'bc75f2893363d5aeb5b178c1b68c9ac1';
 
 // Instantiates Express and assigns our app variable to it
 var app = express();
@@ -20,13 +20,31 @@ var controller = Botkit.slackbot({
     debug: false
     //include "log: false" to disable logging
     //or a "logLevel" integer from 0 to 7 to adjust logging verbosity
-  });
+  }).configureSlackApp(
+    {
+      clientId: clientid,
+      clientSecret: clientsecret,
+      scopes: ['bot'],
+    }
+  );
 controller.spawn({
     token: "xoxb-259926960994-cv6gxdFR7woDT6VkGrvDzphp",
     // incoming_webhook: {
     //     url: my_webhook_url
     //   }
 }).startRTM()
+
+// controller.setupWebserver(4390,function(err,webserver) {
+//     controller.createWebhookEndpoints(controller.webserver);
+  
+//     controller.createOauthEndpoints(controller.webserver,function(err,req,res) {
+//       if (err) {
+//         res.status(500).send('ERROR: ' + err);
+//       } else {
+//         res.send('Success!');
+//       }
+//     });
+//   });
 
 controller.hears('task',['mention', 'direct_mention','direct_message'], function(bot,message) 
 {
@@ -68,9 +86,48 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
 };
 
 bot.reply(message,mg);
+//bot.app.send(mg);
 
 //sendMessageToSlackResponseURL(responseURL, message);
 });
+
+// controller.on('button_tutorial', ['mention', 'direct_mention','direct_message'], function(bot, message) {
+//     console.log("interactive messgae callback");
+//     // check message.actions and message.callback_id to see what action to take...
+
+//     bot.replyInteractive(message, {
+//         text: '...',
+//         attachments: [
+//             {
+//                 title: 'My buttons',
+//                 callback_id: 'btn_callback',
+//                 attachment_type: 'default',
+//                 actions: [
+//                     {
+//                         "name":"yes",
+//                         "text": "Yes!",
+//                         "value": "yes",
+//                         "type": "button",
+//                     },
+//                     {
+//                        "text": "No!",
+//                         "name": "no",
+//                         "value": "delete",
+//                         "style": "danger",
+//                         "type": "button",
+//                         "confirm": {
+//                           "title": "Are you sure?",
+//                           "text": "This will do something!",
+//                           "ok_text": "Yes",
+//                           "dismiss_text": "No"
+//                         }
+//                     }
+//                 ]
+//             }
+//         ]
+//     });
+
+// });
 
 controller.hears('template',['mention', 'direct_mention','direct_message'], function(bot,message) 
 {
@@ -210,15 +267,19 @@ app.post('/command', function(req, res) {
 });
 
 
-app.post('/slack/message_action', function(req, res) {
-    console.log("Received Message Action: "+req+"/n");
-    var actionJSONPayload = JSON.parse(req.body.payload) // parse URL-encoded payload JSON string
-    console.log("received json: "+actionJSONPayload);
-    var message = {
-        "text": actionJSONPayload.user.name+" clicked: "+actionJSONPayload.actions[0].name,
-        "replace_original": false
-    }
-    sendMessageToSlackResponseURL(actionJSONPayload.response_url,message);
+app.post('/slack/actions', function(req, res) {
+    console.log("************ Received Message Action: "+req.payload+"/n");
+    req.on('message', (payload, bot) => { 
+        console.log("SLACK ON and ON: ", payload.callback_id);
+    });
+    res.send('Thank you for responding message button.');
+    // var actionJSONPayload = JSON.parse(req.body.payload) // parse URL-encoded payload JSON string
+    // console.log("received json: "+actionJSONPayload);
+    // var message = {
+    //     "text": actionJSONPayload.user.name+" clicked: "+actionJSONPayload.actions[0].name,
+    //     "replace_original": false
+    // }
+    // sendMessageToSlackResponseURL(actionJSONPayload.response_url,message);
 });
 
 // app.post('/slack/message_action', function(req, res) {
