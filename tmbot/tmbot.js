@@ -21,7 +21,11 @@ var bott = controller.spawn({
     //     url: my_webhook_url
     //   }
 }).startRTM()
-
+// controller.setupWebserver(50001,function(err,webserver) {
+  
+//     controller.createWebhookEndpoints(controller.webserver);
+  
+//   });
 // send webhooks
 bott.configureIncomingWebhook({url: webhook_url});
 
@@ -53,6 +57,63 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
   bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
 });
 
+// bot.reply(message,{
+//   "text": "Khantil following are templates of storyboards:",
+//   "attachments": [
+//       {
+//           "title": storyboardlink,
+//           "text": "Select one template from the dropdown: "
+//       },
+//   {	
+//     "text": "Choose a game to play",
+//           "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+//           "color": "#3AA3E3",
+//           "attachment_type": "default",
+//           "callback_id": "template_selection",
+//           "actions": [
+//               {
+//                   "name": "templates_list",
+//                   "text": "Select a template...",
+//                   "type": "select",
+//                   "options": [
+//                       {
+//                           "text": "Scrum Board",
+//                           "value": "scrum"
+//                       },
+//           {
+//                           "text": "Waterfall Board",
+//                           "value": "waterfall"
+//                       }
+//           ]
+//       }
+//       ]
+//       },
+  
+  
+//       {
+//           "callback": "Would you like to add more lists?",
+//           "title": "Would you like to add more lists in this template?",
+//           "callback_id": "comic_1234_xyz",
+//           "color": "#CBCFF1",
+//           "attachment_type": "default",
+//           "actions": [
+//               {
+//                   "name": "recommend",
+//                   "text": "Yes",
+//                   "type": "button",
+//                   "value": "yes"
+//               },
+//               {
+//                   "name": "no",
+//                   "text": "No",
+//                   "type": "button",
+//                   "value": "bad"
+//               }
+//           ]
+//       }
+//   ]
+// });
+
 controller.hears('template',['mention', 'direct_mention','direct_message'], function(bot,message) 
 {
   console.log("RECEIVED MESSAGE: "+message.text);
@@ -65,44 +126,21 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
     
     storyboardlink = results[0];
     console.log('In here!!! '+storyboardlink);
-        
+    
     bot.reply(message,{
-      "text": "Khantil Following are templates of storyboards:",
+      "text": "Khantil following are templates of storyboards:",
       "attachments": [
           {
               "title": storyboardlink,
               "text": "Select one template from the dropdown: "
           },
-      {	
-        "text": "Choose a game to play",
-              "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
-              "color": "#3AA3E3",
-              "attachment_type": "default",
-              "callback_id": "template_selection",
-              "actions": [
-                  {
-                      "name": "templates_list",
-                      "text": "Select a template...",
-                      "type": "select",
-                      "options": [
-                          {
-                              "text": "Scrum Board",
-                              "value": "scrum"
-                          },
-              {
-                              "text": "Waterfall Board",
-                              "value": "waterfall"
-                          }
-              ]
-          }
-          ]
-          },
+
       
       
           {
               "callback": "Would you like to add more lists?",
               "title": "Would you like to add more lists in this template?",
-              "callback_id": "comic_1234_xyz",
+              "callback_id": "btn_callback",
               "color": "#CBCFF1",
               "attachment_type": "default",
               "actions": [
@@ -122,38 +160,14 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
           }
       ]
   });
+
+
   });
 });
 
-controller.hears('interactive', 'direct_message', function(bot, message) {
-  
-      bot.reply(message, {
-          attachments:[
-              {
-                  title: 'Do you want to interact with my buttons?',
-                  callback_id: '123',
-                  attachment_type: 'default',
-                  actions: [
-                      {
-                          "name":"yes",
-                          "text": "Yes",
-                          "value": "yes",
-                          "type": "button",
-                      },
-                      {
-                          "name":"no",
-                          "text": "No",
-                          "value": "no",
-                          "type": "button",
-                      }
-                  ]
-              }
-          ]
-      });
-  });
 
 //receive an interactive message, and reply with a message that will replace the original
-controller.on('interactive_message_callback', function(bot, message) {
+controller.on('interactive_message_callback', ['mention', 'direct_mention','direct_message'], function(bot, message) {
         console.log("interactive messgae callback");
         // check message.actions and message.callback_id to see what action to take...
     
@@ -162,7 +176,7 @@ controller.on('interactive_message_callback', function(bot, message) {
             attachments: [
                 {
                     title: 'My buttons',
-                    callback_id: '123',
+                    callback_id: 'btn_callback',
                     attachment_type: 'default',
                     actions: [
                         {
