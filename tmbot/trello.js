@@ -65,5 +65,36 @@ function createNewList(list_name, boardId)
 	});
 }
 
+function createNewCard(card_name, listId)
+{
+    var new_card = {
+		"name" : card_name,
+		"idList" : listId
+    };
+
+	var options = {
+        url: urlRoot + "/1/cards",
+        method: 'POST',
+        json: new_card,
+		headers: {
+			"content-type": "application/json",
+			"Authorization": token
+		}
+	};
+
+	return new Promise(function (resolve, reject) 
+	{
+		// Send a http request to url and specify a callback that will be called upon its return.
+		request(options, function (error, response, body) 
+		{
+            console.log("Inside create new card");
+            console.log(body);
+			//var obj = JSON.parse(body);
+            resolve(body);
+		});
+	});
+}
+
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
+exports.createNewCard = createNewCard;
