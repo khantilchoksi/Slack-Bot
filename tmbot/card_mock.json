@@ -1,0 +1,53 @@
+{
+    "created_card" :
+    {
+            "id": "59ef86b92f34dbc457ec4d84",
+            "badges": {
+              "votes": 0,
+              "attachmentsByType": {
+                "trello": {
+                  "board": 0,
+                  "card": 0
+                }
+              },
+              "viewingMemberVoted": false,
+              "subscribed": false,
+              "fogbugz": "",
+              "checkItems": 0,
+              "checkItemsChecked": 0,
+              "comments": 0,
+              "attachments": 0,
+              "description": false,
+              "due": null,
+              "dueComplete": false
+            },
+            "checkItemStates": [],
+            "closed": false,
+            "dueComplete": false,
+            "dateLastActivity": "2017-10-24T18:30:17.846Z",
+            "desc": "",
+            "descData": {
+              "emoji": {}
+            },
+            "due": null,
+            "email": null,
+            "idBoard": "59dd1fd063c0942d8a843542",
+            "idChecklists": [],
+            "stickers": [],
+            "idList": "59dd74d4b1143f5c19c12589",
+            "idMembers": [],
+            "idMembersVoted": [],
+            "idShort": 1,
+            "idAttachmentCover": null,
+            "labels": [],
+            "idLabels": [],
+            "manualCoverAttachment": false,
+            "name": "Acceptance testing",
+            "pos": 16384,
+            "shortLink": "Ia9yCgrV",
+            "shortUrl": "https://trello.com/c/Ia9yCgrV",
+            "subscribed": false,
+            "url": "https://trello.com/c/Ia9yCgrV/1-acceptance-testing"
+          }
+    
+}
