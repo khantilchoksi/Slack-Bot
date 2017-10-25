@@ -28,7 +28,8 @@
 | ------------- | ------------  |  ------------
 | Use Case 2    | Understanding APIs required for managing tasks| &nbsp;
 | Subflow       | To implement UI components for taking input of list in which the card needs to be added|  [Trello Card](https://trello.com/c/diA1DaMw)
-| Subflow       | To implement functions to mock creare card trello API  |  [Trello Card](https://trello.com/c/diA1DaMw)
+| Subflow       | To implement functions to mock create card trello API  |  [Trello Card](https://trello.com/c/diA1DaMw)
 | Subflow       | chaining of promises to get list from story board to add task|  [Trello Card](https://trello.com/c/diA1DaMw)
 | Subflow       | Integration of full usecase service with mock service |[Trello Card](https://trello.com/c/diA1DaMw)
 | use case 3    | Understanding APIs required for providing attachment to a card | [Trello Card](https://trello.com/c/diA1DaMw)
+| subflow       | UI - To select the list in which attachment needs to be inserted in the card | 
