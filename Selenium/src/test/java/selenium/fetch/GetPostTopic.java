@@ -80,10 +80,11 @@ public class GetPostTopic
 			
 			CSVReader reader = new CSVReader(new FileReader(file), ';', '\"', 1 );
 			String[] line;
-			while ((line = reader.hasNext()) != null) 
+			while ((line = reader.readNext()) != null) 
 			{
 				Post p = new Post();
 				p.id = line[0];
+				//System.out.println("post id is "+p.id);
 				p.tagline = line[3];
 				p.Url = line[9];
 				//System.out.println(p.id + "," + p.tagline + "," + p.Url);
@@ -113,8 +114,10 @@ public class GetPostTopic
 		List<Post> posts = scrapper.ReadPostsCSV("/Users/gameweld/data/product-hunt/posts--2016-04-01_14-36-24-UTC.csv");
 
 		int stopAfter = 0;
-		for( Post p: posts )
+		for( int i=0;i<posts.size();i++))
 		{
+			Post p = posts.get(i);
+			//System.out.println("checking post is "+p);
 			//if( stopAfter >= 10 )
 			//	break;
 			
