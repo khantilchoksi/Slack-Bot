@@ -117,8 +117,8 @@ function retrieveLists(boardId)
 		// Send a http request to url and specify a callback that will be called upon its return.
 		request(options, function (error, response, body) 
 		{
-            //console.log("Inside trello.js");
-            //console.log(body);
+            console.log("retrieveLists API CALL: ");
+            console.log(body);
 			//var obj = JSON.parse(body);
             resolve(body);
 		});

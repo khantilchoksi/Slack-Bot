@@ -145,9 +145,14 @@ function getListsInBoard(boardId) {
 		
 		trello.retrieveLists(boardId).then(function (listsArray) 
 		{
-            for(var item in listsArray) {
-				listMap.set(item.name, item.id);
-			}
+			console.log("LISTARRAYS: : "+listsArray);
+			console.log(" TYPE OF : "+typeof listsArray);
+			listsArray = JSON.parse(listsArray);
+            listsArray.forEach(function(item) {
+				console.log("item: : "+item);
+				listMap.set(item.id, item.name);
+			});
+			console.log("LISTS: "+listMap.values()[0]);
 			resolve(listMap);
 		});
 	});

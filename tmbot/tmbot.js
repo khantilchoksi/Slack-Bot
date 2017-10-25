@@ -6,6 +6,7 @@ var Promise = require("bluebird");
 var main = require('./main.js');
 var chai = require("chai");
 var expect = chai.expect;
+var HashMap = require('hashmap');
 
 // Store our app's ID and Secret. These we got from Step 1. 
 // For this tutorial, we'll keep your API credentials right here. But for an actual app, you'll want to  store them securely in environment variables. 
@@ -76,7 +77,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     // Typically, you want to acknowledge the action and remove the interactive elements from the message
     
     //attachment.text =`Welcome ${payload.user.name}`;
-    
+    var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
     main.getNewStoryBoard(selected_options.value, "Swati2")
     .then((response) => {
@@ -88,24 +89,47 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
       persistStoryboardID = response.id;
       
       ackText = `Your story board is created and here is the link: ${storyboardlink} and boardID: ${persistStoryboardID}.`
-      var listsAttach = 
-        {
-			"text": "Hello",
-			"color": "#3DF3E3"
-		};
-    //   updatedMessage.text = response.text;
-    //   if (response.attachments && response.attachments.length > 0) {
-    //     updatedMessage.attachments.push(response.attachments[0]);
-    //   }
-        console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
-        replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
-        delete replacement.attachments[0].actions;
-        replacement.attachments.push(listsAttach);
-        return replacement;
-        //return ackText;
-    }).then(bot);
+      
 
-    console.log("\n At line 98 ***************");
+      console.log(" LINE 100");
+      
+        return persistStoryboardID;
+        //return ackText;
+    }).then((persistStoryboardID) => {
+        main.getListsInBoard(persistStoryboardID)
+        .then((responseLists) => {
+            console.log(" LINE 96");
+            createdListsNames = responseLists.values();
+            console.log(" LINE 98");
+            var lists = `I have created board with ${createdListsNames}.`;
+            
+                  var listsAttach = 
+                    {
+                        "text": lists,
+                        "color": "#3DF3E3"
+                    };
+                //   updatedMessage.text = response.text;
+                //   if (response.attachments && response.attachments.length > 0) {
+                //     updatedMessage.attachments.push(response.attachments[0]);
+                //   }
+                    console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
+                    replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
+                    delete replacement.attachments[0].actions;
+                    console.log('before push');
+                    replacement.attachments.push(listsAttach);
+                    console.log('after push');
+            return replacement;
+        }).then(bot);
+    });
+//.then(bot);
+
+    console.log("\n At line 116 ***************");
+
+    
+    
+
+
+
     return replacement;
    });
 
