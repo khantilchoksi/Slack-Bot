@@ -114,7 +114,7 @@ public class GetPostTopic
 		List<Post> posts = scrapper.ReadPostsCSV("/Users/gameweld/data/product-hunt/posts--2016-04-01_14-36-24-UTC.csv");
 
 		int stopAfter = 0;
-		for( int i=0;i<posts.size();i++))
+		for(int i=0;i<posts.size();i++)
 		{
 			Post p = posts.get(i);
 			//System.out.println("checking post is "+p);
