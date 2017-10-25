@@ -88,7 +88,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
       console.log(" ********** Received Storyboard ID: "+response.id);
       persistStoryboardID = response.id;
       
-      ackText = `Your story board is created and here is the link: ${storyboardlink} and boardID: ${persistStoryboardID}.`
+      ackText = `Your story board is created and here is the link: ${storyboardlink} and boardId: ${persistStoryboardID}.`
       
 
       console.log(" LINE 100");
@@ -125,8 +125,44 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
 
     console.log("\n At line 116 ***************");
 
-    
-    
+    return replacement;
+   });
+
+
+//USE CASE 2 CREATING NEW TASK
+slackMessages.action('list_selection_callback', (payload,bot) => {
+    // `payload` is JSON that describes an interaction with a message.
+    console.log(`The user ${payload.user.name} in team ${payload.team.domain} pressed the welcome button`);
+   
+    console.log('******* LIST PAYLOAD : ', payload);
+    // The `actions` array contains details about the specific action (button press, menu selection, etc.)
+    const action = payload.actions[0];
+
+    var selected_options = action.selected_options[0];
+   console.log("\n\n KHANTIL LIST Selected options: ",JSON.stringify(action.selected_options));
+   console.log("\n\n ****(((*(*(*(*   LIST Selected options KEY: ",JSON.stringify(action.selected_options[1]));
+   //console.log(`The dropdown menu had name ${action.name} and value ${action.value}`);
+    var ackText = `You have selected ${selected_options.value} list.`;
+    const replacement = payload.original_message;
+    // Typically, you want to acknowledge the action and remove the interactive elements from the message
+    console.log("\n\n ****(((*(*(*(*   SELECTED ATTACHEMENTS:: ",JSON.stringify(replacement.attachments));
+    console.log("\n\n ****(((*(*(*(*   SELECTED ATTACHEMENTS:[0]: ",JSON.stringify(replacement.attachments[0]));
+    //attachment.text =`Welcome ${payload.user.name}`;
+    var createdListsNames;
+    // Start an order, and when that completes, send another message to the user.
+    main.getNewCard("Acceptance Testing", selected_options.value)
+    .then((response) => {
+      // Keep the context from the updated message but use the new text and attachment
+      
+      ackText = `Your card has been successfully created in your selected list.`;
+      
+      replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
+      delete replacement.attachments[0].actions;
+      console.log(" LINE 100");
+      
+        return replacement;
+        //return ackText;
+    }).then(bot);
 
 
 
@@ -167,43 +203,17 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
   if(persistStoryboardID == undefined){
     responseMessage = {
         "text": "Please create a storyboard first or link your existing story board of trello."};
+        bot.reply(message,responseMessage);
+  }else{
+      console.log("\n 166: "+buildDropdownLists());
+    buildDropdownLists().then(function(results){
+        responseMessage = results;
+        bot.reply(message,responseMessage);
+    });
   }
-    var str = `Building buttons is easy right? ${persistlink}`;
-    responseMessage = {
-    "text": "This is your first interactive message",
-    "attachments": [
-        {
-            "text": str,
-            "fallback": "Shame... buttons aren't supported in this land",
-            "callback_id": "button_tutorial",
-            "color": "#3AA3E3",
-            "attachment_type": "default",
-            "actions": [
-                {
-                    "name": "yes",
-                    "text": "yes",
-                    "type": "button",
-                    "value": "yes"
-                },
-                {
-                    "name": "no",
-                    "text": "no",
-                    "type": "button",
-                    "value": "no"
-                },
-                {
-                    "name": "maybe",
-                    "text": "maybe",
-                    "type": "button",
-                    "value": "maybe",
-                    "style": "danger"
-                }
-            ]
-        }
-    ]
-};
+    
 
-bot.reply(message,responseMessage);
+
 //bot.app.send(mg);
 
 //sendMessageToSlackResponseURL(responseURL, message);
@@ -212,10 +222,6 @@ bot.reply(message,responseMessage);
 controller.hears('template',['mention', 'direct_mention','direct_message'], function(bot,message) 
 {
   console.log("RECEIVED MESSAGE: "+message.text);
-  //Calling 
-  var storyboardlink = '';
-  var boardName= "Scrum";
-  var list_lists = ['list1'];
 
     
     bot.reply(message,{
@@ -223,7 +229,7 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
       "attachments": [   
       
           {
-            "text": "Choose a board template from the following list",
+            "text": "Choose a list from the following dropdown",
             "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
               "callback_id": "template_selection_callback",
               "color": "#3AA3E3",
@@ -253,6 +259,49 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
 });
 
 // Helper functions
+
+function buildDropdownLists(){
+
+
+    //console.log("\n\n BEFORE :: BEFORE :: JSON OBJECT BUILT: "+JSON.stringify(jsonobj));
+    return new Promise( function(resolve, reject){
+        main.getListsInBoard(persistStoryboardID)
+        .then((responseLists) => {
+            var jsonobj = {
+                "text": "Managing tasks? I am here to help you!",
+                "attachments": [   
+                
+                    {
+                      "text": "Choose a list from the following list to a task into that list:",
+                      "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                        "callback_id": "list_selection_callback",
+                        "color": "#CECDE1",
+                        "attachment_type": "default",
+                        "actions": [
+                        {
+                            "name": "lists_list",
+                            "text": "Select a list...",
+                            "type": "select",
+                            "options": [],
+                       }
+                      ],
+                  }
+              ],
+            };
+            console.log("\n\n BEFORE :: JSON OBJECT BUILT: "+JSON.stringify(jsonobj));
+            responseLists.forEach(function(value, key) {
+                console.log(" KEY : "+key+ "VALUE: "+value);
+                jsonobj.attachments[0].actions[0].options.push({ 
+                    "text" : value,
+                    "value"  : key,
+                });
+            });
+            console.log("\n\n JSON OBJECT BUILT: "+JSON.stringify(jsonobj));
+            resolve(jsonobj);  
+        });
+    });
+
+}
 
 function findAttachment(message, actionCallbackId) {
     console.log("Funciton findAttachment: \n message: ", message, "/n actionCallbackID: ",actionCallbackId);
