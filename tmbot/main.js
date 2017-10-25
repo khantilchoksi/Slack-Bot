@@ -150,11 +150,11 @@ function getNewCard(card_name, listId) {
 function addAttachment(cardId,new_attachment) {
 	return new Promise(function (resolve, reject)
 	{
-		trello.addAttachment(cardId, new_attachment.url).then(function (created_card) 
+		trello.addAttachment(cardId, new_attachment.url).then(function (posted_attachment) 
 		{
             console.log("Is this json");
-            console.log(created_card);
-			resolve(created_card.id);
+            console.log(posted_attachment);
+			resolve(posted_attachment.url);
 		});
 
 	});
