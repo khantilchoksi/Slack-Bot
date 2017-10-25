@@ -80,7 +80,7 @@ public class WebTest
 		WebElement pw = driver.findElement(By.id("password"));
 
 		// Type in our test user login info.
-		String passw = "abcde@0099";
+		String passw = "your-password";
 		email.sendKeys("asoni3@ncsu.edu");
 		pw.sendKeys(passw);
 
