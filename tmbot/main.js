@@ -9,6 +9,7 @@ var card_data = require("./card_mock.json")
 var trello = require("./trello.js");
 var getList_data = require("./createdLists.json");
 const menu = require("./lib/menu.js");
+var HashMap = require('hashmap');
 
 var new_storyboard = {
 	"name" : "Swati2",
@@ -53,6 +54,7 @@ var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Ne
 var waterfall_lists = ['Requirements', 'Design', 'Implementation', 'Verification', 'Maintenance']
 
 var current_boardid = "59eff60e5920e126b94ee55d";
+var current_board ;
 
 function getNewStoryBoard(template_type, boardName)
 {
@@ -77,9 +79,10 @@ function getNewStoryBoard(template_type, boardName)
             console.log(" MAIN.JS : LINE 75 Is this json");
 			console.log(created_storyboard.url);
 			current_boardid = created_storyboard.id;
-			resolve(created_storyboard.url);
+			resolve(created_storyboard);
 		});
 	});
+	return promise1;
 	/*
 	return promise1.then(function(result){
 		resolve(result);
@@ -87,6 +90,7 @@ function getNewStoryBoard(template_type, boardName)
 	*/
 	console.log(" MAIN JS 86 Did you come here");
 	// can also chain above promise with .then for the below code
+	/*
 	var list_promises = [promise1];
 	listArray.forEach(function(list) {
 		console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(list.name));
@@ -97,6 +101,7 @@ function getNewStoryBoard(template_type, boardName)
 		//console.log(values[0]);
 		//Promise.resolve(values);
 	//});
+	*/
 
 }
 
@@ -133,16 +138,17 @@ function getNewCard(card_name, listId) {
 
 
 function getListsInBoard(boardId) {
+	var listMap =  new HashMap();
 	return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
-		var sendListsToUser = []
-		trello.retrieveLists(card_name, listId).then(function (listsArray) 
+		
+		trello.retrieveLists(boardId).then(function (listsArray) 
 		{
             for(var item in listsArray) {
-				sendListsToUser.push(item.name)
+				listMap.set(item.name, item.id);
 			}
-			resolve(sendListsToUser);
+			resolve(listMap);
 		});
 	});
 
