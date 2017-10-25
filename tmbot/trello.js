@@ -149,8 +149,37 @@ function retrieveCards(listId)
 }
 
 
+function addAttachment(cardId, url)
+{
+	var new_attachment = {
+		"url" : url
+	  };
+
+	var options = {
+        url: urlRoot + "/1/cards/" + cardId + "/attachments",
+		method: 'POST',
+		json: new_attachment,
+		headers: {
+			"content-type": "application/json",
+			"Authorization": token
+		}
+	};
+
+	return new Promise(function (resolve, reject) 
+	{
+		// Send a http request to url and specify a callback that will be called upon its return.
+		request(options, function (error, response, body) 
+		{
+			//var obj = JSON.parse(body);
+            resolve(body);
+		});
+	});
+}
+
+
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
 exports.createNewCard = createNewCard;
 exports.retrieveLists = retrieveLists;
 exports.retrieveCards = retrieveCards;
+exports.addAttachment = addAttachment;

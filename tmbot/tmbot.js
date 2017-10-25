@@ -14,6 +14,7 @@ var clientid = '242175471667.260972372135';
 var clientsecret = 'bc75f2893363d5aeb5b178c1b68c9ac1';
 
 var persistStoryboardID;
+var persistCardID;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
 
@@ -176,18 +177,26 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
               console.log("** Attachement1 options: "+JSON.stringify(cardsAttach.actions[0].options));
               replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
               delete replacement.attachments[0].actions;
-              console.log('before push');
               replacement.attachments.push(cardsAttach);
-              console.log('after push');
-        return replacement;
+              return replacement;
     }).then(bot);
 
-    console.log("\n At line 116 ***************");
 
+    return replacement;
+   });
+
+slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
+    // `payload` is JSON that describes an interaction with a message.
     
-    
-
-
+    console.log('*******  Cards Attach PAYLOAD : ', payload);
+    const action = payload.actions[0];
+    var cardId = action.selected_options[0].value;
+   console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
+    var ackText = `Acc to swati one can persist this ${cardId} card and it does!!.`;
+    const replacement = payload.original_message;
+    persistCardID = cardId;
+    replacement.attachments[1].text = `:white_check_mark:  ${ackText}`;
+    delete replacement.attachments[1].actions;
 
     return replacement;
    });
@@ -352,6 +361,31 @@ controller.hears('attach',['mention', 'direct_mention','direct_message'], functi
         }
     ]
   });
+});
+
+controller.hears('URL',['mention', 'direct_mention','direct_message'], function(bot,message){
+      console.log("Message: "+ message);
+      
+      var regexpURL = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm
+      url = regexpURL.exec(message.text);
+      
+      var card_attachment = {url: String(url[0])};
+      
+      main.addAttachment(persistCardID, card_attachment)
+      .then((urlreceived) => {
+        var replyMessage = "Sorry did not understand your URL";
+        if(String(url[0])){
+          replyMessage = "Link "+ String(url[0])+ " was attached to "+ persistCardID+ " card";
+        }
+
+        bot.reply(message,{text: replyMessage});
+
+        return replyMessage;
+
+      }).then(bot);
+
+      
+      
 });
 
 // Helper functions
