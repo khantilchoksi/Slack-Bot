@@ -7,7 +7,7 @@ var token = "token " + "758d909df10f258875ce8c294d90b288553ec3c2d6e1ad408b8be1cb
 var urlRoot = "https://api.trello.com";
 
 var new_storyboard = {
-	"name" : "SwatiScrum",
+	"name" : "Swati2",
 	"defaultLists" : false
 };
 
@@ -125,3 +125,4 @@ function retrieveLists(boardId)
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
 exports.createNewCard = createNewCard;
+exports.retrieveLists = retrieveLists;
