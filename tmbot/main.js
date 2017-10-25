@@ -8,6 +8,7 @@ var list_data = require("./list_mock.json")
 var card_data = require("./card_mock.json")
 var trello = require("./trello.js");
 var getList_data = require("./createdLists.json");
+var getCards_data = require("./cardsInList.json");
 const menu = require("./lib/menu.js");
 var HashMap = require('hashmap');
 
@@ -49,6 +50,11 @@ var mockService_getLists = nock("https://api.trello.com")
 .persist() // This will persist mock interception for lifetime of program.
 .get("/1/boards/59eff60e5920e126b94ee55d/lists")
 .reply(200, (getList_data.listsFormed));
+
+var mockService_getCards = nock("https://api.trello.com")
+.persist()
+.get("/1/lists/59dd74d4b1143f5c19c12589/cards")
+.reply(200, (getCards_data));
 
 var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Next-Up']
 var waterfall_lists = ['Requirements', 'Design', 'Implementation', 'Verification', 'Maintenance']
@@ -157,7 +163,28 @@ function getListsInBoard(boardId) {
 
 }
 
+function getCardsInList(cardId){
+	console.log("getCardsInList entered");
+	var Cards = new HashMap();
+	return new Promise(function (resolve, reject) 
+	{
+		// mock data needs .
+		current_cardId = "59dd74d4b1143f5c19c12589"
+		trello.retrieveCards(current_cardId).then(function (cardsArray) 
+		{
+			console.log("CARDARRAYS: : "+cardsArray);
+			console.log(" TYPE OF : "+typeof cardsArray);
+			cardsArray = JSON.parse(cardsArray);
+            cardsArray.forEach(function(card) {
+				Cards.set(card.id, card.name);
+			});
+			resolve(Cards);
+		});
+	});
+}
+
 exports.getNewStoryBoard = getNewStoryBoard;
 exports.getNewList = getNewList;
 exports.getNewCard = getNewCard;
 exports.getListsInBoard = getListsInBoard;
+exports.getCardsInList = getCardsInList;

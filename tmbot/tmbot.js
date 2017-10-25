@@ -169,7 +169,64 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
     return replacement;
    });
 
+slackMessages.action('cards_under_list_callback', (payload,bot) => {
+    // `payload` is JSON that describes an interaction with a message.
+    
+    console.log('******* Template Cards under List PAYLOAD : ', payload);
+    // The `actions` array contains details about the specific action (button press, menu selection, etc.)
+    const action = payload.actions[0];
+    var listId = action.selected_options[0].value;
+   console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
+    var ackText = `You have selected ${listId} list.`;
+    const replacement = payload.original_message;
+    
+    var createdListsNames;
+    // Start an order, and when that completes, send another message to the user.
 
+    main.getCardsInList(listId)
+    .then((cards) => {
+
+              var cardsAttach = {
+                  "text": "Select your card that you want to attach the link to",
+                  "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                    "callback_id": "card_selected_attachment_callback",
+                    "color": "#3AA3E3",
+                    "attachment_type": "default",
+                    "actions": [
+                    {
+                        "name": "cards_list",
+                        "text": "Select a Card...",
+                        "type": "select",
+                        "options": []
+                   }
+                  ]
+              };
+              console.log(" TYPE OF CARDS : "+typeof cards);
+
+              cards.forEach(function(value,key){
+                console.log("card: "+key+" "+value+" ");
+                cardsAttach.actions[0].options.push({"text":value,"value":key});
+              });
+
+              console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
+              console.log("** Attachement1 options: "+JSON.stringify(cardsAttach.actions[0].options));
+              replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
+              delete replacement.attachments[0].actions;
+              console.log('before push');
+              replacement.attachments.push(cardsAttach);
+              console.log('after push');
+        return replacement;
+    }).then(bot);
+
+    console.log("\n At line 116 ***************");
+
+    
+    
+
+
+
+    return replacement;
+   });
 
 // Instantiates Express and assigns our app variable to it
 var app = express();
@@ -222,7 +279,7 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
 controller.hears('template',['mention', 'direct_mention','direct_message'], function(bot,message) 
 {
   console.log("RECEIVED MESSAGE: "+message.text);
-
+  //Calling 
     
     bot.reply(message,{
       "text": "Hey, there!",
@@ -256,6 +313,55 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
   });
 
 
+});
+
+controller.hears('attach',['mention', 'direct_mention','direct_message'], function(bot,message){
+      bot.reply(message,{
+      "text": "Choose in sequence the card you would like to attach your link to",
+      "attachments": [   
+      
+          {
+            "text": "Choose a List",
+            "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+              "callback_id": "cards_under_list_callback",
+              "color": "#3AA3E3",
+              "attachment_type": "default",
+              "actions": [
+              {
+                  "name": "list_items",
+                  "text": "Select a List...",
+                  "type": "select",
+                  "options": [
+                      {
+                          "text": "Next-up",
+                          "value": "59eff8a5892c13cd1fc14451"
+                      },
+                      {
+                          "text": "On Hold",
+                          "value": "59eff89b5dae7fffcff0abcd"
+                      },
+                      {
+                          "text": "QA",
+                          "value": "59eff8925c221c30218206f8"
+                      },
+                      {
+                          "text": "In Progress",
+                          "value": "59eff88827b56f1c329070b8"
+                      },
+                      {
+                          "text": "Current Sprint",
+                          "value": "59eff87bbcc4fd185d41c87d"
+                      },
+                      {
+                          "text": "Done",
+                          "value": "59eff86c03f047553772c269"
+                      },
+                 ]
+             }
+            ]
+        }
+    ]
+  });
 });
 
 // Helper functions
