@@ -125,8 +125,32 @@ function retrieveLists(boardId)
 	});
 }
 
+function retrieveCards(listId)
+{
+	var options = {
+        url: urlRoot + "/1/lists/"+ listId+"/cards",
+        method: 'GET',
+		headers: {
+			"content-type": "application/json",
+			"Authorization": token
+		}
+	};
+
+	return new Promise(function (resolve, reject) 
+	{
+		// Send a http request to url and specify a callback that will be called upon its return.
+		request(options, function (error, response, body) 
+		{
+            console.log("retrieveLists API CALL: ");
+            console.log(body);
+            resolve(body);
+		});
+	});
+}
+
 
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
 exports.createNewCard = createNewCard;
 exports.retrieveLists = retrieveLists;
+exports.retrieveCards = retrieveCards;
