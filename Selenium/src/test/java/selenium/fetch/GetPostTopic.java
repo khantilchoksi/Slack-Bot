@@ -77,10 +77,10 @@ public class GetPostTopic
 		try 
 		{
 			// Skip first line (header), use ; for delim, " for quotes.
+			
 			CSVReader reader = new CSVReader(new FileReader(file), ';', '\"', 1 );
-
 			String[] line;
-			while ((line = reader.readNext()) != null) 
+			while ((line = reader.hasNext()) != null) 
 			{
 				Post p = new Post();
 				p.id = line[0];
