@@ -82,7 +82,7 @@ function getNewStoryBoard(template_type, boardName)
 			resolve(created_storyboard);
 		});
 	});
-	return promise1;
+	
 	/*
 	return promise1.then(function(result){
 		resolve(result);
@@ -90,19 +90,21 @@ function getNewStoryBoard(template_type, boardName)
 	*/
 	console.log(" MAIN JS 86 Did you come here");
 	// can also chain above promise with .then for the below code
-	/*
+	
 	var list_promises = [promise1];
 	listArray.forEach(function(list) {
 		console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(list.name));
 		var promise = getNewList(list);
-		list_promises.push(promise);
+		promise.then(function(result) {
+			if(result.name == 'QA'){
+				var QAcards =  menu.QAcards();
+				QAcards.forEach(function(card) {
+					var promise2 = getNewCard(card.name, list.id);
+				});
+			}
+		});
 	});
-	return Promise.all(list_promises)//.then(values => {
-		//console.log(values[0]);
-		//Promise.resolve(values);
-	//});
-	*/
-
+	return promise1;
 }
 
 function getNewList(list)
@@ -116,7 +118,7 @@ function getNewList(list)
 			console.log(created_list);
 			// created list comes as array
 			var parsedJson
-			resolve(created_list.id);
+			resolve(created_list);
 		});
 	});
 

@@ -35,6 +35,14 @@ const menu = {
           idBoard : "59eff60e5920e126b94ee55d"
         }
       ],
+    QA: [
+      {
+        name: "Acceptance Testing"
+      },
+      {
+        name : "Functional Testing"
+      }
+    ],
     options: [
       {
         id: 'strength',
@@ -86,6 +94,10 @@ const menu = {
 
     listOfScrumLists() {
         return menu.scrum_lists.map(i => ({ name: i.name, idBoard: i.idBoard }));
+    },
+
+    listOfQAcards() {
+      return menu.QA.map(i => ({ name: i.name }));
     },
 
     listOfWaterfallLists() {
