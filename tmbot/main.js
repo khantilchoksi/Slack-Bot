@@ -7,31 +7,37 @@ var data = require("./mock.json")
 var list_data = require("./list_mock.json")
 var card_data = require("./card_mock.json")
 var trello = require("./trello.js");
-var getList_data = require("./createdLists.json")
+var getList_data = require("./createdLists.json");
+const menu = require("./lib/menu.js");
 
 var new_storyboard = {
-	"name" : "Scrum"
-  };
+	"name" : "Swati2",
+	"defaultLists" : false
+};
   
   var new_list = {
 	"name" : "list1",
-	"idBoard" : "899698658"
+	"idBoard" : "59eff60e5920e126b94ee55d"
   };
 
   var new_card = {
 	  "name" : "Acceptance Testing",
 	  "idList" : "59dd74d4b1143f5c19c12589"
   };
+
+  var mockService_list = nock("https://api.trello.com")
+  .persist() // This will persist mock interception for lifetime of program.
+  .post("/1/lists", new_list)
+  .reply(200, JSON.stringify(list_data.created_list));
+
+
 // Which person is assigned to most to issues?
 var mockService = nock("https://api.trello.com")
 .persist() // This will persist mock interception for lifetime of program.
 .post("/1/boards", new_storyboard)
 .reply(200, JSON.stringify(data.created_storyboard));
 
-var mockService_list = nock("https://api.trello.com")
-.persist() // This will persist mock interception for lifetime of program.
-.post("/1/lists", new_list)
-.reply(200, JSON.stringify(list_data.created_list));
+
 
 var mockService_card = nock("https://api.trello.com")
 .persist() // This will persist mock interception for lifetime of program.
@@ -50,12 +56,14 @@ var current_boardid = "59eff60e5920e126b94ee55d";
 
 function getNewStoryBoard(template_type, boardName)
 {
-	var listArray;
+	console.log(" TEMPLATE TYPE OF SWATI : "+template_type+" BOARD NAME: "+boardName);
+	var listArray = menu.listOfScrumLists();
 	if(template_type == "Scrum") {
-		listArray = scrum_lists;
+		listArray = menu.listOfScrumLists();
+		console.log(" #%$#%$%^$^$ "+listArray[1].name);
 	}
-	else {
-		listArray = waterfall_lists;
+	else if(template_type == "Waterfall") { 
+		listArray = menu.listOfWaterfallLists();
 	}
 	// No need to know the template, the list names determine the template
 	
@@ -66,7 +74,7 @@ function getNewStoryBoard(template_type, boardName)
 		trello.createNewStoryBoard(boardName).then(function (created_storyboard) 
 		{
             //var storyboard_url = _.pluck(created_storyboard,"url");
-            console.log("Is this json");
+            console.log(" MAIN.JS : LINE 75 Is this json");
 			console.log(created_storyboard.url);
 			current_boardid = created_storyboard.id;
 			resolve(created_storyboard.url);
@@ -77,11 +85,12 @@ function getNewStoryBoard(template_type, boardName)
 		resolve(result);
 	});
 	*/
-	console.log("Did you come here");
+	console.log(" MAIN JS 86 Did you come here");
 	// can also chain above promise with .then for the below code
 	var list_promises = [promise1];
 	listArray.forEach(function(list) {
-		var promise = getNewList("list1",current_boardid );
+		console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(list.name));
+		var promise = getNewList(list);
 		list_promises.push(promise);
 	});
 	return Promise.all(list_promises)//.then(values => {
@@ -91,12 +100,12 @@ function getNewStoryBoard(template_type, boardName)
 
 }
 
-function getNewList(list_name, boardId)
+function getNewList(list)
 {
     return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
-		trello.createNewList(list_name, boardId).then(function (created_list) 
+		trello.createNewList(list).then(function (created_list) 
 		{
             console.log("Is this json");
 			console.log(created_list);

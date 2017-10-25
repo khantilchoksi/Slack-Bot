@@ -12,6 +12,7 @@ var expect = chai.expect;
 var clientid = '242175471667.260972372135';
 var clientsecret = 'bc75f2893363d5aeb5b178c1b68c9ac1';
 
+var persistlink;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
 
@@ -70,19 +71,34 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     var selected_options = action.selected_options[0];
    console.log("Selected options: ",JSON.stringify(selected_options));
    //console.log(`The dropdown menu had name ${action.name} and value ${action.value}`);
-    var ackText = `You have selected ${selected_options.value}`;
-    var replacement = payload.original_message;
+    var ackText = `You have selected ${selected_options.value} board.`;
+    const replacement = payload.original_message;
     // Typically, you want to acknowledge the action and remove the interactive elements from the message
     
     //attachment.text =`Welcome ${payload.user.name}`;
     
     // Start an order, and when that completes, send another message to the user.
-   //  main.startOrder(payload.user.id)
-   //  .then(respond)
-   //  .catch(console.error);
-   console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
-   replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
-   delete replacement.attachments[0].actions;
+    main.getNewStoryBoard(selected_options.value, "Swati2")
+    .then((response) => {
+      // Keep the context from the updated message but use the new text and attachment
+      var storyboardlink = response[0];
+      console.log(" Received Storyboard link: "+storyboardlink);
+      console.log(" ********** response[1]"+response[1].name);
+      console.log(" ********** response[2]"+response[2].name);
+      ackText = `Your story board is created and here is the link: ${storyboardlink}.`
+      persistlink = storyboardlink;
+    //   updatedMessage.text = response.text;
+    //   if (response.attachments && response.attachments.length > 0) {
+    //     updatedMessage.attachments.push(response.attachments[0]);
+    //   }
+        console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
+        replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
+        delete replacement.attachments[0].actions;
+        return replacement;
+        //return ackText;
+    }).then(bot);
+
+    console.log("\n At line 98 ***************");
     return replacement;
    });
 
@@ -114,12 +130,12 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
 {
   console.log(message);
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
-
+    var str = `Building buttons is easy right? ${persistlink}`;
   var mg = {
     "text": "This is your first interactive message",
     "attachments": [
         {
-            "text": "Building buttons is easy right?",
+            "text": str,
             "fallback": "Shame... buttons aren't supported in this land",
             "callback_id": "button_tutorial",
             "color": "#3AA3E3",
@@ -162,11 +178,7 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
   var storyboardlink = '';
   var boardName= "Scrum";
   var list_lists = ['list1'];
-  
-  main.getNewStoryBoard(list_lists, boardName).then(function(results){
-    
-    storyboardlink = results[0];
-    console.log('In here!!! '+storyboardlink);
+
     
     bot.reply(message,{
       "text": "Hey, there!",
@@ -186,11 +198,11 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
                   "options": [
                       {
                           "text": "Scrum Board",
-                          "value": "scrum"
+                          "value": "Scrum"
                       },
                       {
                           "text": "Waterfall Board",
-                          "value": "waterfall"
+                          "value": "Waterfall"
                       }
                  ]
              }
@@ -200,7 +212,6 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
   });
 
 
-  });
 });
 
 // Helper functions

@@ -3,6 +3,7 @@ var _ = require("underscore");
 var request = require("request");
 var querystring = require('querystring');
 
+
 var token = "token " + "758d909df10f258875ce8c294d90b288553ec3c2d6e1ad408b8be1cb2987f9b3";
 var urlRoot = "https://api.trello.com";
 
@@ -37,12 +38,15 @@ function createNewStoryBoard(boardName)
 	});
 }
 
-function createNewList(list_name, boardId)
+function createNewList(new_list)
 {
-    var new_list = {
-		"name" : list_name,
-		"idBoard" : "899698658"
-    };
+
+	//making fool
+	//please remove this when we do original api call
+	var new_list = {
+		"name" : "list1",
+		"idBoard" : "59eff60e5920e126b94ee55d"
+	  };
 
 	var options = {
         url: urlRoot + "/1/lists",
