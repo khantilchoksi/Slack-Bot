@@ -1,4 +1,3 @@
-const { WebClient } = require('@slack/client');
 const menu = require('./menu');
 const map = require('lodash.map');
 const axios = require('axios');
