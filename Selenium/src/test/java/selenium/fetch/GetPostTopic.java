@@ -135,8 +135,10 @@ public class GetPostTopic
 		
 		CSVWriter writer = new CSVWriter(new FileWriter("postsWithTopics.csv"), ';');
 		writer.writeNext(new String[]{"id", "tagline", "url", "topic"});
-		for( Post p : posts )
-		{
+		for(int i=0;i<posts.size();i++)
+		{	
+			Post p = posts.get(i);
+			//System.out.println("posts here are"+p);
 			writer.writeNext(new String[]{p.id, p.tagline,p.Url, p.topic});
 		}
 		writer.close();
