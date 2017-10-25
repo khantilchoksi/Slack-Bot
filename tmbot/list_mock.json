@@ -1,10 +1,21 @@
 {
     "created_list" :
     {
+        /*
             "id": "59dd74d4b1143f5c19c12589",
             "name": "list1",
             "closed": false,
             "idBoard": "59dd1fd063c0942d8a843542",
             "pos": 8192
-    }
-}
+            */
+            
+                "id": "59eff7bf616707cd33ac6127",
+                "name": "list1",
+                "closed": false,
+                "idBoard": "59eff60e5920e126b94ee55d",
+                "pos": 16384
+              }
+            }
+            
+    
+   

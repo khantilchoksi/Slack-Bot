@@ -7,7 +7,8 @@ var token = "token " + "758d909df10f258875ce8c294d90b288553ec3c2d6e1ad408b8be1cb
 var urlRoot = "https://api.trello.com";
 
 var new_storyboard = {
-    "name" : "Scrum"
+	"name" : "SwatiScrum",
+	"defaultLists" : false
 };
 
 
@@ -95,6 +96,31 @@ function createNewCard(card_name, listId)
 		});
 	});
 }
+
+function retrieveLists(boardId)
+{
+	var options = {
+        url: urlRoot + "/1/boards/"+ boardId+"/lists",
+        method: 'GET',
+		headers: {
+			"content-type": "application/json",
+			"Authorization": token
+		}
+	};
+
+	return new Promise(function (resolve, reject) 
+	{
+		// Send a http request to url and specify a callback that will be called upon its return.
+		request(options, function (error, response, body) 
+		{
+            //console.log("Inside trello.js");
+            //console.log(body);
+			//var obj = JSON.parse(body);
+            resolve(body);
+		});
+	});
+}
+
 
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
