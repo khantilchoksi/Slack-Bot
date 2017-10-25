@@ -12,7 +12,7 @@ var expect = chai.expect;
 var clientid = '242175471667.260972372135';
 var clientsecret = 'bc75f2893363d5aeb5b178c1b68c9ac1';
 
-var persistlink;
+var persistStoryboardID;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
 
@@ -81,12 +81,18 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     main.getNewStoryBoard(selected_options.value, "Swati2")
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
-      var storyboardlink = response[0];
+      var storyboardlink = response.url;
       console.log(" Received Storyboard link: "+storyboardlink);
-      console.log(" ********** response[1]"+response[1].name);
-      console.log(" ********** response[2]"+response[2].name);
-      ackText = `Your story board is created and here is the link: ${storyboardlink}.`
-      persistlink = storyboardlink;
+      
+      console.log(" ********** Received Storyboard ID: "+response.id);
+      persistStoryboardID = response.id;
+      
+      ackText = `Your story board is created and here is the link: ${storyboardlink} and boardID: ${persistStoryboardID}.`
+      var listsAttach = 
+        {
+			"text": "Hello",
+			"color": "#3DF3E3"
+		};
     //   updatedMessage.text = response.text;
     //   if (response.attachments && response.attachments.length > 0) {
     //     updatedMessage.attachments.push(response.attachments[0]);
@@ -94,6 +100,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
         console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
         replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
         delete replacement.attachments[0].actions;
+        replacement.attachments.push(listsAttach);
         return replacement;
         //return ackText;
     }).then(bot);
@@ -130,8 +137,15 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
 {
   console.log(message);
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
+
+  //check first whether user has created board or not
+  var responseMessage; 
+  if(persistStoryboardID == undefined){
+    responseMessage = {
+        "text": "Please create a storyboard first or link your existing story board of trello."};
+  }
     var str = `Building buttons is easy right? ${persistlink}`;
-  var mg = {
+    responseMessage = {
     "text": "This is your first interactive message",
     "attachments": [
         {
@@ -165,7 +179,7 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
     ]
 };
 
-bot.reply(message,mg);
+bot.reply(message,responseMessage);
 //bot.app.send(mg);
 
 //sendMessageToSlackResponseURL(responseURL, message);
