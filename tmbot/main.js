@@ -24,8 +24,9 @@ var new_storyboard = {
   };
   
   var new_attachment = {
-	"url" : "http://www.google.com"
+	"url" : "https://www.google.com"
   };
+
   var new_card = {
 	  "name" : "Acceptance Testing",
 	  "idList" : "59dd74d4b1143f5c19c12589"
@@ -60,12 +61,11 @@ var mockService_getCards = nock("https://api.trello.com")
 .get("/1/lists/59dd74d4b1143f5c19c12589/cards")
 .reply(200, (getCards_data));
 
-
 //Mock for adding attachments to cards
 var mockService_addAttachments = nock("https://api.trello.com")
-.persist() // This will persist mock interception for lifetime of program.
-.post("1/cards/59ef86b92f34dbc457ec4d84/attachments", new_attachment)
-.reply(200, JSON.stringify(cardAttachment_data.card_Attachment));
+.persist()
+.post("/1/cards/59ef86b92f34dbc457ec4d84/attachments", new_attachment)
+.reply(200, JSON.stringify(cardAttachment_data.card_attachment));
 
 
 var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Next-Up']
@@ -157,10 +157,9 @@ function getNewCard(card_name, listId) {
 function addAttachment(cardId,new_attachment) {
 	return new Promise(function (resolve, reject)
 	{
-		trello.addAttachment(cardId, new_attachment.url).then(function (posted_attachment) 
+		tempCardId = "59ef86b92f34dbc457ec4d84";
+		trello.addAttachment(tempCardId, new_attachment.url).then(function (posted_attachment) 
 		{
-            console.log("Is this json");
-            console.log(posted_attachment);
 			resolve(posted_attachment.url);
 		});
 
@@ -188,14 +187,14 @@ function getListsInBoard(boardId) {
 
 }
 
-function getCardsInList(cardId){
+function getCardsInList(listId){
 	console.log("getCardsInList entered");
 	var Cards = new HashMap();
 	return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
-		current_cardId = "59dd74d4b1143f5c19c12589"
-		trello.retrieveCards(current_cardId).then(function (cardsArray) 
+		current_listId = "59dd74d4b1143f5c19c12589"
+		trello.retrieveCards(current_listId).then(function (cardsArray) 
 		{
 			console.log("CARDARRAYS: : "+cardsArray);
 			console.log(" TYPE OF : "+typeof cardsArray);
@@ -213,3 +212,4 @@ exports.getNewList = getNewList;
 exports.getNewCard = getNewCard;
 exports.getListsInBoard = getListsInBoard;
 exports.getCardsInList = getCardsInList;
+exports.addAttachment = addAttachment;

@@ -149,13 +149,14 @@ function retrieveCards(listId)
 }
 
 
-function addAttachments(cardId, url)
+function addAttachment(cardId, url)
 {
 	var new_attachment = {
 		"url" : url
 	  };
+
 	var options = {
-        url: urlRoot + "1/cards/" + cardId + "/attachments",
+        url: urlRoot + "/1/cards/" + cardId + "/attachments",
 		method: 'POST',
 		json: new_attachment,
 		headers: {
@@ -169,8 +170,6 @@ function addAttachments(cardId, url)
 		// Send a http request to url and specify a callback that will be called upon its return.
 		request(options, function (error, response, body) 
 		{
-            console.log("Attachment to card: ");
-            console.log(body);
 			//var obj = JSON.parse(body);
             resolve(body);
 		});
@@ -183,3 +182,4 @@ exports.createNewList = createNewList;
 exports.createNewCard = createNewCard;
 exports.retrieveLists = retrieveLists;
 exports.retrieveCards = retrieveCards;
+exports.addAttachment = addAttachment;
