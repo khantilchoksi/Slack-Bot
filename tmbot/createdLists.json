@@ -1,0 +1,52 @@
+{
+    "listsFormed": [
+    {
+      "id": "59eff8a5892c13cd1fc14451",
+      "name": "Next-up",
+      "closed": false,
+      "idBoard": "59eff60e5920e126b94ee55d",
+      "pos": 256,
+      "subscribed": false
+    },
+    {
+      "id": "59eff89b5dae7fffcff0abcd",
+      "name": "On Hold",
+      "closed": false,
+      "idBoard": "59eff60e5920e126b94ee55d",
+      "pos": 512,
+      "subscribed": false
+    },
+    {
+      "id": "59eff8925c221c30218206f8",
+      "name": "QA",
+      "closed": false,
+      "idBoard": "59eff60e5920e126b94ee55d",
+      "pos": 1024,
+      "subscribed": false
+    },
+    {
+      "id": "59eff88827b56f1c329070b8",
+      "name": "In Progress",
+      "closed": false,
+      "idBoard": "59eff60e5920e126b94ee55d",
+      "pos": 2048,
+      "subscribed": false
+    },
+    {
+      "id": "59eff87bbcc4fd185d41c87d",
+      "name": "Current Sprint",
+      "closed": false,
+      "idBoard": "59eff60e5920e126b94ee55d",
+      "pos": 4096,
+      "subscribed": false
+    },
+    {
+      "id": "59eff86c03f047553772c269",
+      "name": "Done",
+      "closed": false,
+      "idBoard": "59eff60e5920e126b94ee55d",
+      "pos": 8192,
+      "subscribed": false
+    }
+  ]
+}

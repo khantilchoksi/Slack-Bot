@@ -7,6 +7,7 @@ var data = require("./mock.json")
 var list_data = require("./list_mock.json")
 var card_data = require("./card_mock.json")
 var trello = require("./trello.js");
+var getList_data = require("./createdLists.json")
 
 var new_storyboard = {
 	"name" : "Scrum"
@@ -37,10 +38,27 @@ var mockService_card = nock("https://api.trello.com")
 .post("/1/cards", new_card)
 .reply(200, JSON.stringify(card_data.created_card));
 
-function getNewStoryBoard(listArray, boardName)
+var mockService_getLists = nock("https://api.trello.com")
+.persist() // This will persist mock interception for lifetime of program.
+.get("/1/boards/59eff60e5920e126b94ee55d/lists")
+.reply(200, (getList_data.listsFormed));
+
+var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Next-Up']
+var waterfall_lists = ['Requirements', 'Design', 'Implementation', 'Verification', 'Maintenance']
+
+var current_boardid = "59eff60e5920e126b94ee55d";
+
+function getNewStoryBoard(template_type, boardName)
 {
+	var listArray;
+	if(template_type == "Scrum") {
+		listArray = scrum_lists;
+	}
+	else {
+		listArray = waterfall_lists;
+	}
 	// No need to know the template, the list names determine the template
-	var current_boardid = 0;
+	
 	
 	var promise1 =  new Promise(function (resolve, reject) 
 	{
@@ -81,7 +99,9 @@ function getNewList(list_name, boardId)
 		trello.createNewList(list_name, boardId).then(function (created_list) 
 		{
             console.log("Is this json");
-            console.log(created_list);
+			console.log(created_list);
+			// created list comes as array
+			var parsedJson
 			resolve(created_list.id);
 		});
 	});
@@ -102,6 +122,23 @@ function getNewCard(card_name, listId) {
 
 }
 
+
+function getListsInBoard(boardId) {
+	return new Promise(function (resolve, reject) 
+	{
+		// mock data needs .
+		var sendListsToUser = []
+		trello.retrieveLists(card_name, listId).then(function (listsArray) 
+		{
+            for(var item in listsArray) {
+				sendListsToUser.push(item.name)
+			}
+			resolve(sendListsToUser);
+		});
+	});
+
+}
 exports.getNewStoryBoard = getNewStoryBoard;
 exports.getNewList = getNewList;
 exports.getNewCard = getNewCard;
+exports.getListsInBoard = getListsInBoard;
