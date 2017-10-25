@@ -143,6 +143,7 @@ function getNewList(list)
 function getNewCard(card_name, listId) {
 	return new Promise(function (resolve, reject) 
 	{
+		listId = "59dd74d4b1143f5c19c12589";
 		// mock data needs .
 		trello.createNewCard(card_name, listId).then(function (created_card) 
 		{
@@ -170,17 +171,12 @@ function getListsInBoard(boardId) {
 	return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
-		
 		trello.retrieveLists(boardId).then(function (listsArray) 
 		{
-			console.log("LISTARRAYS: : "+listsArray);
-			console.log(" TYPE OF : "+typeof listsArray);
 			listsArray = JSON.parse(listsArray);
             listsArray.forEach(function(item) {
-				console.log("item: : "+item);
 				listMap.set(item.id, item.name);
 			});
-			console.log("LISTS: "+listMap.values()[0]);
 			resolve(listMap);
 		});
 	});
