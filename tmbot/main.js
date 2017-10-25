@@ -11,6 +11,7 @@ var getList_data = require("./createdLists.json");
 var getCards_data = require("./cardsInList.json");
 const menu = require("./lib/menu.js");
 var HashMap = require('hashmap');
+var cardAttachment_data = require('./card_attachment.json')
 
 var new_storyboard = {
 	"name" : "Swati2",
@@ -21,7 +22,10 @@ var new_storyboard = {
 	"name" : "list1",
 	"idBoard" : "59eff60e5920e126b94ee55d"
   };
-
+  
+  var new_attachment = {
+	"url" : "http://www.google.com"
+  };
   var new_card = {
 	  "name" : "Acceptance Testing",
 	  "idList" : "59dd74d4b1143f5c19c12589"
@@ -55,6 +59,14 @@ var mockService_getCards = nock("https://api.trello.com")
 .persist()
 .get("/1/lists/59dd74d4b1143f5c19c12589/cards")
 .reply(200, (getCards_data));
+
+
+//Mock for adding attachments to cards
+var mockService_addAttachments = nock("https://api.trello.com")
+.persist() // This will persist mock interception for lifetime of program.
+.post("1/cards/59ef86b92f34dbc457ec4d84/attachments", new_attachment)
+.reply(200, JSON.stringify(cardAttachment_data.card_Attachment));
+
 
 var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Next-Up']
 var waterfall_lists = ['Requirements', 'Design', 'Implementation', 'Verification', 'Maintenance']
@@ -142,7 +154,18 @@ function getNewCard(card_name, listId) {
 
 }
 
+function addAttachment(cardId,new_attachment) {
+	return new Promise(function (resolve, reject)
+	{
+		trello.addAttachment(cardId, new_attachment.url).then(function (posted_attachment) 
+		{
+            console.log("Is this json");
+            console.log(posted_attachment);
+			resolve(posted_attachment.url);
+		});
 
+	});
+}
 function getListsInBoard(boardId) {
 	var listMap =  new HashMap();
 	return new Promise(function (resolve, reject) 
