@@ -51,9 +51,9 @@ var mockService_getLists = nock("https://api.trello.com")
 .get("/1/boards/59eff60e5920e126b94ee55d/lists")
 .reply(200, (getList_data.listsFormed));
 
-var mockService_getLists = nock("https://api.trello.com")
+var mockService_getCards = nock("https://api.trello.com")
 .persist()
-.get("/1/list/59dd74d4b1143f5c19c12589/cards")
+.get("/1/lists/59dd74d4b1143f5c19c12589/cards")
 .reply(200, (getCards_data));
 
 var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Next-Up']
@@ -176,9 +176,8 @@ function getCardsInList(cardId){
 		{
 			console.log("CARDARRAYS: : "+cardsArray);
 			console.log(" TYPE OF : "+typeof cardsArray);
-			cardssArray = JSON.parse(cardsArray);
+			cardsArray = JSON.parse(cardsArray);
             cardsArray.forEach(function(card) {
-				console.log("card: : "+card);
 				Cards.set(card.id, card.name);
 			});
 			resolve(Cards);

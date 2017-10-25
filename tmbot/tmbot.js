@@ -147,7 +147,7 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
 
-    main.getCardsInList(selected_options.value)
+    main.getCardsInList(listId)
     .then((cards) => {
 
               var cardsAttach = {
@@ -165,17 +165,19 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
                    }
                   ]
               };
-              console.log("cardsAttach" + cardsAttach);
-              console.log("Cards  " + cards);
-              for(i in cards){
-                cardsAttach.actions[0].options.push({"text":card[i],"value":i});
-              }
+              console.log(" TYPE OF CARDS : "+typeof cards);
+
+              cards.forEach(function(value,key){
+                console.log("card: "+key+" "+value+" ");
+                cardsAttach.actions[0].options.push({"text":value,"value":key});
+              });
 
               console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
+              console.log("** Attachement1 options: "+JSON.stringify(cardsAttach.actions[0].options));
               replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
               delete replacement.attachments[0].actions;
               console.log('before push');
-              replacement.attachments.push(listsAttach);
+              replacement.attachments.push(cardsAttach);
               console.log('after push');
         return replacement;
     }).then(bot);
