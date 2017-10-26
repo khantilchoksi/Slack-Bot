@@ -3,20 +3,20 @@
 | Deliverable   | Item/Status   |  Issues/Tasks  
 | ------------- | ------------  |  ------------ 
 | Design Document|Updating design doc according to feedback (Revised md) | &nbsp;
-| Basic bot code setup | setting up basic bot code to get things started | [Trello Card](https://trello.com/c/diA1DaMw)
-| usecase      | brain storming the flow of usercase-1 |  [Trello Card](https://trello.com/c/diA1DaMw)
-| Subflow-UI  | taking input from user |  [Trello Card](https://trello.com/c/diA1DaMw)
-|subflow-Mocks| creating mocks and implementing mocks for story board| Get Meeting Availability, error1,...
-|subflow-Mocking functions| Implemented functions in main & trello.js for creating new story board| Get Meeting Availability, error1,...
-|Selenium Testing| Getting started with selenium testing for slack.|
-|wit.ai | understanding concept of wit.ai | 
+| Bot Implementation | Setting up basic bot code to get things started | [Trello Card](https://trello.com/c/fueezcP5)
+| Usecase      | Brain storming the flow of Use Case I |  [Trello Card](https://trello.com/c/xoIsfXRe)
+| Subflow  | User Interface - 1 |  [Trello Card](https://trello.com/c/a8yHOTg3)
+| Subflow | Mocking Implementation - 1 | [Trello Card](https://trello.com/c/pxieeMaz)
+| Subflow | Mocking Implementation - 2 | [Trello Card](https://trello.com/c/Li5hweak)
+| Selenium Testing | Selenium Testing for slack channel | [Trello Card](https://trello.com/c/urjeCqbU)
+| Bot Implementation | Understanding concept of Wit.ai |  [Trello Card](https://trello.com/c/ZjIj1yWb)
 
 ##### Week 2
 
 | Deliverable   | Item/Status   |  Issues/Tasks
 | ------------- | ------------  |  ------------
-| use case1     | understanding concept of promise      | &nbsp;
-| use case      | setup of slack application with interactive components by providing server call back url.|[Trello Card](https://trello.com/c/diA1DaMw)
+| Usecase     | Understanding concept of promise      | &nbsp;
+| Usecase      | Setup of slack application with interactive components by providing server call back url.|[Trello Card](https://trello.com/c/diA1DaMw)
 | use case1     | integrating trello function calls with slack app  |  [Trello Card](https://trello.com/c/diA1DaMw)
 | Subflow       | To add slack ui components (e.g. dropdown)  |  [Trello Card](https://trello.com/c/diA1DaMw)
 | refactor      | refactoring design discussion on storyboard on list output for template |  [Trello Card](https://trello.com/c/diA1DaMw)
