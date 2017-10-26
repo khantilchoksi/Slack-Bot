@@ -43,28 +43,6 @@ public class WebTest
 		driver.quit();
 	}
 
-	
-//	@Test
-//	public void googleExists() throws Exception
-//	{
-//		driver.get("http://www.google.com");
-//        assertEquals("Google", driver.getTitle());		
-//	}
-	
-
-//	@Test
-//	public void Closed() throws Exception
-//	{
-//		driver.get("http://www.checkbox.io/studies.html");
-//		
-//		// http://geekswithblogs.net/Aligned/archive/2014/10/16/selenium-and-timing-issues.aspx
-//		WebDriverWait wait = new WebDriverWait(driver, 30);
-//		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@class='status']/span[.='CLOSED']")));
-//		List<WebElement> spans = driver.findElements(By.xpath("//a[@class='status']/span[.='CLOSED']"));
-//
-//		assertNotNull(spans);
-//		assertEquals(5, spans.size());
-//	}
 
 	@Test
 	public void postMessage()
@@ -122,13 +100,6 @@ public class WebTest
 		System.out.println(wb.getAttribute("placeholder"));
 		JavascriptExecutor js = (JavascriptExecutor)driver;
 		js.executeScript("arguments[0].click()", wb);
-//		actions.moveToElement(wb);
-//		actions.click();
-//		actions.build().perform();
-//		actions.sendKeys("Scrum Board");
-//		actions.sendKeys(Keys.ARROW_DOWN);
-//		actions.sendKeys(Keys.RETURN);
-//		actions.build().perform();
 		System.out.println(" WB Clicked");
 		wait.withTimeout(5	, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
 		actions.moveToElement(messageBot);
@@ -143,18 +114,81 @@ public class WebTest
 		WebElement wb2 = driver.findElement(By.xpath("//div[@class='lfs_item single'][last()]"));
 		JavascriptExecutor js2 = (JavascriptExecutor)driver;
 		js2.executeScript("arguments[0].click()", wb2);
-//		actions.moveToElement(wb2);
-//		wait.until(ExpectedConditions.elementToBeClickable(wb2));
-//		actions.click();
-//		actions.build().perform();
+
 		System.out.println(" WB2 Clicked");
 
-
-		//		try {
-//			Thread.sleep(50000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
+	@Test
+	public void testUseCase2()
+	{
+		driver.get("https://se-projectworkspace.slack.com");
+		
+		// Wait until page loads and we can see a sign in button.
+		WebDriverWait wait = new WebDriverWait(driver, 30);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("signin_btn")));
+
+		// Find email and password fields.
+		WebElement email = driver.findElement(By.id("email"));
+		WebElement pw = driver.findElement(By.id("password"));
+
+		// Type in our test user login info.
+		//String passw = System.getenv("A1S2D3F4");
+		String passw = "A1S2D3F4";
+		System.out.println(passw);
+		email.sendKeys("pramesh2@ncsu.edu");
+		pw.sendKeys(passw);
+
+		// Click
+		WebElement signin = driver.findElement(By.id("signin_btn"));
+		signin.click();
+
+		// Wait until we go to general channel.
+		wait.until(ExpectedConditions.titleContains("general"));
+
+		// Switch to #bots channel and wait for it to load.
+		driver.get("https://se-projectworkspace.slack.com/messages/selenium_testting2");
+		wait.until(ExpectedConditions.titleContains("selenium_testting2"));
+		
+		
+		
+		// Wait until page loads and we can see a sign in button.
+		WebElement messageBot = driver.findElement(By.id("msg_input"));
+		assertNotNull(messageBot);		
+		Actions actions = new Actions(driver);
+		actions.moveToElement(messageBot);
+		actions.click();
+		actions.sendKeys("@taskbot task");
+		actions.sendKeys(Keys.RETURN);
+		actions.build().perform();
+
+		wait.withTimeout(10	, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@class='lfs_input' and @placeholder='Select a list...']")));
+
+		String msg = driver.findElement(
+		By.xpath("//input[@class='lfs_input' and @placeholder='Select a list...']")).getAttribute("placeholder");
+		assertNotNull(msg);
+		assertEquals(msg, "Select a list...");
+		wait.withTimeout(10	, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
+		
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@class='lfs_input' and @placeholder='Select a list...'][last()]")));
+		WebElement wb = driver.findElement(By.xpath("//input[@class='lfs_input' and @placeholder='Select a list...'][last()]"));
+		wait.until(ExpectedConditions.elementToBeClickable(wb));
+		System.out.println(wb.getAttribute("placeholder"));
+		JavascriptExecutor js = (JavascriptExecutor)driver;
+		js.executeScript("arguments[0].click()", wb);
+		System.out.println(" WB Clicked");
+		wait.withTimeout(5	, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
+		
+		System.out.println(" Clicked outside");
+		wait.withTimeout(5	, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
+		WebElement wb2 = driver.findElement(By.xpath("//div[@class='lfs_item single'][last()]"));
+		JavascriptExecutor js2 = (JavascriptExecutor)driver;
+		js2.executeScript("arguments[0].click()", wb2);
+		System.out.println(" WB2 Clicked");
+		wait.withTimeout(5	, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
+		WebElement wb3 = driver.findElement(By.xpath("//div[contains(., 'card has been successfully created')]"));
+		assertNotNull(wb3);
+		
+	}
+
 }
