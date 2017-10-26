@@ -131,15 +131,30 @@
 ----------------------------------------------------------------------------------------------------
 * To implement mocking services and data to support service integration, we have mocked the API calls' return JSON responses to .json files in our project.  
 * E.g. To mock the creating a new storyboard we have stored the mocked data into ![mock.json](./tmbot/mock.json)  
-* Then using nock all the mocking service components are used.  
+* Then using nock all the mocking service components are used to intercept Trello API Calls.  
 
  -------------------------------------------------------------------------------------------------
  
- ## Screencast
+ ## BOT IMPLEMENTATION
 
 ----------------------------------------------------------------------------------------------------  
-
+* Created Slack APP for implementing interactive components.  
+* Created a bot inside app.  
+* Our code is inside tmbot folder.
  -------------------------------------------------------------------------------------------------
+ 
+  ## Selenium testing of each use case
+
+----------------------------------------------------------------------------------------------------  
+* Our code is inside Selenium folder.  
+ -------------------------------------------------------------------------------------------------  
+ 
+## Task Tracking -- WORKSHEET.md
+
+----------------------------------------------------------------------------------------------------  
+*  ![WORKSHEET.md](./WORKSHEET.md)   
+ -------------------------------------------------------------------------------------------------  
+ 
  
  ## Screencast
 
