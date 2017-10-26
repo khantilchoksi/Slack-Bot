@@ -15,7 +15,7 @@
 
 | Deliverable   | Item/Status   |  Issues/Tasks
 | ------------- | ------------  |  ------------
-| Usecase     | Understanding concept of promise      | [Trello Card](https://trello.com/c/6P3zPi1u);
+| Usecase     | Understanding concept of promise      | [Trello Card](https://trello.com/c/6P3zPi1u)
 | Usecase      | Setup of slack application with interactive components by providing server call back url.|[Trello Card](https://trello.com/c/pMCA2doZ)
 | Usecase     | Integrating trello function calls with slack app  |  [Trello Card](https://trello.com/c/eW0GH5cx)
 | Subflow       | To add slack UI components (e.g. dropdown, buttons)  |  [Trello Card](https://trello.com/c/qu5qbaOf)
@@ -26,7 +26,7 @@
 
 | Deliverable   | Item/Status   |  Issues/Tasks
 | ------------- | ------------  |  ------------
-| Usecase    | Understanding APIs required for managing tasks| [Trello Card](https://trello.com/c/EGXFF798);
+| Usecase    | Understanding APIs required for managing tasks| [Trello Card](https://trello.com/c/EGXFF798)
 | Subflow       | To implement UI components for taking input of list in which the card needs to be added|  [Trello Card](https://trello.com/c/P7pQwJZL)
 | Subflow       | To implement functions to mock create card trello API  |  [Trello Card](https://trello.com/c/bA2sQdNv)
 | Subflow       | Chaining of promises to get list from story board to add task |  [Trello Card](https://trello.com/c/KMmeoOvt)
