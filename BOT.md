@@ -133,3 +133,7 @@
 * E.g. To mock the creating a new storyboard we have stored the mocked data into ![mock.json](./tmbot/mock.json)  
 * Then using nock all the mocking service components are used.  
 
+
+Screencast: 
+![ScreenCast for USE CASES, BOT IMPLEMENTATION](https://www.youtube.com/watch?v=kUO9cr0g3kE)
+![GIF for Selenium Testing](Selenium Testing gif1.gif)
