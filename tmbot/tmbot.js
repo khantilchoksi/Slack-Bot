@@ -8,8 +8,8 @@ var chai = require("chai");
 var expect = chai.expect;
 var HashMap = require('hashmap');
 
-// Store our app's ID and Secret. These we got from Step 1. 
-// For this tutorial, we'll keep your API credentials right here. But for an actual app, you'll want to  store them securely in environment variables. 
+// Store our app's ID and Secret. These we got from Step 1.
+// For this tutorial, we'll keep your API credentials right here. But for an actual app, you'll want to  store them securely in environment variables.
 var clientid = '242175471667.260972372135';
 var clientsecret = 'bc75f2893363d5aeb5b178c1b68c9ac1';
 
@@ -34,17 +34,17 @@ slackMessages.action('button_tutorial', (payload,bot) => {
 
  // You should return a JSON object which describes a message to replace the original.
  // Note that the payload contains a copy of the original message (`payload.original_message`).
- 
+
  //const updatedMessage = acknowledgeActionFromMessage(payload.original_message, 'button_tutorial',
  //'I\'m getting an order started for you.');
 
  var ackText = `You have selected ${action.value}`;
  var replacement = payload.original_message;
  // Typically, you want to acknowledge the action and remove the interactive elements from the message
- 
+
  //replacement.text =`Welcome ${payload.user.name}`;
- 
- 
+
+
  // Start an order, and when that completes, send another message to the user.
 //  bot.startOrder(payload.user.id)
 //  .then(respond)
@@ -59,15 +59,15 @@ delete replacement.attachments[0].actions;
 slackMessages.action('template_selection_callback', (payload,bot) => {
     // `payload` is JSON that describes an interaction with a message.
     console.log(`The user ${payload.user.name} in team ${payload.team.domain} pressed the welcome button`);
-   
+
     console.log('******* Template PAYLOAD : ', payload);
     // The `actions` array contains details about the specific action (button press, menu selection, etc.)
     const action = payload.actions[0];
-    
-   
+
+
     // You should return a JSON object which describes a message to replace the original.
     // Note that the payload contains a copy of the original message (`payload.original_message`).
-    
+
     //const updatedMessage = acknowledgeActionFromMessage(payload.original_message, 'button_tutorial',
     //'I\'m getting an order started for you.');
     var selected_options = action.selected_options[0];
@@ -76,7 +76,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     var ackText = `You have selected ${selected_options.value} board.`;
     const replacement = payload.original_message;
     // Typically, you want to acknowledge the action and remove the interactive elements from the message
-    
+
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
@@ -85,15 +85,15 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
       // Keep the context from the updated message but use the new text and attachment
       var storyboardlink = response.url;
       console.log(" Received Storyboard link: "+storyboardlink);
-      
+
       console.log(" ********** Received Storyboard ID: "+response.id);
       persistStoryboardID = response.id;
       
-      ackText = `Your story board is created and here is the link: ${storyboardlink} and boardId: ${persistStoryboardID}.`
+      ackText = `Your story board is created and here is the link: ${storyboardlink} and board id : ${persistStoryboardID}.`;
       
 
       console.log(" LINE 100");
-      
+
         return persistStoryboardID;
         //return ackText;
     }).then((persistStoryboardID) => {
@@ -101,33 +101,70 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
         .then((responseLists) => {
             console.log(" LINE 96");
             createdListsNames = responseLists.values();
+            createdListsIds = responseLists.keys();
             console.log(" LINE 98");
-            var lists = `I have created board with ${createdListsNames}.`;
-            
-                  var listsAttach = 
+
+            var map = new HashMap();
+
+            console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
+            replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
+            delete replacement.attachments[0].actions;
+
+
+            var lists = `I have created board with ${createdListsNames} lists.`;
+            var listsAttach =
+              {
+                  "text": lists,
+                  "color": "#FF5733"
+              };
+              replacement.attachments.push(listsAttach);
+            var mylist = [];
+
+            responseLists.forEach(function(value, key){
+
+              var cards = main.getCardsInList(key).then(function(cardsMap) {
+                  //cardsArray = JSON.parse(cardsArray);
+                  console.log("\n ## CARDS ARRAY for");
+                  var cardNames = [];
+                  cardsMap.forEach(function(value, key) {
+                      console.log( "CARD NAME: "+value+" CARD ID: "+key);
+                      cardNames.push(value);
+                  });
+
+                  var listcard = `I have created ${cardNames} cards in ${value} list.`;
+                  console.log( "LIST CARDs: "+listcard);
+                  var listcards =
                     {
-                        "text": lists,
-                        "color": "#3DF3E3"
+                        "text": listcard,
+                        "color": "#FFE400"
                     };
-                //   updatedMessage.text = response.text;
-                //   if (response.attachments && response.attachments.length > 0) {
-                //     updatedMessage.attachments.push(response.attachments[0]);
-                //   }
-                    console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
-                    replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
-                    delete replacement.attachments[0].actions;
-                    console.log('before push');
-                    replacement.attachments.push(listsAttach);
-                    console.log('after push');
-            return replacement;
-        }).then(bot);
+                    
+                    //replacement.attachments.push(listcards);
+                    return listcards; 
+              });
+              
+              console.log(" mylist.push(cards) for cards: "+cards);
+              mylist.push(cards);
+            });
+            console.log(" 149 mylist.push(cards) for cards: ");
+            return Promise.all(mylist);
+            }).then((listlist) => {
+                listlist.forEach(function(entry){
+                    replacement.attachments.push(entry);
+                });
+                
+                return replacement;
+            }).then(bot);
+
+            
+        });
     });
 //.then(bot);
 
-    console.log("\n At line 116 ***************");
+//     console.log("\n At line 116 ***************");
 
-    return replacement;
-   });
+//     return replacement;
+//    });
 
 
 //USE CASE 2 CREATING NEW TASK
@@ -172,7 +209,7 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
 
 slackMessages.action('cards_under_list_callback', (payload,bot) => {
     // `payload` is JSON that describes an interaction with a message.
-    
+
     console.log('******* Template Cards under List PAYLOAD : ', payload);
     // The `actions` array contains details about the specific action (button press, menu selection, etc.)
     const action = payload.actions[0];
@@ -180,7 +217,7 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
    console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
     var ackText = `You have selected ${listId} list.`;
     const replacement = payload.original_message;
-    
+
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
 
@@ -228,7 +265,7 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
     const action = payload.actions[0];
     var cardId = action.selected_options[0].value;
    console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
-    var ackText = `Acc to swati one can persist this ${cardId} card and it does!!.`;
+    var ackText = `Card selected whose id is ${cardId}.`;
     const replacement = payload.original_message;
     persistCardID = cardId;
     replacement.attachments[1].text = `:white_check_mark:  ${ackText}`;
@@ -259,13 +296,13 @@ controller.spawn({
 }).startRTM()
 
 
-controller.hears('task',['mention', 'direct_mention','direct_message'], function(bot,message) 
+controller.hears('task',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
   console.log(message);
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
 
   //check first whether user has created board or not
-  var responseMessage; 
+  var responseMessage;
   if(persistStoryboardID == undefined){
     responseMessage = {
         "text": "Please create a storyboard first or link your existing story board of trello."};
@@ -285,15 +322,15 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
 //sendMessageToSlackResponseURL(responseURL, message);
 });
 
-controller.hears('template',['mention', 'direct_mention','direct_message'], function(bot,message) 
+controller.hears('new board',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
   console.log("RECEIVED MESSAGE: "+message.text);
 
     
     bot.reply(message,{
-      "text": "Hey, there!",
-      "attachments": [   
-      
+      "text": "Sure!",
+      "attachments": [
+
           {
             "text": "Choose a list from the following dropdown",
             "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
@@ -327,8 +364,8 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
 controller.hears('attach',['mention', 'direct_mention','direct_message'], function(bot,message){
       bot.reply(message,{
       "text": "Choose in sequence the card you would like to attach your link to",
-      "attachments": [   
-      
+      "attachments": [
+
           {
             "text": "Choose a List",
             "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
@@ -381,21 +418,40 @@ controller.hears('URL',['mention', 'direct_mention','direct_message'], function(
       
       var card_attachment = {url: String(url[0])};
       
-      main.addAttachment(persistCardID, card_attachment)
-      .then((urlreceived) => {
-        var replyMessage = "Sorry did not understand your URL";
-        if(String(url[0])){
-          replyMessage = "Link "+ String(url[0])+ " was attached to "+ persistCardID+ " card";
-        }
+    //   main.addAttachment(persistCardID, card_attachment)
+    //   .then((urlreceived) => {
+    //     var replyMessage = "Sorry did not understand your URL";
+    //     if(String(url[0])){
+    //       replyMessage = "Link "+ String(url[0])+ " was attached to "+ persistCardID+ " card";
+    //     }
+        var replyMessage = {
+            "text": "I have attached the given URL "+String(url[0])+ " to your previously selected card. "
+        };
+        bot.reply(message,replyMessage);
 
-        bot.reply(message,{text: replyMessage});
+    //     return replyMessage;
 
-        return replyMessage;
-
-      }).then(bot);
+    //   }).then(bot);
 
       
       
+});
+
+controller.hears('Hello',['mention', 'direct_mention','direct_message'], function(bot,message){
+    console.log("Message: "+ message);
+
+      bot.reply(message,{
+        "text": "Hey there, I am taskbot :robot_face:. I am here to help you initialize your task management process faster. ",
+        "attachments": [
+            {
+                "title": "Hint:",
+                "text": "You can ask me to create storyboard from predefined templates! "
+            }
+            
+        ]
+    });
+    
+    
 });
 
 // Helper functions
@@ -447,7 +503,7 @@ function findAttachment(message, actionCallbackId) {
     console.log("Funciton findAttachment: \n message: ", message, "/n actionCallbackID: ",actionCallbackId);
     return message.attachments.find(a => a.callback_id === actionCallbackId);
   }
-  
+
   function acknowledgeActionFromMessage(originalMessage, actionCallbackId, ackText) {
     console.log("Called acknowledgeActionFromMessage : \n Original Message",originalMessage);
     console.log("actionCallbackId: ",actionCallbackId);
@@ -459,17 +515,14 @@ function findAttachment(message, actionCallbackId) {
     console.log("Message:: ",message);
     return message;
   }
-  
+
   function findSelectedOption(originalMessage, actionCallbackId, selectedValue) {
     const attachment = findAttachment(originalMessage, actionCallbackId);
     return attachment.actions[0].options.find(o => o.value === selectedValue);
-  }  
+  }
 
 // Start the built-in HTTP server
 const port = 4390;
 slackMessages.start(port).then(() => {
  console.log(`server listening on port ${port}`);
 });
-
-
-
