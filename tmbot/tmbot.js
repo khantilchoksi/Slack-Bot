@@ -88,15 +88,9 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
 
       console.log(" ********** Received Storyboard ID: "+response.id);
       persistStoryboardID = response.id;
-<<<<<<< HEAD
-
-      ackText = `Your story board is created and here is the link: ${storyboardlink} and boardID: ${persistStoryboardID}.`
-
-=======
       
-      ackText = `Your story board is created and here is the link: ${storyboardlink} and boardId: ${persistStoryboardID}.`
+      ackText = `Your story board is created and here is the link: ${storyboardlink} and board id : ${persistStoryboardID}.`;
       
->>>>>>> 6cfc43d17f7eb37c43a780fe8c335049ce58a5f9
 
       console.log(" LINE 100");
 
@@ -117,57 +111,60 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
             delete replacement.attachments[0].actions;
 
 
-            var lists = `I have created board with ${createdListsNames}.`;
+            var lists = `I have created board with ${createdListsNames} lists.`;
             var listsAttach =
               {
                   "text": lists,
-                  "color": "#3DF3E3"
+                  "color": "#FF5733"
               };
               replacement.attachments.push(listsAttach);
+            var mylist = [];
 
             responseLists.forEach(function(value, key){
-              var cards = main.getCardsInList(key).then(function(cardsArray) {
-                  cardsArray = JSON.parse(cardsArray);
-                  var listcard = `I have created folllowing cards for ${value} list: ${cardsArray}`;
+
+              var cards = main.getCardsInList(key).then(function(cardsMap) {
+                  //cardsArray = JSON.parse(cardsArray);
+                  console.log("\n ## CARDS ARRAY for");
+                  var cardNames = [];
+                  cardsMap.forEach(function(value, key) {
+                      console.log( "CARD NAME: "+value+" CARD ID: "+key);
+                      cardNames.push(value);
+                  });
+
+                  var listcard = `I have created ${cardNames} cards in ${value} list.`;
+                  console.log( "LIST CARDs: "+listcard);
                   var listcards =
                     {
                         "text": listcard,
-                        "color": "#1DA3E2"
+                        "color": "#FFE400"
                     };
-                    replacement.attachments.push(listcards);
-                    return replacement;
-                  // cardsArray.forEach(function(card) {
-                  //
-                  //     QAcardNames.push(card.name);
-                  //
-                  //     return QAcardNames;
-                  // });
+                    
+                    //replacement.attachments.push(listcards);
+                    return listcards; 
               });
-
+              
+              console.log(" mylist.push(cards) for cards: "+cards);
+              mylist.push(cards);
             });
+            console.log(" 149 mylist.push(cards) for cards: ");
+            return Promise.all(mylist);
+            }).then((listlist) => {
+                listlist.forEach(function(entry){
+                    replacement.attachments.push(entry);
+                });
+                
+                return replacement;
+            }).then(bot);
 
-
-
-
-
-                //   updatedMessage.text = response.text;
-                //   if (response.attachments && response.attachments.length > 0) {
-                //     updatedMessage.attachments.push(response.attachments[0]);
-                //   }
-
-            return replacement;
-        }).then(bot);
+            
+        });
     });
 //.then(bot);
 
-    console.log("\n At line 116 ***************");
+//     console.log("\n At line 116 ***************");
 
-<<<<<<< HEAD
-
-
-=======
-    return replacement;
-   });
+//     return replacement;
+//    });
 
 
 //USE CASE 2 CREATING NEW TASK
@@ -204,7 +201,6 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
         return replacement;
         //return ackText;
     }).then(bot);
->>>>>>> 6cfc43d17f7eb37c43a780fe8c335049ce58a5f9
 
 
 
@@ -258,13 +254,6 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
               return replacement;
     }).then(bot);
 
-<<<<<<< HEAD
-    console.log("\n At line 116 ***************");
-
-
-
-=======
->>>>>>> 6cfc43d17f7eb37c43a780fe8c335049ce58a5f9
 
     return replacement;
    });
@@ -276,7 +265,7 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
     const action = payload.actions[0];
     var cardId = action.selected_options[0].value;
    console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
-    var ackText = `Acc to swati one can persist this ${cardId} card and it does!!.`;
+    var ackText = `Card selected whose id is ${cardId}.`;
     const replacement = payload.original_message;
     persistCardID = cardId;
     replacement.attachments[1].text = `:white_check_mark:  ${ackText}`;
@@ -333,18 +322,13 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
 //sendMessageToSlackResponseURL(responseURL, message);
 });
 
-controller.hears('template',['mention', 'direct_mention','direct_message'], function(bot,message)
+controller.hears('new board',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
   console.log("RECEIVED MESSAGE: "+message.text);
-<<<<<<< HEAD
-  //Calling
-
-=======
 
     
->>>>>>> 6cfc43d17f7eb37c43a780fe8c335049ce58a5f9
     bot.reply(message,{
-      "text": "Hey, there!",
+      "text": "Sure!",
       "attachments": [
 
           {
@@ -434,21 +418,40 @@ controller.hears('URL',['mention', 'direct_mention','direct_message'], function(
       
       var card_attachment = {url: String(url[0])};
       
-      main.addAttachment(persistCardID, card_attachment)
-      .then((urlreceived) => {
-        var replyMessage = "Sorry did not understand your URL";
-        if(String(url[0])){
-          replyMessage = "Link "+ String(url[0])+ " was attached to "+ persistCardID+ " card";
-        }
+    //   main.addAttachment(persistCardID, card_attachment)
+    //   .then((urlreceived) => {
+    //     var replyMessage = "Sorry did not understand your URL";
+    //     if(String(url[0])){
+    //       replyMessage = "Link "+ String(url[0])+ " was attached to "+ persistCardID+ " card";
+    //     }
+        var replyMessage = {
+            "text": "I have attached the given URL "+String(url[0])+ " to your previously selected card. "
+        };
+        bot.reply(message,replyMessage);
 
-        bot.reply(message,{text: replyMessage});
+    //     return replyMessage;
 
-        return replyMessage;
-
-      }).then(bot);
+    //   }).then(bot);
 
       
       
+});
+
+controller.hears('Hello',['mention', 'direct_mention','direct_message'], function(bot,message){
+    console.log("Message: "+ message);
+
+      bot.reply(message,{
+        "text": "Hey there, I am taskbot :robot_face:. I am here to help you initialize your task management process faster. ",
+        "attachments": [
+            {
+                "title": "Hint:",
+                "text": "You can ask me to create storyboard from predefined templates! "
+            }
+            
+        ]
+    });
+    
+    
 });
 
 // Helper functions
