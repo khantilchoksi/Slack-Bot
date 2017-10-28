@@ -14,6 +14,7 @@ var clientid = '242175471667.260972372135';
 var clientsecret = 'bc75f2893363d5aeb5b178c1b68c9ac1';
 
 var persistStoryboardID;
+var persistCardID;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
 
@@ -169,7 +170,72 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
     return replacement;
    });
 
+slackMessages.action('cards_under_list_callback', (payload,bot) => {
+    // `payload` is JSON that describes an interaction with a message.
+    
+    console.log('******* Template Cards under List PAYLOAD : ', payload);
+    // The `actions` array contains details about the specific action (button press, menu selection, etc.)
+    const action = payload.actions[0];
+    var listId = action.selected_options[0].value;
+   console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
+    var ackText = `You have selected ${listId} list.`;
+    const replacement = payload.original_message;
+    
+    var createdListsNames;
+    // Start an order, and when that completes, send another message to the user.
 
+    main.getCardsInList(listId)
+    .then((cards) => {
+
+              var cardsAttach = {
+                  "text": "Select your card that you want to attach the link to",
+                  "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                    "callback_id": "card_selected_attachment_callback",
+                    "color": "#3AA3E3",
+                    "attachment_type": "default",
+                    "actions": [
+                    {
+                        "name": "cards_list",
+                        "text": "Select a Card...",
+                        "type": "select",
+                        "options": []
+                   }
+                  ]
+              };
+              console.log(" TYPE OF CARDS : "+typeof cards);
+
+              cards.forEach(function(value,key){
+                console.log("card: "+key+" "+value+" ");
+                cardsAttach.actions[0].options.push({"text":value,"value":key});
+              });
+
+              console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
+              console.log("** Attachement1 options: "+JSON.stringify(cardsAttach.actions[0].options));
+              replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
+              delete replacement.attachments[0].actions;
+              replacement.attachments.push(cardsAttach);
+              return replacement;
+    }).then(bot);
+
+
+    return replacement;
+   });
+
+slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
+    // `payload` is JSON that describes an interaction with a message.
+    
+    console.log('*******  Cards Attach PAYLOAD : ', payload);
+    const action = payload.actions[0];
+    var cardId = action.selected_options[0].value;
+   console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
+    var ackText = `Acc to swati one can persist this ${cardId} card and it does!!.`;
+    const replacement = payload.original_message;
+    persistCardID = cardId;
+    replacement.attachments[1].text = `:white_check_mark:  ${ackText}`;
+    delete replacement.attachments[1].actions;
+
+    return replacement;
+   });
 
 // Instantiates Express and assigns our app variable to it
 var app = express();
@@ -256,6 +322,80 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
   });
 
 
+});
+
+controller.hears('attach',['mention', 'direct_mention','direct_message'], function(bot,message){
+      bot.reply(message,{
+      "text": "Choose in sequence the card you would like to attach your link to",
+      "attachments": [   
+      
+          {
+            "text": "Choose a List",
+            "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+              "callback_id": "cards_under_list_callback",
+              "color": "#3AA3E3",
+              "attachment_type": "default",
+              "actions": [
+              {
+                  "name": "list_items",
+                  "text": "Select a List...",
+                  "type": "select",
+                  "options": [
+                      {
+                          "text": "Next-up",
+                          "value": "59eff8a5892c13cd1fc14451"
+                      },
+                      {
+                          "text": "On Hold",
+                          "value": "59eff89b5dae7fffcff0abcd"
+                      },
+                      {
+                          "text": "QA",
+                          "value": "59eff8925c221c30218206f8"
+                      },
+                      {
+                          "text": "In Progress",
+                          "value": "59eff88827b56f1c329070b8"
+                      },
+                      {
+                          "text": "Current Sprint",
+                          "value": "59eff87bbcc4fd185d41c87d"
+                      },
+                      {
+                          "text": "Done",
+                          "value": "59eff86c03f047553772c269"
+                      },
+                 ]
+             }
+            ]
+        }
+    ]
+  });
+});
+
+controller.hears('URL',['mention', 'direct_mention','direct_message'], function(bot,message){
+      console.log("Message: "+ message);
+      
+      var regexpURL = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm
+      url = regexpURL.exec(message.text);
+      
+      var card_attachment = {url: String(url[0])};
+      
+      main.addAttachment(persistCardID, card_attachment)
+      .then((urlreceived) => {
+        var replyMessage = "Sorry did not understand your URL";
+        if(String(url[0])){
+          replyMessage = "Link "+ String(url[0])+ " was attached to "+ persistCardID+ " card";
+        }
+
+        bot.reply(message,{text: replyMessage});
+
+        return replyMessage;
+
+      }).then(bot);
+
+      
+      
 });
 
 // Helper functions
