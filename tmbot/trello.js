@@ -18,13 +18,14 @@ function createNewStoryBoard(boardName)
 
 		t.post("/1/boards/", {
 			"name" : boardName
-		}, function (error, response, body) {
+		}, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Inside trello.js! KHANTIL NEW BOARD API CALL");
-            console.log("HELLO HELLO: "+body);
-			var obj = JSON.parse(body);
-			console.log("OBJECT: JSON NEW BOARD API CALL: "+obj);
-			resolve(body);
+			console.log("HELLO HELLO: "+response.body);	//response is json
+			//console.log("HELLO HELLO: "+response.url);
+			//var obj = JSON.parse(body);
+			//console.log("OBJECT: JSON NEW BOARD API CALL: "+obj);
+			resolve(response);
 
 		});
 	});
