@@ -7,19 +7,19 @@ var main = require('./main.js');
 var chai = require("chai");
 var expect = chai.expect;
 var HashMap = require('hashmap');
-
+require('dotenv').config();
 // Store our app's ID and Secret. These we got from Step 1.
 // For this tutorial, we'll keep your API credentials right here. But for an actual app, you'll want to  store them securely in environment variables.
-var clientid = '242175471667.260972372135';
-var clientsecret = 'bc75f2893363d5aeb5b178c1b68c9ac1';
+var clientid = process.env.CLIENT_ID;
+var clientsecret = process.env.CLIENT_SECRET;
 
 var persistStoryboardID;
 var persistCardID;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
 
-// Initialize adapter using verification token from environment variables
-const slackMessages = createMessageAdapter('42EBVvKTcHmHGuZFMOjEcxKx');
+// Initialize adapter using slack verification token from environment variables
+const slackMessages = createMessageAdapter(process.env.SLACK_VERIFICATION_TOKEN);
 
 // Attach action handlers by `callback_id`
 // (See: https://api.slack.com/docs/interactive-message-field-guide#attachment_fields)
@@ -63,7 +63,6 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     console.log('******* Template PAYLOAD : ', payload);
     // The `actions` array contains details about the specific action (button press, menu selection, etc.)
     const action = payload.actions[0];
-
 
     // You should return a JSON object which describes a message to replace the original.
     // Note that the payload contains a copy of the original message (`payload.original_message`).
@@ -118,7 +117,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
                   "color": "#FF5733"
               };
               replacement.attachments.push(listsAttach);
-            var mylist = [];
+                var mylist = [];
 
             responseLists.forEach(function(value, key){
 
@@ -289,7 +288,7 @@ var controller = Botkit.slackbot({
     }
   );
 controller.spawn({
-    token: "xoxb-259926960994-cv6gxdFR7woDT6VkGrvDzphp",
+    token: process.env.SLACK_BOT_TOKEN,
     // incoming_webhook: {
     //     url: my_webhook_url
     //   }

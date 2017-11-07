@@ -18,10 +18,10 @@ var new_storyboard = {
 	"defaultLists" : false
 };
   
-  var new_list = {
-	"name" : "list1",
-	"idBoard" : "59eff60e5920e126b94ee55d"
-  };
+//   var new_list = {
+// 	"name" : "list1",
+// 	"idBoard" : "59eff60e5920e126b94ee55d"
+//   };
   
   var new_attachment = {
 	"url" : "https://www.google.com"
@@ -71,8 +71,7 @@ var new_storyboard = {
 var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Next-Up']
 var waterfall_lists = ['Requirements', 'Design', 'Implementation', 'Verification', 'Maintenance']
 
-var current_boardid = "59eff60e5920e126b94ee55d";
-var current_board ;
+var current_boardId;
 
 function getNewStoryBoard(template_type, boardName)
 {
@@ -96,8 +95,17 @@ function getNewStoryBoard(template_type, boardName)
             //var storyboard_url = _.pluck(created_storyboard,"url");
             console.log(" MAIN.JS : LINE 75 Is this json");
 			console.log(created_storyboard.url);
-			current_boardid = created_storyboard.id;
+			current_boardId = created_storyboard.id;
+			
+			var list_promises = [promise1];
+			listArray.forEach(function(listName) {
+				//console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(listName.name));
+				//console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(list.name));
+				var promise = getNewList(listName.name);
+				list_promises.push(promise);
+			});
 			resolve(created_storyboard);
+
 		});
 	});
 	//return promise1;
@@ -110,9 +118,10 @@ function getNewStoryBoard(template_type, boardName)
 	// can also chain above promise with .then for the below code
 	
 	// var list_promises = [promise1];
-	// listArray.forEach(function(list) {
+	// listArray.forEach(function(listName) {
+	// 	console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(listName.name));
 	// 	//console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(list.name));
-	// 	var promise = getNewList(list);
+	// 	var promise = getNewList(listName.name);
 	// 	list_promises.push(promise);
 	// });
 	//return Promise.all(list_promises);//.then(values => {
@@ -123,12 +132,18 @@ function getNewStoryBoard(template_type, boardName)
 
 }
 
-function getNewList(list)
+function getNewList(listName)
 {
     return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
-		trello.createNewList(list).then(function (created_list) 
+		console.log(" This is my story board id: "+current_boardId);
+		var new_list = {
+			"name" : listName,
+			"idBoard" : current_boardId
+	   };
+
+		trello.createNewList(new_list).then(function (created_list) 
 		{
             console.log("Is this json");
 			console.log(created_list);
@@ -173,7 +188,7 @@ function getListsInBoard(boardId) {
 		// mock data needs .
 		trello.retrieveLists(boardId).then(function (listsArray) 
 		{
-			listsArray = JSON.parse(listsArray);
+			//listsArray = JSON.parse(listsArray);
             listsArray.forEach(function(item) {
 				listMap.set(item.id, item.name);
 			});
@@ -194,7 +209,7 @@ function getCardsInList(listId){
 		{
 			//console.log("CARDARRAYS: : "+cardsArray);
 			//console.log(" TYPE OF : "+typeof cardsArray);
-			cardsArray = JSON.parse(cardsArray);
+			//cardsArray = JSON.parse(cardsArray);
             cardsArray.forEach(function(card) {
 				Cards.set(card.id, card.name);
 			});

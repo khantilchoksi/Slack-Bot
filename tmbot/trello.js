@@ -4,10 +4,10 @@ var request = require("request");
 var querystring = require('querystring');
 var Trello = require("node-trello");
 
-
-var token = "5f6d7526fca51cca6d79e18b8412bc60b3c8da2655a12851c4d5faae8afaea17";
+require('dotenv').config();
+var token = process.env.TRELLO_TOKEN;
 var urlRoot = "https://api.trello.com";
-var key = "c5d47d2c7b79c51013aabda4962f25b9";
+var key = process.env.TRELLO_KEY;
 var t = new Trello(key, token);
 
 function createNewStoryBoard(boardName)
@@ -21,45 +21,22 @@ function createNewStoryBoard(boardName)
 		}, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Inside trello.js! KHANTIL NEW BOARD API CALL");
-			console.log("HELLO HELLO: "+response.body);	//response is json
-			//console.log("HELLO HELLO: "+response.url);
-			//var obj = JSON.parse(body);
-			//console.log("OBJECT: JSON NEW BOARD API CALL: "+obj);
+			console.log("Received URL in API response: "+response.url);	
 			resolve(response);
-
 		});
 	});
 }
 
 function createNewList(new_list)
 {
-
-	//making fool
-	//please remove this when we do original api call
-	// var new_list = {
-	// 	"name" : "list1",
-	// 	"idBoard" : "59eff60e5920e126b94ee55d"
-	//   };
-
-	var options = {
-        url: urlRoot + "/1/lists",
-        method: 'POST',
-        qs: new_list,
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
-
 	return new Promise(function (resolve, reject) 
 	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-            console.log("Inside create new list");
-            console.log(body);
-			//var obj = JSON.parse(body);
-            resolve(body);
+
+		t.post("/1/lists", new_list, function (error, response) {
+			if (error) throw new Error(error);
+            console.log("Inside trello.js! KHANTIL NEW LISTTTT API CALL");
+			console.log("Received LIST ID in API response: "+response.id);	
+			resolve(response);
 		});
 	});
 }
@@ -99,26 +76,16 @@ function createNewCard(card_name, listId)
 
 function retrieveLists(boardId)
 {
-	var options = {
-        url: urlRoot + "/1/boards/"+ boardId+"/lists",
-        method: 'GET',
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
-
-	return new Promise(function (resolve, reject) 
-	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-            //console.log("retrieveLists API CALL: ");
-            //console.log(body);
-			//var obj = JSON.parse(body);
-            resolve(body);
-		});
-	});
+    return new Promise(function (resolve, reject) 
+    {
+        t.get("/1/boards/"+ boardId+"/lists", function (error, response) {
+            if (error) throw new Error(error);
+           console.log("Testing retrieving of lists");
+           console.log("RETRIEVE LIST: "+response.body);    //response is json
+            
+            resolve(response);
+        });
+    });
 }
 
 function retrieveCards(listId)
@@ -134,13 +101,21 @@ function retrieveCards(listId)
 
 	return new Promise(function (resolve, reject) 
 	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-            //console.log("retrieveCards API CALL: ");
-            //console.log(body);
-            resolve(body);
-		});
+		// // Send a http request to url and specify a callback that will be called upon its return.
+		// request(options, function (error, response, body) 
+		// {
+        //     //console.log("retrieveCards API CALL: ");
+        //     //console.log(body);
+        //     resolve(body);
+		// });
+
+		t.get("/1/lists/"+ listId+"/cards", function (error, response) {
+            if (error) throw new Error(error);
+           console.log("Testing retrieving of cards");
+           console.log("RETRIEVE CARDS: "+response.body);    //response is json
+            
+            resolve(response);
+        });
 	});
 }
 
