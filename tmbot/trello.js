@@ -66,6 +66,7 @@ function createNewList(new_list)
 
 function createNewCard(card_name, listId)
 {
+	/*
     var new_card = {
 		"name" : card_name,
 		"idList" : listId
@@ -83,22 +84,26 @@ function createNewCard(card_name, listId)
 			"Authorization": token
 		}
 	};
-
+   */
 	return new Promise(function (resolve, reject) 
 	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-            console.log("Inside create new card");
-            console.log(body);
-			//var obj = JSON.parse(body);
-            resolve(body);
+		t.post("/1/cards/", {
+			"name" : card_name,
+			"idList" : listId
+		}, function (error, response) {
+			if (error) throw new Error(error);
+            console.log("Testing actual new card api call");
+			console.log("NEW CARD: "+response.body);	//response is json
+			
+			resolve(response);
+
 		});
 	});
 }
 
 function retrieveLists(boardId)
 {
+	/*
 	var options = {
         url: urlRoot + "/1/boards/"+ boardId+"/lists",
         method: 'GET',
@@ -107,16 +112,15 @@ function retrieveLists(boardId)
 			"Authorization": token
 		}
 	};
-
+*/
 	return new Promise(function (resolve, reject) 
 	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-            //console.log("retrieveLists API CALL: ");
-            //console.log(body);
-			//var obj = JSON.parse(body);
-            resolve(body);
+		t.get(/1/boards/"+ boardId+"/lists, function (error, response) {
+			if (error) throw new Error(error);
+            console.log("Testing retrieving of lists");
+			console.log("RETRIEVE LIST: "+response.body);	//response is json
+			
+			resolve(response);
 		});
 	});
 }

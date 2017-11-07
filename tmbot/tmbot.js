@@ -10,16 +10,16 @@ var HashMap = require('hashmap');
 
 // Store our app's ID and Secret. These we got from Step 1.
 // For this tutorial, we'll keep your API credentials right here. But for an actual app, you'll want to  store them securely in environment variables.
-var clientid = '242175471667.260972372135';
-var clientsecret = 'bc75f2893363d5aeb5b178c1b68c9ac1';
+var clientid = '242175471667.267350399280';
+var clientsecret = '9cd52846b2a3f63db3133600d1703eca';
 
 var persistStoryboardID;
 var persistCardID;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
 
-// Initialize adapter using verification token from environment variables
-const slackMessages = createMessageAdapter('42EBVvKTcHmHGuZFMOjEcxKx');
+// Initialize adapter using slack verification token from environment variables
+const slackMessages = createMessageAdapter('eiB8jBky5cZ3PaLoRUfARIKG');
 
 // Attach action handlers by `callback_id`
 // (See: https://api.slack.com/docs/interactive-message-field-guide#attachment_fields)
@@ -289,7 +289,7 @@ var controller = Botkit.slackbot({
     }
   );
 controller.spawn({
-    token: "xoxb-259926960994-cv6gxdFR7woDT6VkGrvDzphp",
+    token: "xoxb-267354621680-8jGwYss7zgppKU0c83SGUULK",
     // incoming_webhook: {
     //     url: my_webhook_url
     //   }
