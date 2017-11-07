@@ -1,7 +1,7 @@
 var Promise = require("bluebird");
 var chai = require("chai");
 var expect = chai.expect;
-var nock = require("nock");
+//var nock = require("nock");
 var _ = require("underscore");
 var data = require("./mock.json")
 var list_data = require("./list_mock.json")
@@ -32,40 +32,40 @@ var new_storyboard = {
 	  "idList" : "59dd74d4b1143f5c19c12589"
   };
 
-  var mockService_list = nock("https://api.trello.com")
-  .persist() // This will persist mock interception for lifetime of program.
-  .post("/1/lists", new_list)
-  .reply(200, JSON.stringify(list_data.created_list));
+//   var mockService_list = nock("https://api.trello.com")
+//   .persist() // This will persist mock interception for lifetime of program.
+//   .post("/1/lists", new_list)
+//   .reply(200, JSON.stringify(list_data.created_list));
 
 
-// Which person is assigned to most to issues?
-var mockService = nock("https://api.trello.com")
-.persist() // This will persist mock interception for lifetime of program.
-.post("/1/boards", new_storyboard)
-.reply(200, JSON.stringify(data.created_storyboard));
+// // Which person is assigned to most to issues?
+// var mockService = nock("https://api.trello.com")
+// .persist() // This will persist mock interception for lifetime of program.
+// .post("/1/boards", new_storyboard)
+// .reply(200, JSON.stringify(data.created_storyboard));
 
 
 
-var mockService_card = nock("https://api.trello.com")
-.persist() // This will persist mock interception for lifetime of program.
-.post("/1/cards", new_card)
-.reply(200, JSON.stringify(card_data.created_card));
+// var mockService_card = nock("https://api.trello.com")
+// .persist() // This will persist mock interception for lifetime of program.
+// .post("/1/cards", new_card)
+// .reply(200, JSON.stringify(card_data.created_card));
 
-var mockService_getLists = nock("https://api.trello.com")
-.persist() // This will persist mock interception for lifetime of program.
-.get("/1/boards/59eff60e5920e126b94ee55d/lists")
-.reply(200, (getList_data.listsFormed));
+// // var mockService_getLists = nock("https://api.trello.com")
+// // .persist() // This will persist mock interception for lifetime of program.
+// // .get("/1/boards/59eff60e5920e126b94ee55d/lists")
+// // .reply(200, (getList_data.listsFormed));
 
-var mockService_getCards = nock("https://api.trello.com")
-.persist()
-.get("/1/lists/59dd74d4b1143f5c19c12589/cards")
-.reply(200, (getCards_data));
+// var mockService_getCards = nock("https://api.trello.com")
+// .persist()
+// .get("/1/lists/59dd74d4b1143f5c19c12589/cards")
+// .reply(200, (getCards_data));
 
-//Mock for adding attachments to cards
-var mockService_addAttachments = nock("https://api.trello.com")
-.persist()
-.post("/1/cards/59ef86b92f34dbc457ec4d84/attachments", new_attachment)
-.reply(200, JSON.stringify(cardAttachment_data.card_attachment));
+// //Mock for adding attachments to cards
+// var mockService_addAttachments = nock("https://api.trello.com")
+// .persist()
+// .post("/1/cards/59ef86b92f34dbc457ec4d84/attachments", new_attachment)
+// .reply(200, JSON.stringify(cardAttachment_data.card_attachment));
 
 
 var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Next-Up']
@@ -189,8 +189,8 @@ function getCardsInList(listId){
 	return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
-		current_listId = "59dd74d4b1143f5c19c12589"
-		trello.retrieveCards(current_listId).then(function (cardsArray) 
+		//current_listId = "59dd74d4b1143f5c19c12589"
+		trello.retrieveCards(listId).then(function (cardsArray) 
 		{
 			console.log("CARDARRAYS: : "+cardsArray);
 			console.log(" TYPE OF : "+typeof cardsArray);

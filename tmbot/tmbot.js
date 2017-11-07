@@ -7,6 +7,7 @@ var main = require('./main.js');
 var chai = require("chai");
 var expect = chai.expect;
 var HashMap = require('hashmap');
+var trello = require('./trello.js');
 
 // Store our app's ID and Secret. These we got from Step 1. 
 // For this tutorial, we'll keep your API credentials right here. But for an actual app, you'll want to  store them securely in environment variables. 
@@ -289,7 +290,6 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
 {
   console.log("RECEIVED MESSAGE: "+message.text);
 
-    
     bot.reply(message,{
       "text": "Hey, there!",
       "attachments": [   
@@ -324,53 +324,39 @@ controller.hears('template',['mention', 'direct_mention','direct_message'], func
 
 });
 
+
+
 controller.hears('attach',['mention', 'direct_mention','direct_message'], function(bot,message){
-      bot.reply(message,{
-      "text": "Choose in sequence the card you would like to attach your link to",
-      "attachments": [   
-      
-          {
-            "text": "Choose a List",
-            "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
-              "callback_id": "cards_under_list_callback",
-              "color": "#3AA3E3",
-              "attachment_type": "default",
-              "actions": [
+      //trello.rLists.then();
+      lists = trello.retreiveLists("59bd64edb534a81dcd8dc79f").then(function(lists){
+        var options = [];
+        listsArray = JSON.parse(lists);
+        listsArray.forEach(function(list) {
+          //console.log(" list_id: "+list.id+ " lists_name: "+list.name); 
+          options.push({"text": list.name, "value": list.id});
+        });
+        bot.reply(message,{
+          "text": "Choose in sequence the card you would like to attach your link to",
+          "attachments": [
               {
-                  "name": "list_items",
-                  "text": "Select a List...",
-                  "type": "select",
-                  "options": [
-                      {
-                          "text": "Next-up",
-                          "value": "59eff8a5892c13cd1fc14451"
-                      },
-                      {
-                          "text": "On Hold",
-                          "value": "59eff89b5dae7fffcff0abcd"
-                      },
-                      {
-                          "text": "QA",
-                          "value": "59eff8925c221c30218206f8"
-                      },
-                      {
-                          "text": "In Progress",
-                          "value": "59eff88827b56f1c329070b8"
-                      },
-                      {
-                          "text": "Current Sprint",
-                          "value": "59eff87bbcc4fd185d41c87d"
-                      },
-                      {
-                          "text": "Done",
-                          "value": "59eff86c03f047553772c269"
-                      },
-                 ]
-             }
-            ]
-        }
-    ]
-  });
+                "text": "Choose a List",
+                "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                  "callback_id": "cards_under_list_callback",
+                  "color": "#3AA3E3",
+                  "attachment_type": "default",
+                  "actions": [
+                  {
+                      "name": "list_items",
+                      "text": "Select a List...",
+                      "type": "select",
+                      "options": options
+                 }
+                ]
+            }
+        ]
+        });
+      });
+      
 });
 
 controller.hears('URL',['mention', 'direct_mention','direct_message'], function(bot,message){

@@ -2,9 +2,11 @@ var Promise = require("bluebird");
 var _ = require("underscore");
 var request = require("request");
 var querystring = require('querystring');
+var Trello = require("node-trello");
+var t = new Trello("b34dabae973dea4150fb7fce14970aae", "a8130dacb252bd4b897219a939febb3fc42b76e51634831dae8ad3858ab4d5c7");
 
-
-var token = "token " + "758d909df10f258875ce8c294d90b288553ec3c2d6e1ad408b8be1cb2987f9b3";
+var token = "token " + "a8130dacb252bd4b897219a939febb3fc42b76e51634831dae8ad3858ab4d5c7";
+var key = "b34dabae973dea4150fb7fce14970aae";
 var urlRoot = "https://api.trello.com";
 
 var new_storyboard = {
@@ -101,7 +103,7 @@ function createNewCard(card_name, listId)
 	});
 }
 
-function retrieveLists(boardId)
+function retreiveLists(boardId)
 {
 	var options = {
         url: urlRoot + "/1/boards/"+ boardId+"/lists",
@@ -111,18 +113,19 @@ function retrieveLists(boardId)
 			"Authorization": token
 		}
 	};
+	return t.get("/1/boards/" + boardId+ "/lists");
 
-	return new Promise(function (resolve, reject) 
-	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-            console.log("retrieveLists API CALL: ");
-            console.log(body);
-			//var obj = JSON.parse(body);
-            resolve(body);
-		});
-	});
+	// return new Promise(function (resolve, reject) 
+	// {
+	// 	// Send a http request to url and specify a callback that will be called upon its return.
+	// 	request(options, function (error, response, body) 
+	// 	{
+ //            console.log("retrieveLists API CALL: ");
+ //            console.log(body);
+	// 		//var obj = JSON.parse(body);
+ //            resolve(body);
+	// 	});
+	// });
 }
 
 function retrieveCards(listId)
@@ -180,6 +183,6 @@ function addAttachment(cardId, url)
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
 exports.createNewCard = createNewCard;
-exports.retrieveLists = retrieveLists;
+exports.retreiveLists = retreiveLists;
 exports.retrieveCards = retrieveCards;
 exports.addAttachment = addAttachment;
