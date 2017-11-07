@@ -80,7 +80,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
-    main.getNewStoryBoard(selected_options.value, "Swati2")
+    main.getNewStoryBoard(selected_options.value, "MyNewStoryBoard")
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       var storyboardlink = response.url;
@@ -278,7 +278,7 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
 var app = express();
 
 var controller = Botkit.slackbot({
-    debug: true
+    debug: false
     //include "log: false" to disable logging
     //or a "logLevel" integer from 0 to 7 to adjust logging verbosity
   }).configureSlackApp(

@@ -2,38 +2,30 @@ var Promise = require("bluebird");
 var _ = require("underscore");
 var request = require("request");
 var querystring = require('querystring');
+var Trello = require("node-trello");
 
 
-var token = "token " + "758d909df10f258875ce8c294d90b288553ec3c2d6e1ad408b8be1cb2987f9b3";
+var token = "5f6d7526fca51cca6d79e18b8412bc60b3c8da2655a12851c4d5faae8afaea17";
 var urlRoot = "https://api.trello.com";
-
-var new_storyboard = {
-	"name" : "Swati2",
-	"defaultLists" : false
-};
-
+var key = "c5d47d2c7b79c51013aabda4962f25b9";
+var t = new Trello(key, token);
 
 function createNewStoryBoard(boardName)
 {
-	var options = {
-        url: urlRoot + "/1/boards",
-        method: 'POST',
-        json: new_storyboard,
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
 
 	return new Promise(function (resolve, reject) 
 	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-            //console.log("Inside trello.js");
-            //console.log(body);
-			//var obj = JSON.parse(body);
-            resolve(body);
+
+		t.post("/1/boards/", {
+			"name" : boardName
+		}, function (error, response, body) {
+			if (error) throw new Error(error);
+            console.log("Inside trello.js! KHANTIL NEW BOARD API CALL");
+            console.log("HELLO HELLO: "+body);
+			var obj = JSON.parse(body);
+			console.log("OBJECT: JSON NEW BOARD API CALL: "+obj);
+			resolve(body);
+
 		});
 	});
 }
@@ -43,15 +35,15 @@ function createNewList(new_list)
 
 	//making fool
 	//please remove this when we do original api call
-	var new_list = {
-		"name" : "list1",
-		"idBoard" : "59eff60e5920e126b94ee55d"
-	  };
+	// var new_list = {
+	// 	"name" : "list1",
+	// 	"idBoard" : "59eff60e5920e126b94ee55d"
+	//   };
 
 	var options = {
         url: urlRoot + "/1/lists",
         method: 'POST',
-        json: new_list,
+        qs: new_list,
 		headers: {
 			"content-type": "application/json",
 			"Authorization": token
@@ -63,8 +55,8 @@ function createNewList(new_list)
 		// Send a http request to url and specify a callback that will be called upon its return.
 		request(options, function (error, response, body) 
 		{
-            //console.log("Inside create new list");
-            //console.log(body);
+            console.log("Inside create new list");
+            console.log(body);
 			//var obj = JSON.parse(body);
             resolve(body);
 		});
@@ -81,7 +73,10 @@ function createNewCard(card_name, listId)
 	var options = {
         url: urlRoot + "/1/cards",
         method: 'POST',
-        json: new_card,
+        qs: {
+			"name" : card_name,
+			"idList" : listId
+		},
 		headers: {
 			"content-type": "application/json",
 			"Authorization": token
