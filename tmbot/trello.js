@@ -115,7 +115,7 @@ function retrieveLists(boardId)
 */
 	return new Promise(function (resolve, reject) 
 	{
-		t.get(/1/boards/"+ boardId+"/lists, function (error, response) {
+		t.get("/1/boards/"+ boardId+"/lists", function (error, response) {
 			if (error) throw new Error(error);
             console.log("Testing retrieving of lists");
 			console.log("RETRIEVE LIST: "+response.body);	//response is json

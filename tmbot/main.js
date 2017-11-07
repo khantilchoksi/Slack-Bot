@@ -12,7 +12,7 @@ var getCards_data = require("./cardsInList.json");
 const menu = require("./lib/menu.js");
 var HashMap = require('hashmap');
 var cardAttachment_data = require('./card_attachment.json')
-
+/*
 var new_storyboard = {
 	"name" : "Swati2",
 	"defaultLists" : false
@@ -66,7 +66,7 @@ var new_storyboard = {
 // .persist()
 // .post("/1/cards/59ef86b92f34dbc457ec4d84/attachments", new_attachment)
 // .reply(200, JSON.stringify(cardAttachment_data.card_attachment));
-
+*/
 
 var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Next-Up']
 var waterfall_lists = ['Requirements', 'Design', 'Implementation', 'Verification', 'Maintenance']
@@ -143,7 +143,7 @@ function getNewList(list)
 function getNewCard(card_name, listId) {
 	return new Promise(function (resolve, reject) 
 	{
-		listId = "59dd74d4b1143f5c19c12589";
+		//listId = "59dd74d4b1143f5c19c12589";
 		// mock data needs .
 		trello.createNewCard(card_name, listId).then(function (created_card) 
 		{
@@ -173,7 +173,7 @@ function getListsInBoard(boardId) {
 		// mock data needs .
 		trello.retrieveLists(boardId).then(function (listsArray) 
 		{
-			listsArray = JSON.parse(listsArray);
+			//listsArray = JSON.parse(listsArray);
             listsArray.forEach(function(item) {
 				listMap.set(item.id, item.name);
 			});
