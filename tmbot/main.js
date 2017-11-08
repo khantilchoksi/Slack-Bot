@@ -158,8 +158,7 @@ function getNewCard(card_name, listId) {
 function addAttachment(cardId,new_attachment) {
 	return new Promise(function (resolve, reject)
 	{
-		tempCardId = "59ef86b92f34dbc457ec4d84";
-		trello.addAttachment(tempCardId, new_attachment.url).then(function (posted_attachment) 
+		trello.addAttachment(cardId, new_attachment.url).then(function (posted_attachment) 
 		{
 			resolve(posted_attachment.url);
 		});

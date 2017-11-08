@@ -105,50 +105,26 @@ function createNewCard(card_name, listId)
 
 function retreiveLists(boardId)
 {
-	var options = {
-        url: urlRoot + "/1/boards/"+ boardId+"/lists",
-        method: 'GET',
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
-	return t.get("/1/boards/" + boardId+ "/lists");
+    return new Promise(function (resolve, reject) 
+    {
+    	t.get("/1/boards/" + boardId+ "/lists", function (error, body) {
+            if (error) throw new Error(error);
+            resolve(body);
 
-	// return new Promise(function (resolve, reject) 
-	// {
-	// 	// Send a http request to url and specify a callback that will be called upon its return.
-	// 	request(options, function (error, response, body) 
-	// 	{
- //            console.log("retrieveLists API CALL: ");
- //            console.log(body);
-	// 		//var obj = JSON.parse(body);
- //            resolve(body);
-	// 	});
-	// });
+        });
+    });
 }
 
-function retrieveCards(listId)
+function retreiveCards(listId)
 {
-	var options = {
-        url: urlRoot + "/1/lists/"+ listId+"/cards",
-        method: 'GET',
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
-
-	return new Promise(function (resolve, reject) 
-	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-            console.log("retrieveCards API CALL: ");
-            console.log(body);
+    return new Promise(function (resolve, reject) 
+    {
+    	t.get("/1/lists/" + listId+ "/cards", function (error, body) {
+            if (error) throw new Error(error);
             resolve(body);
-		});
-	});
+
+        });
+    });
 }
 
 
@@ -167,16 +143,15 @@ function addAttachment(cardId, url)
 			"Authorization": token
 		}
 	};
-
 	return new Promise(function (resolve, reject) 
-	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-			//var obj = JSON.parse(body);
+    {
+    	console.log("URL: " + url + " type: " + typeof url);
+    	t.post("/1/cards/" + cardId+ "/attachments", {"url": url},function (error, body) {
+            if (error) throw new Error(error);
             resolve(body);
-		});
-	});
+
+        });
+    });
 }
 
 
@@ -184,5 +159,5 @@ exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
 exports.createNewCard = createNewCard;
 exports.retreiveLists = retreiveLists;
-exports.retrieveCards = retrieveCards;
+exports.retreiveCards = retreiveCards;
 exports.addAttachment = addAttachment;
