@@ -13,24 +13,24 @@ const menu = require("./lib/menu.js");
 var HashMap = require('hashmap');
 var cardAttachment_data = require('./card_attachment.json')
 
-var new_storyboard = {
-	"name" : "Swati2",
-	"defaultLists" : false
-};
+// var new_storyboard = {
+// 	"name" : "Swati2",
+// 	"defaultLists" : false
+// };
   
-//   var new_list = {
-// 	"name" : "list1",
-// 	"idBoard" : "59eff60e5920e126b94ee55d"
+// //   var new_list = {
+// // 	"name" : "list1",
+// // 	"idBoard" : "59eff60e5920e126b94ee55d"
+// //   };
+  
+//   var new_attachment = {
+// 	"url" : "https://www.google.com"
 //   };
-  
-  var new_attachment = {
-	"url" : "https://www.google.com"
-  };
 
-  var new_card = {
-	  "name" : "Acceptance Testing",
-	  "idList" : "59dd74d4b1143f5c19c12589"
-  };
+//   var new_card = {
+// 	  "name" : "Acceptance Testing",
+// 	  "idList" : "59dd74d4b1143f5c19c12589"
+//   };
 
 //   var mockService_list = nock("https://api.trello.com")
 //   .persist() // This will persist mock interception for lifetime of program.
@@ -97,17 +97,19 @@ function getNewStoryBoard(template_type, boardName)
 			console.log(created_storyboard.url);
 			current_boardId = created_storyboard.id;
 			
-			var list_promises = [promise1];
-			listArray.forEach(function(listName) {
-				//console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(listName.name));
-				//console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(list.name));
-				var promise = getNewList(listName.name);
-				list_promises.push(promise);
-			});
 			resolve(created_storyboard);
-
 		});
 	});
+	var list_promises = [promise1];
+	return promise1.then(function(result){
+		
+		listArray.forEach(function(listName) {
+			var promise = createNewListWithTemplateCards(listName.name);
+			list_promises.push(promise);
+		});
+		return Promise.all(list_promises);
+	});
+	
 	//return promise1;
 	/*
 	return promise1.then(function(result){
@@ -115,19 +117,6 @@ function getNewStoryBoard(template_type, boardName)
 	});
 	*/
 	console.log(" MAIN JS 86 Did you come here");
-	// can also chain above promise with .then for the below code
-	
-	// var list_promises = [promise1];
-	// listArray.forEach(function(listName) {
-	// 	console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(listName.name));
-	// 	//console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(list.name));
-	// 	var promise = getNewList(listName.name);
-	// 	list_promises.push(promise);
-	// });
-	//return Promise.all(list_promises);//.then(values => {
-		return promise1;
-		//console.log(values[0]);
-		//Promise.resolve(values);
 	
 
 }
@@ -149,21 +138,74 @@ function getNewList(listName)
 			console.log(created_list);
 			// created list comes as array
 			
+			
+
 			resolve(created_list.id);
 		});
 	});
 
 }
 
+function createNewListWithTemplateCards(listName)
+{
+		// mock data needs .
+		//console.log(" This is my story board id: "+current_boardId);
+		console.log("\n MAIN JS: createNewListWithTemplateCards FUNCITON CALL");
+		var new_list = {
+			"name" : listName,
+			"idBoard" : current_boardId
+	   };
+	   var generatedListID;
+	   var promise2 =  new Promise(function (resolve, reject) 
+	   {
+		trello.createNewList(new_list).then(function (created_list) 
+		{
+			console.log(created_list);
+			// created list comes as array
+			generatedListID = created_list.id;
+			resolve(created_list.id);
+		});
+	});
+	var cardsArray;
+	switch(listName){
+		case "QA": 
+			cardsArray = menu.listOfQACards();
+			break;
+		case "Testing":
+			cardsArray = menu.listOfTestingCards();
+			break;
+		case "Service":
+			cardsArray = menu.listOfServiceCards();
+			break;
+		case "Testing":
+			cardsArray = menu.listOfTestingCards();
+			break;
+		case "Deployment":
+			cardsArray = menu.listOfDeploymentCards();
+			break;
+	}
+	
+	var list_promises2 = [promise2];
+	return promise2.then(function(result){
+		
+		cardsArray.forEach(function(cardName) {
+			console.log("cardNAME: "+cardName.name);
+			var promise = getNewCard(cardName.name, generatedListID);
+			list_promises2.push(promise);
+		});
+		return Promise.all(list_promises2);
+	});
+	
+
+}
+
 function getNewCard(card_name, listId) {
 	return new Promise(function (resolve, reject) 
 	{
-		listId = "59dd74d4b1143f5c19c12589";
-		// mock data needs .
 		trello.createNewCard(card_name, listId).then(function (created_card) 
 		{
-            console.log("Is this json");
-            console.log(created_card);
+            console.log("MAIN JS: getNewCard");
+            //console.log(created_card);
 			resolve(created_card.id);
 		});
 	});
@@ -190,6 +232,8 @@ function getListsInBoard(boardId) {
 		{
 			//listsArray = JSON.parse(listsArray);
             listsArray.forEach(function(item) {
+				console.log(" MAIN.JS GETLISTS IN BOARD ID : "+item.id);
+				console.log(" MAIN.JS GETLISTS IN BOARD NAME : "+item.name);
 				listMap.set(item.id, item.name);
 			});
 			resolve(listMap);
@@ -204,14 +248,16 @@ function getCardsInList(listId){
 	return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
-		current_listId = "59dd74d4b1143f5c19c12589"
-		trello.retrieveCards(current_listId).then(function (cardsArray) 
+		//current_listId = "59dd74d4b1143f5c19c12589"
+		trello.retrieveCards(listId).then(function (cardsArray) 
 		{
 			//console.log("CARDARRAYS: : "+cardsArray);
 			//console.log(" TYPE OF : "+typeof cardsArray);
 			//cardsArray = JSON.parse(cardsArray);
             cardsArray.forEach(function(card) {
 				Cards.set(card.id, card.name);
+				console.log("#$ MAIN JS: Card ID: "+card.id);
+				console.log("#$ MAIN JS: Card Name: "+card.name);
 			});
 			resolve(Cards);
 		});

@@ -17,7 +17,8 @@ function createNewStoryBoard(boardName)
 	{
 
 		t.post("/1/boards/", {
-			"name" : boardName
+			"name" : boardName,
+			"defaultLists" : false
 		}, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Inside trello.js! KHANTIL NEW BOARD API CALL");
@@ -43,46 +44,39 @@ function createNewList(new_list)
 
 function createNewCard(card_name, listId)
 {
-    var new_card = {
-		"name" : card_name,
-		"idList" : listId
-    };
-
-	var options = {
-        url: urlRoot + "/1/cards",
-        method: 'POST',
-        qs: {
-			"name" : card_name,
-			"idList" : listId
-		},
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
 
 	return new Promise(function (resolve, reject) 
 	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-            console.log("Inside create new card");
-            console.log(body);
-			//var obj = JSON.parse(body);
-            resolve(body);
+		t.post("/1/cards/", {
+			"name" : card_name,
+			"idList" : listId
+		}, function (error, response) {
+			if (error) throw new Error(error);
+            console.log("Testing actual new card api call");
+			console.log("NEW CARD: "+response.id);	//response is json
+			
+			resolve(response);
+
 		});
 	});
+    
 }
 
 function retrieveLists(boardId)
 {
+	console.log(" TRELLO.JS RETRIEVE LISTS: "+boardId);
     return new Promise(function (resolve, reject) 
     {
         t.get("/1/boards/"+ boardId+"/lists", function (error, response) {
             if (error) throw new Error(error);
            console.log("Testing retrieving of lists");
-           console.log("RETRIEVE LIST: "+response.body);    //response is json
-            
+           //console.log("RETRIEVE LIST: "+response.body);    //response is json
+			
+		   response.forEach(function(item) {
+				console.log(" TRELLO.JS GETLISTS IN LIST ID : "+item.id);
+				console.log(" TRELO.JS GETLISTS IN LIST NAME : "+item.name);
+			//listMap.set(item.id, item.name);
+		});
             resolve(response);
         });
     });
@@ -90,24 +84,8 @@ function retrieveLists(boardId)
 
 function retrieveCards(listId)
 {
-	var options = {
-        url: urlRoot + "/1/lists/"+ listId+"/cards",
-        method: 'GET',
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
-
 	return new Promise(function (resolve, reject) 
 	{
-		// // Send a http request to url and specify a callback that will be called upon its return.
-		// request(options, function (error, response, body) 
-		// {
-        //     //console.log("retrieveCards API CALL: ");
-        //     //console.log(body);
-        //     resolve(body);
-		// });
 
 		t.get("/1/lists/"+ listId+"/cards", function (error, response) {
             if (error) throw new Error(error);

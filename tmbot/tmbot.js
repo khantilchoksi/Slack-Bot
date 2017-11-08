@@ -79,14 +79,14 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
-    main.getNewStoryBoard(selected_options.value, "MyNewStoryBoard")
+    main.getNewStoryBoard(selected_options.value, "Nov71Board")
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
-      var storyboardlink = response.url;
+      var storyboardlink = response[0].url;
       console.log(" Received Storyboard link: "+storyboardlink);
 
-      console.log(" ********** Received Storyboard ID: "+response.id);
-      persistStoryboardID = response.id;
+      console.log(" ********** Received Storyboard ID: "+response[0].id);
+      persistStoryboardID = response[0].id;
       
       ackText = `Your story board is created and here is the link: ${storyboardlink} and board id : ${persistStoryboardID}.`;
       
@@ -277,7 +277,7 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
 var app = express();
 
 var controller = Botkit.slackbot({
-    debug: false
+    debug: true
     //include "log: false" to disable logging
     //or a "logLevel" integer from 0 to 7 to adjust logging verbosity
   }).configureSlackApp(
