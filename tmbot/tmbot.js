@@ -14,7 +14,7 @@ var trello = require('./trello.js');
 var clientid = process.env.CLIENT_ID;
 var clientsecret = process.env.CLIENT_SECRET;
 
-var persistStoryboardID;
+var persistStoryboardID = "59bd64edb534a81dcd8dc79f";
 var persistCardID;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
@@ -268,7 +268,7 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
     const action = payload.actions[0];
     var cardId = action.selected_options[0].value;
     console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
-    var ackText = `Acc to swati one can persist this ${cardId} card and it does!!.`;
+    var ackText = `Card selected whose id is ${cardId}.`;
     const replacement = payload.original_message;
     persistCardID = cardId;
     replacement.attachments[1].text = `:white_check_mark:  ${ackText}`;
