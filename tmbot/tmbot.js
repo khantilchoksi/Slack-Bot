@@ -7,19 +7,20 @@ var main = require('./main.js');
 var chai = require("chai");
 var expect = chai.expect;
 var HashMap = require('hashmap');
-
+require('dotenv').config();
+var trello = require('./trello.js');
 // Store our app's ID and Secret. These we got from Step 1.
 // For this tutorial, we'll keep your API credentials right here. But for an actual app, you'll want to  store them securely in environment variables.
-var clientid = '242175471667.260972372135';
-var clientsecret = 'bc75f2893363d5aeb5b178c1b68c9ac1';
+var clientid = process.env.CLIENT_ID;
+var clientsecret = process.env.CLIENT_SECRET;
 
-var persistStoryboardID;
+var persistStoryboardID = "59bd64edb534a81dcd8dc79f";
 var persistCardID;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
 
-// Initialize adapter using verification token from environment variables
-const slackMessages = createMessageAdapter('42EBVvKTcHmHGuZFMOjEcxKx');
+// Initialize adapter using slack verification token from environment variables
+const slackMessages = createMessageAdapter(process.env.SLACK_VERIFICATION_TOKEN);
 
 // Attach action handlers by `callback_id`
 // (See: https://api.slack.com/docs/interactive-message-field-guide#attachment_fields)
@@ -64,7 +65,6 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     // The `actions` array contains details about the specific action (button press, menu selection, etc.)
     const action = payload.actions[0];
 
-
     // You should return a JSON object which describes a message to replace the original.
     // Note that the payload contains a copy of the original message (`payload.original_message`).
 
@@ -80,14 +80,14 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
-    main.getNewStoryBoard(selected_options.value, "Swati2")
+    main.getNewStoryBoard(selected_options.value, "Nov71Board")
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
-      var storyboardlink = response.url;
+      var storyboardlink = response[0].url;
       console.log(" Received Storyboard link: "+storyboardlink);
 
-      console.log(" ********** Received Storyboard ID: "+response.id);
-      persistStoryboardID = response.id;
+      console.log(" ********** Received Storyboard ID: "+response[0].id);
+      persistStoryboardID = response[0].id;
       
       ackText = `Your story board is created and here is the link: ${storyboardlink} and board id : ${persistStoryboardID}.`;
       
@@ -118,7 +118,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
                   "color": "#FF5733"
               };
               replacement.attachments.push(listsAttach);
-            var mylist = [];
+                var mylist = [];
 
             responseLists.forEach(function(value, key){
 
@@ -221,38 +221,41 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
 
-    main.getCardsInList(listId)
+    trello.retreiveCards(listId)
     .then((cards) => {
 
-              var cardsAttach = {
-                  "text": "Select your card that you want to attach the link to",
-                  "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
-                    "callback_id": "card_selected_attachment_callback",
-                    "color": "#3AA3E3",
-                    "attachment_type": "default",
-                    "actions": [
-                    {
-                        "name": "cards_list",
-                        "text": "Select a Card...",
-                        "type": "select",
-                        "options": []
-                   }
-                  ]
-              };
-              console.log(" TYPE OF CARDS : "+typeof cards);
+          var cardsAttach = {
+              "text": "Select your card that you want to attach the link to",
+              "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                "callback_id": "card_selected_attachment_callback",
+                "color": "#3AA3E3",
+                "attachment_type": "default",
+                "actions": [
+                {
+                    "name": "cards_list",
+                    "text": "Select a Card...",
+                    "type": "select",
+                    "options": []
+               }
+              ]
+          };
+          console.log(" TYPE OF CARDS : "+typeof cards);
 
-              cards.forEach(function(value,key){
-                console.log("card: "+key+" "+value+" ");
-                cardsAttach.actions[0].options.push({"text":value,"value":key});
-              });
+          cards.forEach(function(card){
+            console.log("card: "+card.id+" "+card.name+" ");
+            cardsAttach.actions[0].options.push({"text":card.name,"value":card.id});
+          });
 
-              console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
-              console.log("** Attachement1 options: "+JSON.stringify(cardsAttach.actions[0].options));
-              replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
-              delete replacement.attachments[0].actions;
-              replacement.attachments.push(cardsAttach);
-              return replacement;
+          // console.log("** Attachement: "+JSON.stringify(replacement.attachments[0]));
+          // console.log("** Attachement1 options: "+JSON.stringify(cardsAttach.actions[0].options));
+          replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
+          delete replacement.attachments[0].actions;
+          replacement.attachments.push(cardsAttach);
+          return replacement;
     }).then(bot);
+
+    //main.getCardsInList(listId)
+
 
 
     return replacement;
@@ -264,7 +267,7 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
     console.log('*******  Cards Attach PAYLOAD : ', payload);
     const action = payload.actions[0];
     var cardId = action.selected_options[0].value;
-   console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
+    console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
     var ackText = `Card selected whose id is ${cardId}.`;
     const replacement = payload.original_message;
     persistCardID = cardId;
@@ -289,7 +292,7 @@ var controller = Botkit.slackbot({
     }
   );
 controller.spawn({
-    token: "xoxb-259926960994-cv6gxdFR7woDT6VkGrvDzphp",
+    token: process.env.SLACK_BOT_TOKEN,
     // incoming_webhook: {
     //     url: my_webhook_url
     //   }
@@ -326,7 +329,6 @@ controller.hears('new board',['mention', 'direct_mention','direct_message'], fun
 {
   console.log("RECEIVED MESSAGE: "+message.text);
 
-    
     bot.reply(message,{
       "text": "Sure!",
       "attachments": [
@@ -361,53 +363,37 @@ controller.hears('new board',['mention', 'direct_mention','direct_message'], fun
 
 });
 
-controller.hears('attach',['mention', 'direct_mention','direct_message'], function(bot,message){
-      bot.reply(message,{
-      "text": "Choose in sequence the card you would like to attach your link to",
-      "attachments": [
 
-          {
-            "text": "Choose a List",
-            "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
-              "callback_id": "cards_under_list_callback",
-              "color": "#3AA3E3",
-              "attachment_type": "default",
-              "actions": [
+
+controller.hears('attach',['mention', 'direct_mention','direct_message'], function(bot,message){
+      lists = trello.retreiveLists("59bd64edb534a81dcd8dc79f").then(function(lists){
+        var options = [];
+        console.log(lists);
+        lists.forEach(function(list) {
+          options.push({"text": list.name, "value": list.id});
+        });
+        bot.reply(message,{
+          "text": "Choose in sequence the card you would like to attach your link to",
+          "attachments": [
               {
-                  "name": "list_items",
-                  "text": "Select a List...",
-                  "type": "select",
-                  "options": [
-                      {
-                          "text": "Next-up",
-                          "value": "59eff8a5892c13cd1fc14451"
-                      },
-                      {
-                          "text": "On Hold",
-                          "value": "59eff89b5dae7fffcff0abcd"
-                      },
-                      {
-                          "text": "QA",
-                          "value": "59eff8925c221c30218206f8"
-                      },
-                      {
-                          "text": "In Progress",
-                          "value": "59eff88827b56f1c329070b8"
-                      },
-                      {
-                          "text": "Current Sprint",
-                          "value": "59eff87bbcc4fd185d41c87d"
-                      },
-                      {
-                          "text": "Done",
-                          "value": "59eff86c03f047553772c269"
-                      },
-                 ]
-             }
-            ]
-        }
-    ]
-  });
+                "text": "Choose a List",
+                "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                  "callback_id": "cards_under_list_callback",
+                  "color": "#3AA3E3",
+                  "attachment_type": "default",
+                  "actions": [
+                  {
+                      "name": "list_items",
+                      "text": "Select a List...",
+                      "type": "select",
+                      "options": options
+                 }
+                ]
+            }
+        ]
+        });
+      });
+      
 });
 
 controller.hears('URL',['mention', 'direct_mention','direct_message'], function(bot,message){
@@ -433,8 +419,6 @@ controller.hears('URL',['mention', 'direct_mention','direct_message'], function(
 
     //   }).then(bot);
 
-      
-      
 });
 
 controller.hears('Hello',['mention', 'direct_mention','direct_message'], function(bot,message){

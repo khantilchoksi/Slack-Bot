@@ -1,37 +1,69 @@
 const menu = {
     scrum_lists: [
       {
-        name : "list1",
+        name : "QA",
         idBoard : "59eff60e5920e126b94ee55d"
       },
       {
-        name : "list2",
+        name : "Testing",
         idBoard : "59eff60e5920e126b94ee55d"
       },
       {
-        name : "list3",
+        name : "Service",
         idBoard : "59eff60e5920e126b94ee55d"
       },
       {
-        name : "list4",
+        name : "Deployment",
         idBoard : "59eff60e5920e126b94ee55d"
+      }
+    ],
+    QA: [
+      {
+        name : "White Box Testing",
+      },
+      {
+        name : "Black Box Testing",
+      }
+    ],
+    Testing: [
+      {
+        name : "Testing1",
+      },
+      {
+        name : "Testing2",
+      }
+    ],
+    Service: [
+      {
+        name : "Service1",
+      },
+      {
+        name : "Service2",
+      }
+    ], 
+    Deployment: [
+      {
+        name : "Deployment1",
+      },
+      {
+        name : "Deployment2",
       }
     ],
     waterfall_lists: [
         {
-          name : "list1",
+          name : "Waterfall List 1",
           idBoard : "59eff60e5920e126b94ee55d"
         },
         {
-          name : "list2",
+          name : "Water fall list2",
           idBoard : "59eff60e5920e126b94ee55d"
         },
         {
-          name : "list3",
+          name : "Water fall list3",
           idBoard : "59eff60e5920e126b94ee55d"
         },
         {
-          name : "list4",
+          name : "Water list4",
           idBoard : "59eff60e5920e126b94ee55d"
         }
       ],
@@ -90,6 +122,22 @@ const menu = {
 
     listOfWaterfallLists() {
         return menu.waterfall_lists.map(i => ({ name: i.name, idBoard: i.idBoard }));
+    },
+
+    listOfQACards() {
+      return menu.QA.map(i => ({ name: i.name }));
+    },
+
+    listOfTestingCards() {
+      return menu.Testing.map(i => ({ name: i.name }));
+    },
+
+    listOfServiceCards() {
+      return menu.Service.map(i => ({ name: i.name }));
+    },
+
+    listOfDeploymentCards() {
+      return menu.Deployment.map(i => ({ name: i.name }));
     },
   
     listOfChoicesForOption(optionId) {
