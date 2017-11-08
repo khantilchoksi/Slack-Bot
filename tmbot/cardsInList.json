@@ -1,7 +1,7 @@
 [
   {
     "id": "59ef86b92f34dbc457ec4d84",
-    "name": "Issue 1",
+    "name": "Integration Testing",
     "badges": {
       "votes": 0,
       "viewingMemberVoted": false,
@@ -27,7 +27,7 @@
   },
   {
     "id": "560bf4e25d93437b729482e0",
-    "name": "Enhancement 2",
+    "name": "Mocking Service Components",
     "badges": {
       "votes": 0,
       "viewingMemberVoted": false,

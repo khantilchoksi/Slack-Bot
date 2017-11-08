@@ -13,66 +13,65 @@ const menu = require("./lib/menu.js");
 var HashMap = require('hashmap');
 var cardAttachment_data = require('./card_attachment.json')
 
-var new_storyboard = {
-	"name" : "Swati2",
-	"defaultLists" : false
-};
+// var new_storyboard = {
+// 	"name" : "Swati2",
+// 	"defaultLists" : false
+// };
   
-  var new_list = {
-	"name" : "list1",
-	"idBoard" : "59eff60e5920e126b94ee55d"
-  };
+// //   var new_list = {
+// // 	"name" : "list1",
+// // 	"idBoard" : "59eff60e5920e126b94ee55d"
+// //   };
   
-  var new_attachment = {
-	"url" : "https://www.google.com"
-  };
+//   var new_attachment = {
+// 	"url" : "https://www.google.com"
+//   };
 
-  var new_card = {
-	  "name" : "Acceptance Testing",
-	  "idList" : "59dd74d4b1143f5c19c12589"
-  };
+//   var new_card = {
+// 	  "name" : "Acceptance Testing",
+// 	  "idList" : "59dd74d4b1143f5c19c12589"
+//   };
 
-  var mockService_list = nock("https://api.trello.com")
-  .persist() // This will persist mock interception for lifetime of program.
-  .post("/1/lists", new_list)
-  .reply(200, JSON.stringify(list_data.created_list));
-
-
-// Which person is assigned to most to issues?
-var mockService = nock("https://api.trello.com")
-.persist() // This will persist mock interception for lifetime of program.
-.post("/1/boards", new_storyboard)
-.reply(200, JSON.stringify(data.created_storyboard));
+//   var mockService_list = nock("https://api.trello.com")
+//   .persist() // This will persist mock interception for lifetime of program.
+//   .post("/1/lists", new_list)
+//   .reply(200, JSON.stringify(list_data.created_list));
 
 
+// // Which person is assigned to most to issues?
+// var mockService = nock("https://api.trello.com")
+// .persist() // This will persist mock interception for lifetime of program.
+// .post("/1/boards", new_storyboard)
+// .reply(200, JSON.stringify(data.created_storyboard));
 
-var mockService_card = nock("https://api.trello.com")
-.persist() // This will persist mock interception for lifetime of program.
-.post("/1/cards", new_card)
-.reply(200, JSON.stringify(card_data.created_card));
 
-var mockService_getLists = nock("https://api.trello.com")
-.persist() // This will persist mock interception for lifetime of program.
-.get("/1/boards/59eff60e5920e126b94ee55d/lists")
-.reply(200, (getList_data.listsFormed));
 
-var mockService_getCards = nock("https://api.trello.com")
-.persist()
-.get("/1/lists/59dd74d4b1143f5c19c12589/cards")
-.reply(200, (getCards_data));
+// var mockService_card = nock("https://api.trello.com")
+// .persist() // This will persist mock interception for lifetime of program.
+// .post("/1/cards", new_card)
+// .reply(200, JSON.stringify(card_data.created_card));
 
-//Mock for adding attachments to cards
-var mockService_addAttachments = nock("https://api.trello.com")
-.persist()
-.post("/1/cards/59ef86b92f34dbc457ec4d84/attachments", new_attachment)
-.reply(200, JSON.stringify(cardAttachment_data.card_attachment));
+// var mockService_getLists = nock("https://api.trello.com")
+// .persist() // This will persist mock interception for lifetime of program.
+// .get("/1/boards/59eff60e5920e126b94ee55d/lists")
+// .reply(200, (getList_data.listsFormed));
+
+// var mockService_getCards = nock("https://api.trello.com")
+// .persist()
+// .get("/1/lists/59dd74d4b1143f5c19c12589/cards")
+// .reply(200, (getCards_data));
+
+// //Mock for adding attachments to cards
+// var mockService_addAttachments = nock("https://api.trello.com")
+// .persist()
+// .post("/1/cards/59ef86b92f34dbc457ec4d84/attachments", new_attachment)
+// .reply(200, JSON.stringify(cardAttachment_data.card_attachment));
 
 
 var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Next-Up']
 var waterfall_lists = ['Requirements', 'Design', 'Implementation', 'Verification', 'Maintenance']
 
-var current_boardid = "59eff60e5920e126b94ee55d";
-var current_board ;
+var current_boardId;
 
 function getNewStoryBoard(template_type, boardName)
 {
@@ -96,58 +95,117 @@ function getNewStoryBoard(template_type, boardName)
             //var storyboard_url = _.pluck(created_storyboard,"url");
             console.log(" MAIN.JS : LINE 75 Is this json");
 			console.log(created_storyboard.url);
-			current_boardid = created_storyboard.id;
+			current_boardId = created_storyboard.id;
+			
 			resolve(created_storyboard);
 		});
 	});
-	return promise1;
+	var list_promises = [promise1];
+	return promise1.then(function(result){
+		
+		listArray.forEach(function(listName) {
+			var promise = createNewListWithTemplateCards(listName.name);
+			list_promises.push(promise);
+		});
+		return Promise.all(list_promises);
+	});
+	
+	//return promise1;
 	/*
 	return promise1.then(function(result){
 		resolve(result);
 	});
 	*/
 	console.log(" MAIN JS 86 Did you come here");
-	// can also chain above promise with .then for the below code
-	/*
-	var list_promises = [promise1];
-	listArray.forEach(function(list) {
-		console.log("\n @#$T^$@^%^#%$^ DELETE THIS AFTER CHECK: "+JSON.stringify(list.name));
-		var promise = getNewList(list);
-		list_promises.push(promise);
-	});
-	return Promise.all(list_promises)//.then(values => {
-		//console.log(values[0]);
-		//Promise.resolve(values);
-	//});
-	*/
+	
 
 }
 
-function getNewList(list)
+function getNewList(listName)
 {
     return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
-		trello.createNewList(list).then(function (created_list) 
+		console.log(" This is my story board id: "+current_boardId);
+		var new_list = {
+			"name" : listName,
+			"idBoard" : current_boardId
+	   };
+
+		trello.createNewList(new_list).then(function (created_list) 
 		{
             console.log("Is this json");
 			console.log(created_list);
 			// created list comes as array
-			var parsedJson
+			
+			
+
 			resolve(created_list.id);
 		});
 	});
 
 }
 
+function createNewListWithTemplateCards(listName)
+{
+		// mock data needs .
+		//console.log(" This is my story board id: "+current_boardId);
+		console.log("\n MAIN JS: createNewListWithTemplateCards FUNCITON CALL");
+		var new_list = {
+			"name" : listName,
+			"idBoard" : current_boardId
+	   };
+	   var generatedListID;
+	   var promise2 =  new Promise(function (resolve, reject) 
+	   {
+		trello.createNewList(new_list).then(function (created_list) 
+		{
+			console.log(created_list);
+			// created list comes as array
+			generatedListID = created_list.id;
+			resolve(created_list.id);
+		});
+	});
+	var cardsArray;
+	switch(listName){
+		case "QA": 
+			cardsArray = menu.listOfQACards();
+			break;
+		case "Testing":
+			cardsArray = menu.listOfTestingCards();
+			break;
+		case "Service":
+			cardsArray = menu.listOfServiceCards();
+			break;
+		case "Testing":
+			cardsArray = menu.listOfTestingCards();
+			break;
+		case "Deployment":
+			cardsArray = menu.listOfDeploymentCards();
+			break;
+	}
+	
+	var list_promises2 = [promise2];
+	return promise2.then(function(result){
+		
+		cardsArray.forEach(function(cardName) {
+			console.log("cardNAME: "+cardName.name);
+			var promise = getNewCard(cardName.name, generatedListID);
+			list_promises2.push(promise);
+		});
+		return Promise.all(list_promises2);
+	});
+	
+
+}
+
 function getNewCard(card_name, listId) {
 	return new Promise(function (resolve, reject) 
 	{
-		// mock data needs .
 		trello.createNewCard(card_name, listId).then(function (created_card) 
 		{
-            console.log("Is this json");
-            console.log(created_card);
+            console.log("MAIN JS: getNewCard");
+            //console.log(created_card);
 			resolve(created_card.id);
 		});
 	});
@@ -170,17 +228,14 @@ function getListsInBoard(boardId) {
 	return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
-		
 		trello.retrieveLists(boardId).then(function (listsArray) 
 		{
-			console.log("LISTARRAYS: : "+listsArray);
-			console.log(" TYPE OF : "+typeof listsArray);
-			listsArray = JSON.parse(listsArray);
+			//listsArray = JSON.parse(listsArray);
             listsArray.forEach(function(item) {
-				console.log("item: : "+item);
+				console.log(" MAIN.JS GETLISTS IN BOARD ID : "+item.id);
+				console.log(" MAIN.JS GETLISTS IN BOARD NAME : "+item.name);
 				listMap.set(item.id, item.name);
 			});
-			console.log("LISTS: "+listMap.values()[0]);
 			resolve(listMap);
 		});
 	});
@@ -193,14 +248,16 @@ function getCardsInList(listId){
 	return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
-		current_listId = "59dd74d4b1143f5c19c12589"
-		trello.retrieveCards(current_listId).then(function (cardsArray) 
+		//current_listId = "59dd74d4b1143f5c19c12589"
+		trello.retrieveCards(listId).then(function (cardsArray) 
 		{
-			console.log("CARDARRAYS: : "+cardsArray);
-			console.log(" TYPE OF : "+typeof cardsArray);
-			cardsArray = JSON.parse(cardsArray);
+			//console.log("CARDARRAYS: : "+cardsArray);
+			//console.log(" TYPE OF : "+typeof cardsArray);
+			//cardsArray = JSON.parse(cardsArray);
             cardsArray.forEach(function(card) {
 				Cards.set(card.id, card.name);
+				console.log("#$ MAIN JS: Card ID: "+card.id);
+				console.log("#$ MAIN JS: Card Name: "+card.name);
 			});
 			resolve(Cards);
 		});
