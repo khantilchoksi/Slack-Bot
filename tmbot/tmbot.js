@@ -188,7 +188,7 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
-    main.getNewCard("Acceptance Testing", selected_options.value)
+    main.getNewCard("Swati's new card", selected_options.value)
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       
@@ -306,6 +306,7 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
 
   //check first whether user has created board or not
   var responseMessage;
+  persistStoryboardID = "59bd64edb534a81dcd8dc79f";
   if(persistStoryboardID == undefined){
     responseMessage = {
         "text": "Please create a storyboard first or link your existing story board of trello."};
