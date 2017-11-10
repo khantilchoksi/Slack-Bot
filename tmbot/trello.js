@@ -143,18 +143,16 @@ function addAttachment(cardId, url)
 			"Authorization": token
 		}
 	};
-
 	return new Promise(function (resolve, reject) 
-	{
-		// Send a http request to url and specify a callback that will be called upon its return.
-		request(options, function (error, response, body) 
-		{
-			//var obj = JSON.parse(body);
+    {
+    	console.log("URL: " + url + " type: " + typeof url);
+    	t.post("/1/cards/" + cardId+ "/attachments", {"url": url},function (error, body) {
+            if (error) throw new Error(error);
             resolve(body);
-		});
-	});
-}
 
+        });
+    });
+}
 
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
