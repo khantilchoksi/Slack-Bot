@@ -14,7 +14,7 @@ var trello = require('./trello.js');
 var clientid = process.env.CLIENT_ID;
 var clientsecret = process.env.CLIENT_SECRET;
 
-var persistStoryboardID = "59bd64edb534a81dcd8dc79f";
+var persistStoryboardID ;
 var persistCardID;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');

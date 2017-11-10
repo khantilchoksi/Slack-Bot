@@ -5,9 +5,11 @@ var querystring = require('querystring');
 var Trello = require("node-trello");
 
 require('dotenv').config();
-var token = process.env.TRELLO_TOKEN;
+//var token = process.env.TRELLO_TOKEN;
+var token = '758d909df10f258875ce8c294d90b288553ec3c2d6e1ad408b8be1cb2987f9b3'
 var urlRoot = "https://api.trello.com";
-var key = process.env.TRELLO_KEY;
+//var key = process.env.TRELLO_KEY;
+var key = '48668aeb414389d2719b4b0c56183d96'
 var t = new Trello(key, token);
 
 function createNewStoryBoard(boardName)
@@ -18,7 +20,7 @@ function createNewStoryBoard(boardName)
 
 		t.post("/1/boards/", {
 			"name" : boardName,
-			"defaultLists" : false
+			"defaultLists" : false 
 		}, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Inside trello.js! KHANTIL NEW BOARD API CALL");
@@ -44,7 +46,25 @@ function createNewList(new_list)
 
 function createNewCard(card_name, listId)
 {
+	/*
+    var new_card = {
+		"name" : card_name,
+		"idList" : listId
+    };
 
+	var options = {
+        url: urlRoot + "/1/cards",
+        method: 'POST',
+        qs: {
+			"name" : card_name,
+			"idList" : listId
+		},
+		headers: {
+			"content-type": "application/json",
+			"Authorization": token
+		}
+	};
+   */
 	return new Promise(function (resolve, reject) 
 	{
 		t.post("/1/cards/", {
@@ -53,37 +73,58 @@ function createNewCard(card_name, listId)
 		}, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Testing actual new card api call");
-			console.log("NEW CARD: "+response.id);	//response is json
+			console.log("NEW CARD: "+response.body);	//response is json
 			
 			resolve(response);
 
 		});
 	});
-    
 }
 
 function retrieveLists(boardId)
 {
+	boardId = "5a023ebed0f8fa0a0a2e6840";
+	//console.log("Mamamama board id in retrieveLists :" + boardId);
     return new Promise(function (resolve, reject) 
     {
-    	t.get("/1/boards/" + boardId+ "/lists", function (error, body) {
+        t.get("/1/boards/"+ boardId+"/lists", function (error, response) {
             if (error) throw new Error(error);
-            resolve(body);
-
+           console.log("Testing retrieving of lists");
+           console.log("RETRIEVE LIST: "+response.body);    //response is json
+            
+            resolve(response);
         });
     });
 }
-
 function retrieveCards(listId)
 {
-    return new Promise(function (resolve, reject) 
-    {
-    	t.get("/1/lists/" + listId+ "/cards", function (error, body) {
-            if (error) throw new Error(error);
-            resolve(body);
+	var options = {
+        url: urlRoot + "/1/lists/"+ listId+"/cards",
+        method: 'GET',
+		headers: {
+			"content-type": "application/json",
+			"Authorization": token
+		}
+	};
 
+	return new Promise(function (resolve, reject) 
+	{
+		// // Send a http request to url and specify a callback that will be called upon its return.
+		// request(options, function (error, response, body) 
+		// {
+        //     //console.log("retrieveCards API CALL: ");
+        //     //console.log(body);
+        //     resolve(body);
+		// });
+
+		t.get("/1/lists/"+ listId+"/cards", function (error, response) {
+            if (error) throw new Error(error);
+           console.log("Testing retrieving of cards");
+           console.log("RETRIEVE CARDS: "+response.body);    //response is json
+            
+            resolve(response);
         });
-    });
+	});
 }
 
 
@@ -102,15 +143,16 @@ function addAttachment(cardId, url)
 			"Authorization": token
 		}
 	};
-	return new Promise(function (resolve, reject) 
-    {
-    	console.log("URL: " + url + " type: " + typeof url);
-    	t.post("/1/cards/" + cardId+ "/attachments", {"url": url},function (error, body) {
-            if (error) throw new Error(error);
-            resolve(body);
 
-        });
-    });
+	return new Promise(function (resolve, reject) 
+	{
+		// Send a http request to url and specify a callback that will be called upon its return.
+		request(options, function (error, response, body) 
+		{
+			//var obj = JSON.parse(body);
+            resolve(body);
+		});
+	});
 }
 
 
