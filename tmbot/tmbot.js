@@ -125,7 +125,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
 
               var cards = main.getCardsInList(key).then(function(cardsMap) {
                   //cardsArray = JSON.parse(cardsArray);
-                  console.log("\n ## CARDS ARRAY for");
+                  console.log("\n ## CARDS ARRAY for this list: ");
                   var cardNames = [];
                   cardsMap.forEach(function(value, key) {
                       console.log( "CARD NAME: "+value+" CARD ID: "+key);
@@ -512,4 +512,29 @@ function findAttachment(message, actionCallbackId) {
 const port = 4390;
 slackMessages.start(port).then(() => {
  console.log(`server listening on port ${port}`);
+});
+
+controller.hears('set date',['mention', 'direct_mention','direct_message'], function(bot,message)
+{
+  console.log(message);
+  //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
+
+  //check first whether user has created board or not
+  var responseMessage;
+  var regexpDueDate = /(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d/
+  dueDate = regexpDueDate.exec(message.text);
+  var card_due = String(dueDate[0]);
+  
+  
+  if(persistStoryboardID == undefined){
+    responseMessage = {
+        "text": "Please create a storyboard first or link your existing story board of trello."};
+        bot.reply(message,responseMessage);
+  }else{
+      
+    main.addDueDate(persistCardID, card_due ).then(function(results){
+        responseMessage = "Due date set on this card: "+results;
+        bot.reply(message,responseMessage);
+    });
+  }
 });

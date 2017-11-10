@@ -83,8 +83,7 @@ function createNewCard(card_name, listId)
 
 function retrieveLists(boardId)
 {
-	boardId = "5a023ebed0f8fa0a0a2e6840";
-	console.log("Mamamama board id in retrieveLists :" + boardId);
+	
     return new Promise(function (resolve, reject) 
     {
         t.get("/1/boards/"+ boardId+"/lists", function (error, response) {
@@ -154,9 +153,24 @@ function addAttachment(cardId, url)
     });
 }
 
+function addDueDate(cardId, dueDate)
+{
+	
+	return new Promise(function (resolve, reject) 
+    {
+    	console.log("Incoming due date : "+ dueDate);
+    	t.put("/1/cards/" + cardId, {"due": dueDate},function (error, body) {
+            if (error) throw new Error(error);
+            resolve(body);
+
+        });
+    });
+}
+
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
 exports.createNewCard = createNewCard;
 exports.retrieveLists = retrieveLists;
 exports.retrieveCards = retrieveCards;
 exports.addAttachment = addAttachment;
+exports.addDueDate = addDueDate;
