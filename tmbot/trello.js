@@ -86,6 +86,17 @@ function retrieveCards(listId)
     });
 }
 
+function retrieveBoards()
+{
+    return new Promise(function (resolve, reject) 
+    {
+    	t.get("/1/members/" + process.env.TRELLO_MEMBERID+ "/boards", function (error, body) {
+            if (error) throw new Error(error);
+            resolve(body);
+        });
+    });
+}
+
 
 function addAttachment(cardId, url)
 {
@@ -120,3 +131,4 @@ exports.createNewCard = createNewCard;
 exports.retrieveLists = retrieveLists;
 exports.retrieveCards = retrieveCards;
 exports.addAttachment = addAttachment;
+exports.retrieveBoards = retrieveBoards;

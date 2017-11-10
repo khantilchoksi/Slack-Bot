@@ -241,6 +241,25 @@ function getListsInBoard(boardId) {
 
 }
 
+function getBoardsOfMember() {
+	var listMap =  new HashMap();
+	return new Promise(function (resolve, reject) 
+	{
+		// mock data needs .
+		trello.retrieveBoards().then(function (listsArray) 
+		{
+			//listsArray = JSON.parse(listsArray);
+            listsArray.forEach(function(item) {
+				console.log(" MAIN.JS  getBoardsOfMemberGOT BOARD ID : "+item.id);
+				console.log(" MAIN.JS  getBoardsOfMember GOT BOARD NAME : "+item.name);
+				listMap.set(item.id, item.name);	//key, value
+			});
+			resolve(listMap);
+		});
+	});
+
+}
+
 function getCardsInList(listId){
 	console.log("getCardsInList entered");
 	var Cards = new HashMap();
@@ -263,9 +282,38 @@ function getCardsInList(listId){
 	});
 }
 
+
+function copyListsToBoard(fromBoardId, toBoardId)
+{
+	return new Promise(function (resolve, reject) 
+	{
+		trello.retrieveLists(fromBoardId).then(function(listsArray){
+		
+		listsArray.forEach(function(item) {
+				var new_list = {
+					"name" : item.name,
+					"idBoard" : toBoardId
+			   };
+			   trello.createNewList(new_list).then(function (created_list) 
+			   {
+				   // created list comes as array
+				   console.log("\n\n\n CREATED COPIED LIST: "+item.name+" with created_list.url: "+created_list.url);
+				   resolve(created_list.id);
+			   });
+		});
+	});
+});
+	
+
+}
+
+
+
 exports.getNewStoryBoard = getNewStoryBoard;
 exports.getNewList = getNewList;
 exports.getNewCard = getNewCard;
 exports.getListsInBoard = getListsInBoard;
 exports.getCardsInList = getCardsInList;
 exports.addAttachment = addAttachment;
+exports.getBoardsOfMember = getBoardsOfMember;
+exports.copyListsToBoard = copyListsToBoard;
