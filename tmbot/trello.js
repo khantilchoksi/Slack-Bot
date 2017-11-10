@@ -62,7 +62,7 @@ function createNewCard(card_name, listId)
     
 }
 
-function retreiveLists(boardId)
+function retrieveLists(boardId)
 {
     return new Promise(function (resolve, reject) 
     {
@@ -74,7 +74,7 @@ function retreiveLists(boardId)
     });
 }
 
-function retreiveCards(listId)
+function retrieveCards(listId)
 {
     return new Promise(function (resolve, reject) 
     {
@@ -117,6 +117,6 @@ function addAttachment(cardId, url)
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
 exports.createNewCard = createNewCard;
-exports.retreiveLists = retreiveLists;
-exports.retreiveCards = retreiveCards;
+exports.retrieveLists = retrieveLists;
+exports.retrieveCards = retrieveCards;
 exports.addAttachment = addAttachment;
