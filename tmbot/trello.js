@@ -83,26 +83,18 @@ function createNewCard(card_name, listId)
 
 function retrieveLists(boardId)
 {
-	/*
-	var options = {
-        url: urlRoot + "/1/boards/"+ boardId+"/lists",
-        method: 'GET',
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
-*/
-	return new Promise(function (resolve, reject) 
-	{
-		t.get("/1/boards/"+ boardId+"/lists", function (error, response) {
-			if (error) throw new Error(error);
-            console.log("Testing retrieving of lists");
-			console.log("RETRIEVE LIST: "+response.body);	//response is json
-			
-			resolve(response);
-		});
-	});
+	boardId = "5a023ebed0f8fa0a0a2e6840";
+	console.log("Mamamama board id in retrieveLists :" + boardId);
+    return new Promise(function (resolve, reject) 
+    {
+        t.get("/1/boards/"+ boardId+"/lists", function (error, response) {
+            if (error) throw new Error(error);
+           console.log("Testing retrieving of lists");
+           console.log("RETRIEVE LIST: "+response.body);    //response is json
+            
+            resolve(response);
+        });
+    });
 }
 function retrieveCards(listId)
 {

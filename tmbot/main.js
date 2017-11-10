@@ -229,6 +229,7 @@ function getListsInBoard(boardId) {
 		// mock data needs .
 		trello.retrieveLists(boardId).then(function (listsArray) 
 		{
+			console.log("Common Board id "+ boardId)
 			//listsArray = JSON.parse(listsArray);
             listsArray.forEach(function(item) {
 				console.log(" MAIN.JS GETLISTS IN BOARD ID : "+item.id);
@@ -248,7 +249,11 @@ function getCardsInList(listId){
 	{
 		// mock data needs .
 		//current_listId = "59dd74d4b1143f5c19c12589"
+<<<<<<< HEAD
 		trello.retrieveCards(listId).then(function (cardsArray) 
+=======
+		trello.retrieveCards(current_listId).then(function (cardsArray) 
+>>>>>>> Usecase 2 service working
 		{
 			//console.log("CARDARRAYS: : "+cardsArray);
 			//console.log(" TYPE OF : "+typeof cardsArray);
