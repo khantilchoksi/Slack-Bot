@@ -66,7 +66,7 @@ var cardAttachment_data = require('./card_attachment.json')
 // .persist()
 // .post("/1/cards/59ef86b92f34dbc457ec4d84/attachments", new_attachment)
 // .reply(200, JSON.stringify(cardAttachment_data.card_attachment));
-*/
+
 
 var scrum_lists = ['Done', 'Current Sprint', 'In progress', 'QA', 'On Hold', 'Next-Up']
 var waterfall_lists = ['Requirements', 'Design', 'Implementation', 'Verification', 'Maintenance']
@@ -249,11 +249,7 @@ function getCardsInList(listId){
 	{
 		// mock data needs .
 		//current_listId = "59dd74d4b1143f5c19c12589"
-<<<<<<< HEAD
 		trello.retrieveCards(listId).then(function (cardsArray) 
-=======
-		trello.retrieveCards(current_listId).then(function (cardsArray) 
->>>>>>> Usecase 2 service working
 		{
 			//console.log("CARDARRAYS: : "+cardsArray);
 			//console.log(" TYPE OF : "+typeof cardsArray);

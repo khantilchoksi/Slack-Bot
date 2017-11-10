@@ -223,7 +223,7 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
 
-    trello.retreiveCards(listId)
+    trello.retrieveCards(listId)
     .then((cards) => {
 
           var cardsAttach = {
@@ -369,7 +369,7 @@ controller.hears('new board',['mention', 'direct_mention','direct_message'], fun
 
 
 controller.hears('attach',['mention', 'direct_mention','direct_message'], function(bot,message){
-      lists = trello.retreiveLists("59bd64edb534a81dcd8dc79f").then(function(lists){
+      lists = trello.retrieveLists(persistStoryboardID).then(function(lists){
         var options = [];
         console.log(lists);
         lists.forEach(function(list) {
