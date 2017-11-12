@@ -121,7 +121,7 @@ function getNewStoryBoard(template_type, boardName)
 
 }
 
-function getNewList(listName)
+function getNewList(listName, storyBoardId)
 {
     return new Promise(function (resolve, reject) 
 	{
@@ -129,7 +129,7 @@ function getNewList(listName)
 		console.log(" This is my story board id: "+current_boardId);
 		var new_list = {
 			"name" : listName,
-			"idBoard" : current_boardId
+			"idBoard" : storyBoardId
 	   };
 
 		trello.createNewList(new_list).then(function (created_list) 
@@ -138,12 +138,9 @@ function getNewList(listName)
 			console.log(created_list);
 			// created list comes as array
 			
-			
-
-			resolve(created_list.id);
+			resolve(created_list);
 		});
 	});
-
 }
 
 function createNewListWithTemplateCards(listName)
