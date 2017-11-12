@@ -5,11 +5,9 @@ var querystring = require('querystring');
 var Trello = require("node-trello");
 
 require('dotenv').config();
-//var token = process.env.TRELLO_TOKEN;
-var token = '758d909df10f258875ce8c294d90b288553ec3c2d6e1ad408b8be1cb2987f9b3'
+var token = process.env.TRELLO_TOKEN;
 var urlRoot = "https://api.trello.com";
-//var key = process.env.TRELLO_KEY;
-var key = '48668aeb414389d2719b4b0c56183d96'
+var key = process.env.TRELLO_KEY;
 var t = new Trello(key, token);
 
 function createNewStoryBoard(boardName)
@@ -46,25 +44,7 @@ function createNewList(new_list)
 
 function createNewCard(card_name, listId)
 {
-	/*
-    var new_card = {
-		"name" : card_name,
-		"idList" : listId
-    };
 
-	var options = {
-        url: urlRoot + "/1/cards",
-        method: 'POST',
-        qs: {
-			"name" : card_name,
-			"idList" : listId
-		},
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
-   */
 	return new Promise(function (resolve, reject) 
 	{
 		t.post("/1/cards/", {
@@ -73,7 +53,7 @@ function createNewCard(card_name, listId)
 		}, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Testing actual new card api call");
-			console.log("NEW CARD: "+response.body);	//response is json
+			console.log("NEW CARD: "+response.id);	//response is json
 			
 			resolve(response);
 
@@ -97,24 +77,9 @@ function retrieveLists(boardId)
 }
 function retrieveCards(listId)
 {
-	var options = {
-        url: urlRoot + "/1/lists/"+ listId+"/cards",
-        method: 'GET',
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
-
+	
 	return new Promise(function (resolve, reject) 
 	{
-		// // Send a http request to url and specify a callback that will be called upon its return.
-		// request(options, function (error, response, body) 
-		// {
-        //     //console.log("retrieveCards API CALL: ");
-        //     //console.log(body);
-        //     resolve(body);
-		// });
 
 		t.get("/1/lists/"+ listId+"/cards", function (error, response) {
             if (error) throw new Error(error);
@@ -124,6 +89,17 @@ function retrieveCards(listId)
             resolve(response);
         });
 	});
+}
+
+function retrieveBoards()
+{
+    return new Promise(function (resolve, reject) 
+    {
+    	t.get("/1/members/" + process.env.TRELLO_MEMBERID+ "/boards", function (error, body) {
+            if (error) throw new Error(error);
+            resolve(body);
+        });
+    });
 }
 
 
@@ -191,3 +167,4 @@ exports.retrieveCards = retrieveCards;
 exports.addAttachment = addAttachment;
 exports.addDueDate = addDueDate;
 exports.addLabel = addLabel;
+exports.retrieveBoards = retrieveBoards;

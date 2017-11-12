@@ -14,7 +14,7 @@ var trello = require('./trello.js');
 var clientid = process.env.CLIENT_ID;
 var clientsecret = process.env.CLIENT_SECRET;
 
-var persistStoryboardID ;
+var persistStoryboardID;
 var persistCardID;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
@@ -113,7 +113,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
-    main.getNewStoryBoard(selected_options.value, "Nov71Board")
+    main.getNewStoryBoard(selected_options.value, "Nov12Board")
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       var storyboardlink = response[0].url;
@@ -123,9 +123,6 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
       persistStoryboardID = response[0].id;
       
       ackText = `Your story board is created and here is the link: ${storyboardlink} and board id : ${persistStoryboardID}.`;
-      
-
-      console.log(" LINE 100");
 
         return persistStoryboardID;
         //return ackText;
@@ -199,6 +196,69 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
 //     return replacement;
 //    });
 
+//Use Case 1 : Copy lists from one board to another board
+slackMessages.action('boards_lists_callback', (payload,bot) => {
+    // `payload` is JSON that describes an interaction with a message.
+    //console.log(`The user ${payload.user.name} in team ${payload.team.domain} pressed the welcome button`);
+   
+    //console.log('******* LIST PAYLOAD : ', payload);
+    // The `actions` array contains details about the specific action (button press, menu selection, etc.)
+    const action = payload.actions[0];
+
+    var selected_options = action.selected_options[0];
+   console.log("\n\n Board Selected options: ",JSON.stringify(action.selected_options));
+   console.log("\n\n BOARD Selected options KEY: ",JSON.stringify(action.selected_options[1]));
+   
+    var ackText = `You have selected ${selected_options.value} board.`;
+    const replacement = payload.original_message;
+
+    var createdListsNames;
+    // Start an order, and when that completes, send another message to the user.
+    main.copyListsToBoard(selected_options.value, persistStoryboardID)
+    .then((response) => {
+      // Keep the context from the updated message but use the new text and attachment
+      
+      ackText = `All the lists from ${selected_options.text} board has been copied to your linked board with this channel.`;
+      
+      replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
+      delete replacement.attachments[0].actions;
+      
+        return replacement;
+        
+    }).then(bot);
+
+
+
+    return replacement;
+   });
+
+   //Use Case 1 : Link pre-existing storyboard to channel
+slackMessages.action('link_boards_lists_callback', (payload,bot) => {
+    // `payload` is JSON that describes an interaction with a message.
+    //console.log(`The user ${payload.user.name} in team ${payload.team.domain} pressed the welcome button`);
+   
+    //console.log('******* LIST PAYLOAD : ', payload);
+    // The `actions` array contains details about the specific action (button press, menu selection, etc.)
+    const action = payload.actions[0];
+
+    var selected_options = action.selected_options[0];
+   console.log("\n\n Board Selected options: ",JSON.stringify(action.selected_options));
+   console.log("\n\n BOARD Selected options KEY: ",JSON.stringify(action.selected_options[1]));
+   persistStoryboardID = action.selected_options[0].value;
+   const selectedType = findSelectedOption(payload.original_message, 
+                                'link_boards_lists_callback', 
+                                payload.actions[0].selected_options[0].value);
+
+    var ackText = `${selectedType.text} board has been linked with this channel.`;
+
+
+    const replacement = payload.original_message;
+    replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
+    delete replacement.attachments[0].actions;
+    
+      return replacement;
+   });
+
 
 //USE CASE 2 CREATING NEW TASK
 slackMessages.action('list_selection_callback', (payload,bot) => {
@@ -222,7 +282,7 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
 
-    main.getNewCard("Swati's new card", selected_options.value)
+    main.getNewCard("Acceptance Testing", selected_options.value)
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       
@@ -340,25 +400,53 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
 
   //check first whether user has created board or not
   var responseMessage;
-  //persistStoryboardID = "5a023ebed0f8fa0a0a2e6840";
   if(persistStoryboardID == undefined){
     responseMessage = {
         "text": "Please create a storyboard first or link your existing story board of trello."};
         bot.reply(message,responseMessage);
   }else{
       console.log("\n 166: "+buildDropdownLists());
-    buildDropdownLists().then(function(results){
+      const actionCallbackID = 'list_selection_callback';
+    buildDropdownLists(actionCallbackID).then(function(results){
         responseMessage = results;
         bot.reply(message,responseMessage);
     });
   }
-    
-
-
-//bot.app.send(mg);
-
-//sendMessageToSlackResponseURL(responseURL, message);
 });
+
+  controller.hears('create new list',['mention', 'direct_mention','direct_message'], function(bot,message)
+  {
+    console.log("!@#$%^&* create new list: "+message);
+    var responseMessage;
+    if(persistStoryboardID == undefined){
+      responseMessage = {
+          "text": "Please link your existing story board of trello or create a new storyboard first."};
+          bot.reply(message,responseMessage);
+    }else{
+        bot.startConversation({
+            user: message.user,
+            channel: message.channel,
+            text: 'Please enter the list name!'
+            }, function(err, convo) {
+              convo.ask({
+              channel: message.channel,
+              text: 'Please enter the name of the list!'
+               }, function(res, convo) {
+                 
+                 main.getNewList(res.text, persistStoryboardID).then((response)=>{
+                    convo.say(`\`${res.text}\`` + ' list has been created to your linked board!'); 
+                    convo.next();  
+                 });
+                 
+                 }
+          )
+    }
+
+);
+    }    
+
+});
+
 
 controller.hears('new board',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
@@ -443,6 +531,68 @@ controller.hears('manage tasks',['mention', 'direct_mention','direct_message'], 
       
 });
 
+controller.hears('Copy lists',['mention', 'direct_mention','direct_message'], function(bot,message){
+    listMap = main.getBoardsOfMember().then(function(listMap){
+      var options = [];
+      console.log(listMap);
+      listMap.forEach(function(value, key) {
+        options.push({"text": value, "value": key});
+      });
+      bot.reply(message,{
+        "text": "Choose your pre-existing storyboard from which you want to copy your lists.",
+        "attachments": [
+            {
+              "text": "Choose pre-existing storyboard",
+              "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                "callback_id": "boards_lists_callback",
+                "color": "#1ABDE3",
+                "attachment_type": "default",
+                "actions": [
+                {
+                    "name": "board_items",
+                    "text": "Select a Board...",
+                    "type": "select",
+                    "options": options
+               }
+              ]
+          }
+      ]
+      });
+    });
+    
+});
+
+controller.hears('Link board',['mention', 'direct_mention','direct_message'], function(bot,message){
+    listMap = main.getBoardsOfMember().then(function(listMap){
+      var options = [];
+      console.log(listMap);
+      listMap.forEach(function(value, key) {
+        options.push({"text": value, "value": key});
+      });
+      bot.reply(message,{
+        "text": "Choose your pre-existing storyboard to which you want to link this channel.",
+        "attachments": [
+            {
+              "text": "Choose pre-existing storyboard",
+              "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                "callback_id": "link_boards_lists_callback",
+                "color": "#1ABDE3",
+                "attachment_type": "default",
+                "actions": [
+                {
+                    "name": "board_items",
+                    "text": "Select a Board...",
+                    "type": "select",
+                    "options": options
+               }
+              ]
+          }
+      ]
+      });
+    });
+    
+});
+
 controller.hears('URL',['mention', 'direct_mention','direct_message'], function(bot,message){
       console.log("Message: "+ message);
       
@@ -487,7 +637,7 @@ controller.hears('Hello',['mention', 'direct_mention','direct_message'], functio
 
 // Helper functions
 
-function buildDropdownLists(){
+function buildDropdownLists(actionCallbackId){
 
 
     //console.log("\n\n BEFORE :: BEFORE :: JSON OBJECT BUILT: "+JSON.stringify(jsonobj));
