@@ -22,6 +22,32 @@ const { createMessageAdapter } = require('@slack/interactive-messages');
 // Initialize adapter using slack verification token from environment variables
 const slackMessages = createMessageAdapter(process.env.SLACK_VERIFICATION_TOKEN);
 
+var fetch = require('isomorphic-fetch');
+
+function create_new_board(entities){
+  console.log("Entities : "+ entities["board_name"][0]["value"])
+  var msg = "Board name is "+ entities["board_name"][0]["value"];
+
+  return msg;
+}
+
+function delegateMessage(json){
+  console.log("JSON  "+ JSON.stringify(json));
+  debugger;
+  console.log("Intent  "+ json["entities"]["intent"][0]["value"]);
+  var intent = json["entities"]["intent"][0]["value"];
+  var entities = json["entities"];
+  var msg;
+  switch(intent){
+    case "new_board_with_name": msg = create_new_board(entities); break;
+    default: msg = "No idea what this command means";
+  }
+  console.log("Msg is" + msg);
+  return msg;
+}
+
+
+
 // Attach action handlers by `callback_id`
 // (See: https://api.slack.com/docs/interactive-message-field-guide#attachment_fields)
 slackMessages.action('button_tutorial', (payload,bot) => {
@@ -327,6 +353,18 @@ controller.hears('task',['mention', 'direct_mention','direct_message'], function
 
 controller.hears('new board',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
+  var msg;
+  console.log(message);
+  fetch(
+  'https://api.wit.ai/message?q='+message.text,
+  {
+    method: 'GET',
+    headers: {Authorization: 'Bearer JV4QANMKE3OADXWWE2CWJH4M2EDGIHTJ'}
+  }
+  )
+  .then(response => response.json())
+  .then(json => delegateMessage(json))
+  .then(msg => console.log(msg));
   console.log("RECEIVED MESSAGE: "+message.text);
 
     bot.reply(message,{
@@ -404,20 +442,20 @@ controller.hears('URL',['mention', 'direct_mention','direct_message'], function(
       
       var card_attachment = {url: String(url[0])};
       
-    //   main.addAttachment(persistCardID, card_attachment)
-    //   .then((urlreceived) => {
-    //     var replyMessage = "Sorry did not understand your URL";
-    //     if(String(url[0])){
-    //       replyMessage = "Link "+ String(url[0])+ " was attached to "+ persistCardID+ " card";
-    //     }
+      main.addAttachment(persistCardID, card_attachment)
+      .then((urlreceived) => {
+        var replyMessage = "Sorry did not understand your URL";
+        if(String(url[0])){
+          replyMessage = "Link "+ String(url[0])+ " was attached to "+ persistCardID+ " card";
+        }
         var replyMessage = {
             "text": "I have attached the given URL "+String(url[0])+ " to your previously selected card. "
         };
         bot.reply(message,replyMessage);
 
-    //     return replyMessage;
+        return replyMessage;
 
-    //   }).then(bot);
+      }).then(bot);
 
 });
 
