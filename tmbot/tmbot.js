@@ -59,27 +59,33 @@ slackMessages.action('button_tutorial', (payload,bot) => {
  const action = payload.actions[0];
  console.log(`The button had name ${action.name} and value ${action.value}`);
 
- // You should return a JSON object which describes a message to replace the original.
- // Note that the payload contains a copy of the original message (`payload.original_message`).
+ var labelName = action.name;
+ var color = action.value;
 
- //const updatedMessage = acknowledgeActionFromMessage(payload.original_message, 'button_tutorial',
- //'I\'m getting an order started for you.');
-
- var ackText = `You have selected ${action.value}`;
+ var ackText;
  var replacement = payload.original_message;
  // Typically, you want to acknowledge the action and remove the interactive elements from the message
 
  //replacement.text =`Welcome ${payload.user.name}`;
 
-
- // Start an order, and when that completes, send another message to the user.
-//  bot.startOrder(payload.user.id)
-//  .then(respond)
-//  .catch(console.error);
-
-replacement.attachments[0].text = `:white_check_mark: ${ackText}`;
-delete replacement.attachments[0].actions;
- return replacement;
+ if(persistStoryboardID == undefined){
+    responseMessage = {
+        "text": "Please create a storyboard first or link your existing story board of trello."};
+        bot.reply(message,responseMessage);
+  }else{
+      
+    main.addLabel(persistCardID, color, labelName ).then(function(results){
+        responseMessage = "Priority set on this card "+ results;
+        //bot.reply(message,responseMessage);
+        ackText = responseMessage;
+        console.log("AckText :" + ackText);
+        replacement.attachments[0].text = `:white_check_mark: ${ackText}`;
+        delete replacement.attachments[0].actions;
+        return replacement;
+            
+    }).then(bot);
+  }
+ 
 });
 
 
@@ -243,7 +249,7 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
     const action = payload.actions[0];
     var listId = action.selected_options[0].value;
    console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
-    var ackText = `You have selected ${listId} list.`;
+    var ackText = `You have selected ${listId} list. You can do the following : provide URL to attach, set due date or set label`;
     const replacement = payload.original_message;
 
     var createdListsNames;
@@ -327,7 +333,7 @@ controller.spawn({
 }).startRTM()
 
 
-controller.hears('task',['mention', 'direct_mention','direct_message'], function(bot,message)
+controller.hears('new card',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
   console.log(message);
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
@@ -406,7 +412,7 @@ controller.hears('new board',['mention', 'direct_mention','direct_message'], fun
 
 
 
-controller.hears('attach',['mention', 'direct_mention','direct_message'], function(bot,message){
+controller.hears('manage tasks',['mention', 'direct_mention','direct_message'], function(bot,message){
       lists = trello.retrieveLists(persistStoryboardID).then(function(lists){
         var options = [];
         console.log(lists);
@@ -576,3 +582,48 @@ controller.hears('set date',['mention', 'direct_mention','direct_message'], func
     });
   }
 });
+
+
+controller.hears('label',['mention', 'direct_mention','direct_message'], function(bot,message) 
+{
+  console.log(message);
+  //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
+
+  var mg = {
+    "text": "This is your first interactive message",
+    "attachments": [
+        {
+            "text": "Building buttons is easy right?",
+            "fallback": "Shame... buttons aren't supported in this land",
+            "callback_id": "button_tutorial",
+            "color": "#3AA3E3",
+            "attachment_type": "default",
+            "actions": [
+                {
+                    "name": "high priority",
+                    "text": "high priority",
+                    "type": "button",
+                    "value": "red",
+                    "style": "danger"
+                },
+                {
+                    "name": "medium priority",
+                    "text": "medium priority",
+                    "type": "button",
+                    "value": "yellow"
+                },
+                {
+                    "name": "low priority",
+                    "text": "low priority",
+                    "type": "button",
+                    "value": "green",
+                    
+                }
+            ]
+        }
+    ]
+}
+bot.reply(message,mg);
+});
+
+

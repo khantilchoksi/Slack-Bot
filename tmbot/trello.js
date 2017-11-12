@@ -167,6 +167,22 @@ function addDueDate(cardId, dueDate)
     });
 }
 
+function addLabel(cardId, color, labelName)
+{
+	
+	return new Promise(function (resolve, reject) 
+    {
+    	console.log("Incoming color : "+ color);
+    	t.post("/1/cards/"+cardId+"/labels", {"color": color, "name": labelName},function (error, body) {
+            if (error) throw new Error(error);
+            resolve(body);
+
+        });
+    });
+}
+
+
+
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
 exports.createNewCard = createNewCard;
@@ -174,3 +190,4 @@ exports.retrieveLists = retrieveLists;
 exports.retrieveCards = retrieveCards;
 exports.addAttachment = addAttachment;
 exports.addDueDate = addDueDate;
+exports.addLabel = addLabel;

@@ -233,6 +233,16 @@ function addDueDate(cardId,dueDate) {
 
 	});
 }
+
+function addLabel(cardId, color, labelName) {
+	return new Promise(function (resolve, reject)
+	{
+		trello.addLabel(cardId, color, labelName).then(function (updated_card) 
+		{
+			resolve(updated_card.name);
+		});
+	});
+}
 function getListsInBoard(boardId) {
 	var listMap =  new HashMap();
 	return new Promise(function (resolve, reject) 
@@ -282,3 +292,4 @@ exports.getListsInBoard = getListsInBoard;
 exports.getCardsInList = getCardsInList;
 exports.addAttachment = addAttachment;
 exports.addDueDate = addDueDate;
+exports.addLabel = addLabel;
