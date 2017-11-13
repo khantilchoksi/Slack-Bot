@@ -732,7 +732,28 @@ controller.hears('set date',['mention', 'direct_mention','direct_message'], func
     });
   }
 });
+controller.hears('archive card',['mention', 'direct_mention','direct_message'], function(bot,message)
+{
+  console.log(message);
+  //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
 
+  //check first whether user has created board or not
+  var responseMessage;
+ 
+  
+  
+  if(persistStoryboardID == undefined){
+    responseMessage = {
+        "text": "Please create a storyboard first or link your existing story board of trello."};
+        bot.reply(message,responseMessage);
+  }else{
+      
+    main.archiveCard(persistCardID).then(function(results){
+        responseMessage = "This card is now archived: "+results;
+        bot.reply(message,responseMessage);
+    });
+  }
+});
 
 controller.hears('label',['mention', 'direct_mention','direct_message'], function(bot,message) 
 {

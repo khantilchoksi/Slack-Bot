@@ -157,6 +157,20 @@ function addLabel(cardId, color, labelName)
     });
 }
 
+function archiveCard(cardId)
+{
+	
+	return new Promise(function (resolve, reject) 
+    {
+    	
+    	t.put("/1/cards/"+cardId, {"closed": true},function (error, body) {
+            if (error) throw new Error(error);
+            resolve(body);
+
+        });
+    });
+}
+
 
 
 exports.createNewStoryBoard = createNewStoryBoard;
@@ -168,3 +182,4 @@ exports.addAttachment = addAttachment;
 exports.addDueDate = addDueDate;
 exports.addLabel = addLabel;
 exports.retrieveBoards = retrieveBoards;
+exports.archiveCard = archiveCard;

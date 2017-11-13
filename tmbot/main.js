@@ -240,6 +240,16 @@ function addLabel(cardId, color, labelName) {
 		});
 	});
 }
+
+function archiveCard(cardId) {
+	return new Promise(function (resolve, reject)
+	{
+		trello.archiveCard(cardId).then(function (updated_card) 
+		{
+			resolve(updated_card.url);
+		});
+	});
+}
 function getListsInBoard(boardId) {
 	var listMap =  new HashMap();
 	return new Promise(function (resolve, reject) 
@@ -336,5 +346,9 @@ exports.getCardsInList = getCardsInList;
 exports.addAttachment = addAttachment;
 exports.addDueDate = addDueDate;
 exports.addLabel = addLabel;
+<<<<<<< Updated upstream
 exports.getBoardsOfMember = getBoardsOfMember;
 exports.copyListsToBoard = copyListsToBoard;
+=======
+exports.archiveCard = archiveCard;
+>>>>>>> Stashed changes
