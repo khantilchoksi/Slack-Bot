@@ -246,14 +246,11 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
     const action = payload.actions[0];
 
     var selected_options = action.selected_options[0];
-   console.log("\n\n KHANTIL LIST Selected options: ",JSON.stringify(action.selected_options));
-   console.log("\n\n ****(((*(*(*(*   LIST Selected options KEY: ",JSON.stringify(action.selected_options[1]));
+
    //console.log(`The dropdown menu had name ${action.name} and value ${action.value}`);
     var ackText = `You have selected ${selected_options.value} list.`;
     const replacement = payload.original_message;
-    // Typically, you want to acknowledge the action and remove the interactive elements from the message
-    console.log("\n\n ****(((*(*(*(*   SELECTED ATTACHEMENTS:: ",JSON.stringify(replacement.attachments));
-    console.log("\n\n ****(((*(*(*(*   SELECTED ATTACHEMENTS:[0]: ",JSON.stringify(replacement.attachments[0]));
+
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
@@ -394,7 +391,7 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
         }, function(err, convo) {
           convo.ask({
           channel: message.channel,
-          text: 'Please enter the name of the card!'
+          text: 'Enter the name of the card:'
            }, function(res, convo) {
              
             //  main.getNewList(res.text, persistStoryboardID).then((response)=>{
@@ -463,7 +460,7 @@ controller.hears('new board',['mention', 'direct_mention','direct_message'], fun
     }, function(err, convo) {
       convo.ask({
       channel: message.channel,
-      text: 'Please enter the name of the board!'
+      text: 'Enter the name of the board:'
        }, function(res, convo) {
          
         //  main.getNewList(res.text, persistStoryboardID).then((response)=>{
@@ -472,7 +469,7 @@ controller.hears('new board',['mention', 'direct_mention','direct_message'], fun
         //  });
         newStoryBoardName = res.text;
         bot.reply(message,{
-            "text": "Sure!",
+            "text": "Creating a new board is easy now!",
             "attachments": [
       
                 {
@@ -658,7 +655,7 @@ function buildDropdownLists(actionCallbackId){
         main.getListsInBoard(persistStoryboardID)
         .then((responseLists) => {
             var jsonobj = {
-                "text": "Managing tasks? I am here to help you!",
+                "text": "First we will link your task which you want to manage: ",
                 "attachments": [   
                 
                     {
@@ -692,6 +689,54 @@ function buildDropdownLists(actionCallbackId){
     });
 
 }
+
+function buildManageTasksDropdownLists(){  
+        //console.log("\n\n BEFORE :: BEFORE :: JSON OBJECT BUILT: "+JSON.stringify(jsonobj));
+        return new Promise( function(resolve, reject){
+
+                var jsonobj = {
+                    "text": "You have following options for managing tasks: ",
+                    "attachments": [   
+                    
+                        {
+                          "text": "Choose a list from the following list to a task into that list:",
+                          "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                            "callback_id": "manage_tasks_callback",
+                            "color": "#0070FF",
+                            "attachment_type": "default",
+                            "actions": [
+                            {
+                                "name": "lists_list",
+                                "text": "Select an action to perform...",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "text": "Set Label",
+                                        "value": "Set Label"
+                                    },
+                                    {
+                                        "text": "Attach URL",
+                                        "value": "Attach URL"
+                                    },
+                                    {
+                                        "text": "Set Due Date",
+                                        "value": "Set Due Date"
+                                    },
+                                    {
+                                        "text": "Archive Card",
+                                        "value": "Archive Card"
+                                    },
+                                ],
+                           }
+                          ],
+                      }
+                  ],
+                };
+                resolve(jsonobj);  
+            });
+
+    
+    }
 
 function findAttachment(message, actionCallbackId) {
     console.log("Funciton findAttachment: \n message: ", message, "/n actionCallbackID: ",actionCallbackId);
