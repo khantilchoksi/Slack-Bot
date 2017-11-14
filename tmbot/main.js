@@ -361,9 +361,6 @@ exports.getCardsInList = getCardsInList;
 exports.addAttachment = addAttachment;
 exports.addDueDate = addDueDate;
 exports.addLabel = addLabel;
-<<<<<<< Updated upstream
 exports.getBoardsOfMember = getBoardsOfMember;
 exports.copyListsToBoard = copyListsToBoard;
-=======
 exports.archiveCard = archiveCard;
->>>>>>> Stashed changes
