@@ -273,7 +273,12 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
    console.log("\n\n KHANTIL LIST Selected options: ",JSON.stringify(action.selected_options));
    console.log("\n\n ****(((*(*(*(*   LIST Selected options KEY: ",JSON.stringify(action.selected_options[1]));
    //console.log(`The dropdown menu had name ${action.name} and value ${action.value}`);
-    var ackText = `You have selected ${selected_options.value} list.`;
+   
+   const selectedType = findSelectedOption(payload.original_message, 
+    'list_selection_callback', 
+    payload.actions[0].selected_options[0].value);
+    
+   var ackText = `You have selected ${selectedType.text} list.`;
     const replacement = payload.original_message;
     // Typically, you want to acknowledge the action and remove the interactive elements from the message
     console.log("\n\n ****(((*(*(*(*   SELECTED ATTACHEMENTS:: ",JSON.stringify(replacement.attachments));
@@ -301,7 +306,7 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
     return replacement;
    });
 
-slackMessages.action('cards_under_list_callback', (payload,bot) => {
+   slackMessages.action('cards_under_list_callback', (payload,bot) => {
     // `payload` is JSON that describes an interaction with a message.
 
     console.log('******* Template Cards under List PAYLOAD : ', payload);
@@ -309,7 +314,12 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
     const action = payload.actions[0];
     var listId = action.selected_options[0].value;
    console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
-    var ackText = `You have selected ${listId} list. You can do the following : provide URL to attach, set due date or set label`;
+   
+   const selectedType = findSelectedOption(payload.original_message, 
+    'cards_under_list_callback', 
+    payload.actions[0].selected_options[0].value);
+   
+   var ackText = `You have selected \`${selectedType.text}\` list. \n You can do the following : Provide URL to attach, Set due date, Set label, or Archive Card`;
     const replacement = payload.original_message;
 
     var createdListsNames;
@@ -319,7 +329,7 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
     .then((cards) => {
 
           var cardsAttach = {
-              "text": "Select your card that you want to attach the link to",
+              "text": "Select your card that you want to attach the link to:",
               "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
                 "callback_id": "card_selected_attachment_callback",
                 "color": "#3AA3E3",
@@ -362,7 +372,10 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
     const action = payload.actions[0];
     var cardId = action.selected_options[0].value;
     console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
-    var ackText = `Card selected whose id is ${cardId}.`;
+    const selectedType = findSelectedOption(payload.original_message, 
+        'card_selected_attachment_callback', 
+        payload.actions[0].selected_options[0].value);
+    var ackText = `You have selected ${selectedType.text} card.`;
     const replacement = payload.original_message;
     persistCardID = cardId;
     replacement.attachments[1].text = `:white_check_mark:  ${ackText}`;
