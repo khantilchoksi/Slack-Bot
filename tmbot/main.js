@@ -165,20 +165,35 @@ function createNewListWithTemplateCards(listName)
 	});
 	var cardsArray;
 	switch(listName){
-		case "QA": 
-			cardsArray = menu.listOfQACards();
+		case "Story": 
+			cardsArray = menu.listOfStoryCards();
 			break;
-		case "Testing":
-			cardsArray = menu.listOfTestingCards();
+		case "To_Do":
+			cardsArray = menu.listOfToDoCards();
 			break;
-		case "Service":
-			cardsArray = menu.listOfServiceCards();
+		case "In_Progress":
+			cardsArray = menu.listOfInProgressCards();
 			break;
-		case "Testing":
-			cardsArray = menu.listOfTestingCards();
+		case "To_Verify":
+			cardsArray = menu.listOfToVerifyCards();
 			break;
-		case "Deployment":
-			cardsArray = menu.listOfDeploymentCards();
+		case "Done":
+			cardsArray = menu.listOfDoneCards();
+			break;
+		case "Requirements": 
+			cardsArray = menu.listOfRequirementsCards();
+			break;
+		case "Design":
+			cardsArray = menu.listOfDesignCards();
+			break;
+		case "Implementation":
+			cardsArray = menu.listOfImplementationCards();
+			break;
+		case "Verification":
+			cardsArray = menu.listOfVerificationCards();
+			break;
+		case "Maintenance":
+			cardsArray = menu.listOfMaintenanceCards();
 			break;
 	}
 	
