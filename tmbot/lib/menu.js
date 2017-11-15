@@ -23,42 +23,66 @@ const menu = {
     ],
     Story: [
       {
-        name : "White Box Testing",
+        name : "Feature 1 Design Review",
       },
       {
-        name : "Black Box Testing",
+        name : "Feature 1 Implementation",
+      },
+      {
+        name : "Feature 1 Acceptance Testing",
+      },
+      {
+        name : "Feature 1 Code Review",
+      },
+      {
+        name : "Feature 1 Deployment",
+      },
+      {
+        name : "Feature 2 Design Review",
+      },
+      {
+        name : "Feature 2 Implementation",
+      },
+      {
+        name : "Feature 2 Acceptance Testing",
+      },
+      {
+        name : "Feature 2 Code Review",
+      },
+      {
+        name : "Feature 2 Deployment",
       }
     ],
     To_Do: [
       {
-        name : "Testing1",
+        name : "Feature 1 Deployment",
       },
       {
-        name : "Testing2",
+        name : "Feature 2 Deployment",
       }
     ],
     In_Progress: [
       {
-        name : "Service1",
+        name : "Feature 1 Code Review",
       },
       {
-        name : "Service2",
+        name : "Feature 2 Code Review",
       }
     ], 
     To_Verify: [
       {
-        name : "Deployment1",
+        name : "Feature 1 Implementation",
       },
       {
-        name : "Deployment2",
+        name : "Feature 2 Implementation",
       }
     ],
     Done: [
       {
-        name : "Deployment1",
+        name : "Feature 1 Design Review",
       },
       {
-        name : "Deployment2",
+        name : "Feature 2 Design Review",
       }
     ],
     waterfall_lists: [
@@ -85,42 +109,42 @@ const menu = {
       ],
     Requirements: [
       {
-        name : "White Box Testing",
+        name : "Customer Specification",
       },
       {
-        name : "Black Box Testing",
+        name : "Non Disclosure Agreement",
       }
     ],
     Design: [
       {
-        name : "Testing1",
+        name : "Wireframe1",
       },
       {
-        name : "Testing2",
+        name : "Prototype2",
       }
     ],
     Implementation: [
       {
-        name : "Service1",
+        name : "API implementation",
       },
       {
-        name : "Service2",
+        name : "OAuth authorization",
       }
     ], 
     Verification: [
       {
-        name : "Deployment1",
+        name : "Code Review",
       },
       {
-        name : "Deployment2",
+        name : "Acceptance Testing",
       }
     ],
     Maintenance: [
       {
-        name : "Deployment1",
+        name : "Customer Feedback",
       },
       {
-        name : "Deployment2",
+        name : "Support Issue",
       }
     ],
     options: [
