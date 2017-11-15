@@ -1,4 +1,7 @@
-Functionalities of the bot:   
+## MILESTONE : SERVICE  
+---------------------------------------------------------------
+
+### Functionalities of the bot:   
 **UseCase 1**<br>    
   User can perform the following actions:   
   * User can create a new board in trello, from available templates (Scrum, Waterfall)  
