@@ -323,7 +323,7 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
     .then((cards) => {
 
           var cardsAttach = {
-              "text": "Select your card that you want to attach the link to:",
+              "text": "Select your card that you want to manage:",
               "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
                 "callback_id": "card_selected_attachment_callback",
                 "color": "#3AA3E3",
@@ -376,6 +376,28 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
     replacement.attachments[1].text = `:white_check_mark:  ${ackText}`;
     delete replacement.attachments[1].actions;
 
+    buildManageTasksDropdownLists().then(function(taskAttachment){
+        console.log("WHY ARE YOU NOT COMING HERE?");
+        replacement.attachments.push(taskAttachment); 
+        return replacement;
+    }).then(bot);
+        //return replacement;
+   });
+
+
+   //Manage Tasks:
+
+   slackMessages.action('manage_tasks_callback', (payload,bot) => {
+    // `payload` is JSON that describes an interaction with a message.
+    
+    console.log('*******  manage_tasks PAYLOAD : ', payload);
+    const action = payload.actions[0];
+    console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
+    var selected_options = action.selected_options[0];
+    var ackText = `You have selected \`${selected_options.value}.\` manage`;
+    const replacement = payload.original_message;
+    replacement.attachments[2].text = `:white_check_mark:  ${ackText}`;
+    delete replacement.attachments[2].actions;
     return replacement;
    });
 
@@ -552,7 +574,7 @@ controller.hears('manage tasks',['mention', 'direct_mention','direct_message'], 
           options.push({"text": list.name, "value": list.id});
         });
         bot.reply(message,{
-          "text": "Choose in sequence the card you would like to attach your link to",
+          "text": "Choose the card you want to manage:",
           "attachments": [
               {
                 "text": "Choose a List",
@@ -729,10 +751,6 @@ function buildManageTasksDropdownLists(){
         return new Promise( function(resolve, reject){
 
                 var jsonobj = {
-                    "text": "You have following options for managing tasks: ",
-                    "attachments": [   
-                    
-                        {
                           "text": "Choose a list from the following list to a task into that list:",
                           "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
                             "callback_id": "manage_tasks_callback",
@@ -763,13 +781,9 @@ function buildManageTasksDropdownLists(){
                                 ],
                            }
                           ],
-                      }
-                  ],
-                };
+                      };
                 resolve(jsonobj);  
             });
-
-    
     }
 
 function findAttachment(message, actionCallbackId) {
@@ -853,31 +867,32 @@ controller.hears('label',['mention', 'direct_mention','direct_message'], functio
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
 
   var mg = {
-    "text": "This is your first interactive message",
+    "text": "You can assign the priority of the task now.",
     "attachments": [
         {
-            "text": "Building buttons is easy right?",
+            "text": "Select the priority of the card you want to assign:",
             "fallback": "Shame... buttons aren't supported in this land",
             "callback_id": "button_tutorial",
             "color": "#3AA3E3",
             "attachment_type": "default",
             "actions": [
                 {
-                    "name": "high priority",
-                    "text": "high priority",
+                    "name": "high Priority",
+                    "text": "High Priority",
                     "type": "button",
                     "value": "red",
                     "style": "danger"
                 },
                 {
-                    "name": "medium priority",
-                    "text": "medium priority",
+                    "name": "Medium Priority",
+                    "text": "Medium Priority",
                     "type": "button",
-                    "value": "yellow"
+                    "value": "yellow",
+                    "style": "danger"
                 },
                 {
-                    "name": "low priority",
-                    "text": "low priority",
+                    "name": "Low Priority",
+                    "text": "Low Priority",
                     "type": "button",
                     "value": "green",
                     
