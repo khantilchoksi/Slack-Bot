@@ -68,7 +68,7 @@ const menu = {
       {
         name : "Feature 2 Code Review",
       }
-    ], 
+    ],
     To_Verify: [
       {
         name : "Feature 1 Implementation",
@@ -130,7 +130,7 @@ const menu = {
       {
         name : "OAuth authorization",
       }
-    ], 
+    ],
     Verification: [
       {
         name : "Code Review",
@@ -147,51 +147,8 @@ const menu = {
         name : "Support Issue",
       }
     ],
-    options: [
-      {
-        id: 'strength',
-        choices: [
-          {
-            id: 'single',
-            name: 'Single',
-          },
-          {
-            id: 'double',
-            name: 'Double',
-          },
-          {
-            id: 'triple',
-            name: 'Triple',
-          },
-          {
-            id: 'quad',
-            name: 'Quad',
-          },
-        ],
-      },
-      {
-        id: 'milk',
-        choices: [
-          {
-            id: 'whole',
-            name: 'Whole',
-          },
-          {
-            id: 'lowfat',
-            name: 'Low fat',
-          },
-          {
-            id: 'almond',
-            name: 'Almond',
-          },
-          {
-            id: 'soy',
-            name: 'Soy',
-          },
-        ],
-      },
-    ],
-  
+
+
     listOfTypes() {
       return menu.items.map(i => ({ text: i.name, value: i.id }));
     },
@@ -244,7 +201,7 @@ const menu = {
       return menu.options.find(o => o.id === optionId).choices
         .map(c => ({ text: c.name, value: c.id }));
     },
-  
+
     choiceNameForId(optionId, choiceId) {
       const option = menu.options.find(o => o.id === optionId);
       if (option) {
@@ -253,5 +210,5 @@ const menu = {
       return false;
     },
   };
-  
+
   module.exports = menu;
