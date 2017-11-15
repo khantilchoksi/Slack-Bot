@@ -215,12 +215,15 @@ slackMessages.action('boards_lists_callback', (payload,bot) => {
     const replacement = payload.original_message;
 
     var createdListsNames;
+    const selectedType = findSelectedOption(payload.original_message, 
+        'boards_lists_callback', 
+        payload.actions[0].selected_options[0].value);
     // Start an order, and when that completes, send another message to the user.
     main.copyListsToBoard(selected_options.value, persistStoryboardID)
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       
-      ackText = `All the lists from ${selected_options.text} board has been copied to your linked board with this channel.`;
+      ackText = `All the lists from ${selectedType.text} board has been copied to your linked board with this channel.`;
       
       replacement.attachments[0].text = `:white_check_mark:  ${ackText}`;
       delete replacement.attachments[0].actions;
@@ -450,6 +453,7 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
             newCardName = res.text;
             buildDropdownLists(actionCallbackID).then(function(results){
                 responseMessage = results;
+                convo.next();
                 bot.reply(message,responseMessage);
             });
              
@@ -458,7 +462,6 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
 }
 
 );
-convo.next();
   }
 });
 
@@ -628,7 +631,7 @@ controller.hears('Copy lists',['mention', 'direct_mention','direct_message'], fu
     
 });
 
-controller.hears('Link board',['mention', 'direct_mention','direct_message'], function(bot,message){
+controller.hears('Link existing board',['mention', 'direct_mention','direct_message'], function(bot,message){
     listMap = main.getBoardsOfMember().then(function(listMap){
       var options = [];
       console.log(listMap);
@@ -814,7 +817,7 @@ slackMessages.start(port).then(() => {
  console.log(`server listening on port ${port}`);
 });
 
-controller.hears('set date',['mention', 'direct_mention','direct_message'], function(bot,message)
+controller.hears('set due date',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
   console.log(message);
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
@@ -887,8 +890,8 @@ controller.hears('label',['mention', 'direct_mention','direct_message'], functio
                     "name": "Medium Priority",
                     "text": "Medium Priority",
                     "type": "button",
-                    "value": "yellow",
-                    "style": "danger"
+                    "value": "yellow"
+                
                 },
                 {
                     "name": "Low Priority",
