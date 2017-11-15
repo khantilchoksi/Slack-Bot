@@ -376,12 +376,12 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
     replacement.attachments[1].text = `:white_check_mark:  ${ackText}`;
     delete replacement.attachments[1].actions;
 
-    buildManageTasksDropdownLists().then(function(taskAttachment){
-        console.log("WHY ARE YOU NOT COMING HERE?");
-        replacement.attachments.push(taskAttachment); 
-        return replacement;
-    }).then(bot);
-        //return replacement;
+    // buildManageTasksDropdownLists().then(function(taskAttachment){
+    //     console.log("WHY ARE YOU NOT COMING HERE?");
+    //     replacement.attachments.push(taskAttachment); 
+    //     return replacement;
+    // }).then(bot);
+    return replacement;
    });
 
 
