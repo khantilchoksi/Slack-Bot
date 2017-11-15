@@ -2,7 +2,8 @@
 
 ## [Milestone : Initial Design](./Design.md) 
 ## [Revised Design](./Design_1.2.md)
-## [Milestone : BOT](./BOT.md) 
+## [Milestone : BOT](./BOT.md)
+## [Milestone : BOT](./SERVICE.md)
 ## Team Name : Task Management Bot
 
 #### Team members
