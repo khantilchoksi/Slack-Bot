@@ -1,72 +1,152 @@
 const menu = {
     scrum_lists: [
       {
-        name : "QA",
+        name : "Story",
         idBoard : "59eff60e5920e126b94ee55d"
       },
       {
-        name : "Testing",
+        name : "To_Do",
         idBoard : "59eff60e5920e126b94ee55d"
       },
       {
-        name : "Service",
+        name : "In_Progress",
         idBoard : "59eff60e5920e126b94ee55d"
       },
       {
-        name : "Deployment",
+        name : "To_Verify",
+        idBoard : "59eff60e5920e126b94ee55d"
+      },
+      {
+        name : "Done",
         idBoard : "59eff60e5920e126b94ee55d"
       }
     ],
-    QA: [
+    Story: [
       {
-        name : "White Box Testing",
+        name : "Feature 1 Design Review",
       },
       {
-        name : "Black Box Testing",
+        name : "Feature 1 Implementation",
+      },
+      {
+        name : "Feature 1 Acceptance Testing",
+      },
+      {
+        name : "Feature 1 Code Review",
+      },
+      {
+        name : "Feature 1 Deployment",
+      },
+      {
+        name : "Feature 2 Design Review",
+      },
+      {
+        name : "Feature 2 Implementation",
+      },
+      {
+        name : "Feature 2 Acceptance Testing",
+      },
+      {
+        name : "Feature 2 Code Review",
+      },
+      {
+        name : "Feature 2 Deployment",
       }
     ],
-    Testing: [
+    To_Do: [
       {
-        name : "Testing1",
+        name : "Feature 1 Deployment",
       },
       {
-        name : "Testing2",
+        name : "Feature 2 Deployment",
       }
     ],
-    Service: [
+    In_Progress: [
       {
-        name : "Service1",
+        name : "Feature 1 Code Review",
       },
       {
-        name : "Service2",
+        name : "Feature 2 Code Review",
       }
     ], 
-    Deployment: [
+    To_Verify: [
       {
-        name : "Deployment1",
+        name : "Feature 1 Implementation",
       },
       {
-        name : "Deployment2",
+        name : "Feature 2 Implementation",
+      }
+    ],
+    Done: [
+      {
+        name : "Feature 1 Design Review",
+      },
+      {
+        name : "Feature 2 Design Review",
       }
     ],
     waterfall_lists: [
         {
-          name : "Waterfall List 1",
+          name : "Requirements",
           idBoard : "59eff60e5920e126b94ee55d"
         },
         {
-          name : "Water fall list2",
+          name : "Design",
           idBoard : "59eff60e5920e126b94ee55d"
         },
         {
-          name : "Water fall list3",
+          name : "Implementation",
           idBoard : "59eff60e5920e126b94ee55d"
         },
         {
-          name : "Water list4",
+          name : "Verification",
+          idBoard : "59eff60e5920e126b94ee55d"
+        },
+        {
+          name : "Maintenance",
           idBoard : "59eff60e5920e126b94ee55d"
         }
       ],
+    Requirements: [
+      {
+        name : "Customer Specification",
+      },
+      {
+        name : "Non Disclosure Agreement",
+      }
+    ],
+    Design: [
+      {
+        name : "Wireframe1",
+      },
+      {
+        name : "Prototype2",
+      }
+    ],
+    Implementation: [
+      {
+        name : "API implementation",
+      },
+      {
+        name : "OAuth authorization",
+      }
+    ], 
+    Verification: [
+      {
+        name : "Code Review",
+      },
+      {
+        name : "Acceptance Testing",
+      }
+    ],
+    Maintenance: [
+      {
+        name : "Customer Feedback",
+      },
+      {
+        name : "Support Issue",
+      }
+    ],
     options: [
       {
         id: 'strength',
@@ -124,22 +204,42 @@ const menu = {
         return menu.waterfall_lists.map(i => ({ name: i.name, idBoard: i.idBoard }));
     },
 
-    listOfQACards() {
-      return menu.QA.map(i => ({ name: i.name }));
+    listOfStoryCards() {
+      return menu.Story.map(i => ({ name: i.name }));
     },
 
-    listOfTestingCards() {
-      return menu.Testing.map(i => ({ name: i.name }));
+    listOfToDoCards() {
+      return menu.To_Do.map(i => ({ name: i.name }));
     },
 
-    listOfServiceCards() {
-      return menu.Service.map(i => ({ name: i.name }));
+    listOfInProgressCards() {
+      return menu.In_Progress.map(i => ({ name: i.name }));
     },
 
-    listOfDeploymentCards() {
-      return menu.Deployment.map(i => ({ name: i.name }));
+    listOfToVerifyCards() {
+      return menu.To_Verify.map(i => ({ name: i.name }));
     },
-  
+    listOfDoneCards() {
+      return menu.Done.map(i => ({ name: i.name }));
+    },
+    listOfRequirementsCards() {
+      return menu.Requirements.map(i => ({ name: i.name }));
+    },
+
+    listOfDesignCards() {
+      return menu.Design.map(i => ({ name: i.name }));
+    },
+
+    listOfImplementationCards() {
+      return menu.Implementation.map(i => ({ name: i.name }));
+    },
+
+    listOfVerificationCards() {
+      return menu.Verification.map(i => ({ name: i.name }));
+    },
+    listOfMaintenanceCards() {
+      return menu.Maintenance.map(i => ({ name: i.name }));
+    },
     listOfChoicesForOption(optionId) {
       return menu.options.find(o => o.id === optionId).choices
         .map(c => ({ text: c.name, value: c.id }));

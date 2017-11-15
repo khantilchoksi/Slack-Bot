@@ -18,7 +18,7 @@ function createNewStoryBoard(boardName)
 
 		t.post("/1/boards/", {
 			"name" : boardName,
-			"defaultLists" : false
+			"defaultLists" : false 
 		}, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Inside trello.js! KHANTIL NEW BOARD API CALL");
@@ -59,29 +59,45 @@ function createNewCard(card_name, listId)
 
 		});
 	});
-    
 }
 
-function retreiveLists(boardId)
+function retrieveLists(boardId)
 {
+	
     return new Promise(function (resolve, reject) 
     {
-    	t.get("/1/boards/" + boardId+ "/lists", function (error, body) {
+        t.get("/1/boards/"+ boardId+"/lists", function (error, response) {
             if (error) throw new Error(error);
-            resolve(body);
-
+           console.log("Testing retrieving of lists");
+           console.log("RETRIEVE LIST: "+response.body);    //response is json
+            
+            resolve(response);
         });
     });
 }
+function retrieveCards(listId)
+{
+	
+	return new Promise(function (resolve, reject) 
+	{
 
-function retreiveCards(listId)
+		t.get("/1/lists/"+ listId+"/cards", function (error, response) {
+            if (error) throw new Error(error);
+           console.log("Testing retrieving of cards");
+           console.log("RETRIEVE CARDS: "+response.body);    //response is json
+            
+            resolve(response);
+        });
+	});
+}
+
+function retrieveBoards()
 {
     return new Promise(function (resolve, reject) 
     {
-    	t.get("/1/lists/" + listId+ "/cards", function (error, body) {
+    	t.get("/1/members/" + process.env.TRELLO_MEMBERID+ "/boards", function (error, body) {
             if (error) throw new Error(error);
             resolve(body);
-
         });
     });
 }
@@ -113,10 +129,57 @@ function addAttachment(cardId, url)
     });
 }
 
+function addDueDate(cardId, dueDate)
+{
+	
+	return new Promise(function (resolve, reject) 
+    {
+    	console.log("Incoming due date : "+ dueDate);
+    	t.put("/1/cards/" + cardId, {"due": dueDate},function (error, body) {
+            if (error) throw new Error(error);
+            resolve(body);
+
+        });
+    });
+}
+
+function addLabel(cardId, color, labelName)
+{
+	
+	return new Promise(function (resolve, reject) 
+    {
+    	console.log("Incoming color : "+ color);
+    	t.post("/1/cards/"+cardId+"/labels", {"color": color, "name": labelName},function (error, body) {
+            if (error) throw new Error(error);
+            resolve(body);
+
+        });
+    });
+}
+
+function archiveCard(cardId)
+{
+	
+	return new Promise(function (resolve, reject) 
+    {
+    	
+    	t.put("/1/cards/"+cardId, {"closed": true},function (error, body) {
+            if (error) throw new Error(error);
+            resolve(body);
+
+        });
+    });
+}
+
+
 
 exports.createNewStoryBoard = createNewStoryBoard;
 exports.createNewList = createNewList;
 exports.createNewCard = createNewCard;
-exports.retreiveLists = retreiveLists;
-exports.retreiveCards = retreiveCards;
+exports.retrieveLists = retrieveLists;
+exports.retrieveCards = retrieveCards;
 exports.addAttachment = addAttachment;
+exports.addDueDate = addDueDate;
+exports.addLabel = addLabel;
+exports.retrieveBoards = retrieveBoards;
+exports.archiveCard = archiveCard;

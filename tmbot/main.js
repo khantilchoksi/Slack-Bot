@@ -121,7 +121,7 @@ function getNewStoryBoard(template_type, boardName)
 
 }
 
-function getNewList(listName)
+function getNewList(listName, storyBoardId)
 {
     return new Promise(function (resolve, reject) 
 	{
@@ -129,7 +129,7 @@ function getNewList(listName)
 		console.log(" This is my story board id: "+current_boardId);
 		var new_list = {
 			"name" : listName,
-			"idBoard" : current_boardId
+			"idBoard" : storyBoardId
 	   };
 
 		trello.createNewList(new_list).then(function (created_list) 
@@ -138,12 +138,9 @@ function getNewList(listName)
 			console.log(created_list);
 			// created list comes as array
 			
-			
-
-			resolve(created_list.id);
+			resolve(created_list);
 		});
 	});
-
 }
 
 function createNewListWithTemplateCards(listName)
@@ -168,20 +165,35 @@ function createNewListWithTemplateCards(listName)
 	});
 	var cardsArray;
 	switch(listName){
-		case "QA": 
-			cardsArray = menu.listOfQACards();
+		case "Story": 
+			cardsArray = menu.listOfStoryCards();
 			break;
-		case "Testing":
-			cardsArray = menu.listOfTestingCards();
+		case "To_Do":
+			cardsArray = menu.listOfToDoCards();
 			break;
-		case "Service":
-			cardsArray = menu.listOfServiceCards();
+		case "In_Progress":
+			cardsArray = menu.listOfInProgressCards();
 			break;
-		case "Testing":
-			cardsArray = menu.listOfTestingCards();
+		case "To_Verify":
+			cardsArray = menu.listOfToVerifyCards();
 			break;
-		case "Deployment":
-			cardsArray = menu.listOfDeploymentCards();
+		case "Done":
+			cardsArray = menu.listOfDoneCards();
+			break;
+		case "Requirements": 
+			cardsArray = menu.listOfRequirementsCards();
+			break;
+		case "Design":
+			cardsArray = menu.listOfDesignCards();
+			break;
+		case "Implementation":
+			cardsArray = menu.listOfImplementationCards();
+			break;
+		case "Verification":
+			cardsArray = menu.listOfVerificationCards();
+			break;
+		case "Maintenance":
+			cardsArray = menu.listOfMaintenanceCards();
 			break;
 	}
 	
@@ -222,6 +234,37 @@ function addAttachment(cardId,new_attachment) {
 
 	});
 }
+
+function addDueDate(cardId,dueDate) {
+	return new Promise(function (resolve, reject)
+	{
+		trello.addDueDate(cardId, dueDate).then(function (updated_card) 
+		{
+			resolve(updated_card.due);
+		});
+
+	});
+}
+
+function addLabel(cardId, color, labelName) {
+	return new Promise(function (resolve, reject)
+	{
+		trello.addLabel(cardId, color, labelName).then(function (updated_card) 
+		{
+			resolve(updated_card.name);
+		});
+	});
+}
+
+function archiveCard(cardId) {
+	return new Promise(function (resolve, reject)
+	{
+		trello.archiveCard(cardId).then(function (updated_card) 
+		{
+			resolve(updated_card.url);
+		});
+	});
+}
 function getListsInBoard(boardId) {
 	var listMap =  new HashMap();
 	return new Promise(function (resolve, reject) 
@@ -229,11 +272,31 @@ function getListsInBoard(boardId) {
 		// mock data needs .
 		trello.retrieveLists(boardId).then(function (listsArray) 
 		{
+			console.log("Common Board id "+ boardId)
 			//listsArray = JSON.parse(listsArray);
             listsArray.forEach(function(item) {
 				console.log(" MAIN.JS GETLISTS IN BOARD ID : "+item.id);
 				console.log(" MAIN.JS GETLISTS IN BOARD NAME : "+item.name);
 				listMap.set(item.id, item.name);
+			});
+			resolve(listMap);
+		});
+	});
+
+}
+
+function getBoardsOfMember() {
+	var listMap =  new HashMap();
+	return new Promise(function (resolve, reject) 
+	{
+		// mock data needs .
+		trello.retrieveBoards().then(function (listsArray) 
+		{
+			//listsArray = JSON.parse(listsArray);
+            listsArray.forEach(function(item) {
+				console.log(" MAIN.JS  getBoardsOfMemberGOT BOARD ID : "+item.id);
+				console.log(" MAIN.JS  getBoardsOfMember GOT BOARD NAME : "+item.name);
+				listMap.set(item.id, item.name);	//key, value
 			});
 			resolve(listMap);
 		});
@@ -263,9 +326,41 @@ function getCardsInList(listId){
 	});
 }
 
+
+function copyListsToBoard(fromBoardId, toBoardId)
+{
+	return new Promise(function (resolve, reject) 
+	{
+		trello.retrieveLists(fromBoardId).then(function(listsArray){
+		
+		listsArray.forEach(function(item) {
+				var new_list = {
+					"name" : item.name,
+					"idBoard" : toBoardId
+			   };
+			   trello.createNewList(new_list).then(function (created_list) 
+			   {
+				   // created list comes as array
+				   console.log("\n\n\n CREATED COPIED LIST: "+item.name+" with created_list.url: "+created_list.url);
+				   resolve(created_list.id);
+			   });
+		});
+	});
+});
+	
+
+}
+
+
+
 exports.getNewStoryBoard = getNewStoryBoard;
 exports.getNewList = getNewList;
 exports.getNewCard = getNewCard;
 exports.getListsInBoard = getListsInBoard;
 exports.getCardsInList = getCardsInList;
 exports.addAttachment = addAttachment;
+exports.addDueDate = addDueDate;
+exports.addLabel = addLabel;
+exports.getBoardsOfMember = getBoardsOfMember;
+exports.copyListsToBoard = copyListsToBoard;
+exports.archiveCard = archiveCard;
