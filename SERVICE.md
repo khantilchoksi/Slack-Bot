@@ -25,3 +25,10 @@ User can perform the following actions:
     * Bot will add a URL to the card which can be later referred to recollect the issues for that task
   * User can ask to archive the card
     * Bot will move the requested card to archive as per user’s request
+    
+    
+Link to [worksheet](https://github.ncsu.edu/asoni3/CSC510-Project/blob/milestone_service/Service_Worksheet.md)
+
+Link to [YouTube Screencast](https://youtu.be/1ylPTatReYI)
+
+Link to [branch that contains code for this milestone](https://github.ncsu.edu/asoni3/CSC510-Project/tree/milestone_service)
