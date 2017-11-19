@@ -812,7 +812,7 @@ function findAttachment(message, actionCallbackId) {
   }
 
 // Start the built-in HTTP server
-const port = 4390;
+const port = process.env.PORT || 4390;
 slackMessages.start(port).then(() => {
  console.log(`server listening on port ${port}`);
 });
