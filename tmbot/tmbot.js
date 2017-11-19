@@ -450,6 +450,7 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
             newCardName = res.text;
             buildDropdownLists(actionCallbackID).then(function(results){
                 responseMessage = results;
+                convo.next();
                 bot.reply(message,responseMessage);
             });
              
@@ -458,7 +459,6 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
 }
 
 );
-convo.next();
   }
 });
 
