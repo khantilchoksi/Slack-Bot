@@ -3,6 +3,7 @@ var express = require('express');
 var http = require('http')
 var OAuth = require('oauth').OAuth
 var url = require('url')
+var trelloDB = require('./trelloDB.js')
 require('dotenv').config();
 /*
 /     Express Server Setup
@@ -11,11 +12,10 @@ var app = express();
 
 app.use(express.static('public'));
 
-var server = app.listen(4390, function () {
+var server = app.listen(4391, function () {
  console.log('Server up and running...🏃🏃🏻');
  console.log("Listening on port %s", server.address().port);
 });
-
 
 /*
 /     OAuth Setup and Functions
@@ -31,7 +31,7 @@ const key = process.env.TRELLO_KEY;
 const secret = process.env.TRELLO_OAUTH_SECRET;
 
 // Trello redirects the user here after authentication
-const loginCallback = "http://1c0fcf14.ngrok.io/callback";
+const loginCallback = "http://c35faff4.ngrok.io/callback";
 
 // You should have {"token": "tokenSecret"} pairs in a real application
 // Storage should be more permanent (redis would be a good choice)
@@ -60,9 +60,8 @@ var callback = function(request, response) {
      // Now we can respond with data to show that we have access to your Trello account via OAuth
      console.log(`in getProtectedResource - accessToken: ${accessToken}, accessTokenSecret: ${accessTokenSecret}`);
      console.log(JSON.parse(data).username);
+     trelloDB.insertIntoSlackToTrello("user1", JSON.parse(data).username);
      response.send(data);
-    
-    
    });
  });
 };
