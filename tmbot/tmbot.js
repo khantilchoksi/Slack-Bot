@@ -7,8 +7,12 @@ var main = require('./main.js');
 var chai = require("chai");
 var expect = chai.expect;
 var HashMap = require('hashmap');
+var OAuth = require('oauth').OAuth
+var url = require('url')
 require('dotenv').config();
 var trello = require('./trello.js');
+var trelloDB = require('./trelloDB.js');
+var bodyParser = require('body-parser');
 // Store our app's ID and Secret. These we got from Step 1.
 // For this tutorial, we'll keep your API credentials right here. But for an actual app, you'll want to  store them securely in environment variables.
 var clientid = process.env.CLIENT_ID;
@@ -23,6 +27,16 @@ const { createMessageAdapter } = require('@slack/interactive-messages');
 
 // Initialize adapter using slack verification token from environment variables
 const slackMessages = createMessageAdapter(process.env.SLACK_VERIFICATION_TOKEN);
+
+
+//new setup using express middleware
+
+// Instantiates Express and assigns our app variable to it
+var app = express();
+app.use(bodyParser.urlencoded({extended: false}));
+app.use('slack/actions',slackMessages.expressMiddleware());
+
+
 
 var fetch = require('isomorphic-fetch');
 
@@ -404,8 +418,6 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
     return replacement;
    });
 
-// Instantiates Express and assigns our app variable to it
-var app = express();
 
 var controller = Botkit.slackbot({
     debug: true
@@ -430,7 +442,6 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
 {
   console.log(message);
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
-
   //check first whether user has created board or not
   var responseMessage;
   if(persistStoryboardID == undefined){
@@ -703,7 +714,47 @@ controller.hears('Hello',['mention', 'direct_mention','direct_message'], functio
     
     
 });
-
+var slackUsername;
+controller.hears('Link my trello',['mention', 'direct_mention','direct_message'], function(bot,message)
+{
+  console.log(message);
+  slackUsername = message.user;
+  var responseMessage;
+  // Check if entry already there in slack to trello database, 
+  // getTrelloToken (Also need to modify all functions to take in key and token as params)
+  //var trelloUserName = trelloDB.getTrelloUsername(slackUsername);
+  //TODO database class and call insert function from there
+  var trelloUserName = -1;
+  if(trelloUserName == -1){
+    const requestURL = "https://trello.com/1/OAuthGetRequestToken";
+    const accessURL = "https://trello.com/1/OAuthGetAccessToken";
+    const authorizeURL = "https://trello.com/1/OAuthAuthorizeToken";
+    const appName = "Taskbot App";
+    
+    // Be sure to include your key and secret in 🗝.env ↖️ over there.
+    // You can get your key and secret from Trello at: https://trello.com/app-key
+    const key = process.env.TRELLO_KEY;
+    const secret = process.env.TRELLO_OAUTH_SECRET;
+    
+    // Trello redirects the user here after authentication
+    const loginCallback = "http://522c18c4.ngrok.io/callback";
+    
+    // You should have {"token": "tokenSecret"} pairs in a real application
+    // Storage should be more permanent (redis would be a good choice)
+    //const oauth_secrets = {};
+    
+    oauth = new OAuth(requestURL, accessURL, key, secret, "1.0A", loginCallback, "HMAC-SHA1")
+    
+    trelloUserName =  //call the oauth method to get the user related trelloname, toke
+    oauth.getOAuthRequestToken(function(error, token, tokenSecret, results){
+        console.log(`in getOAuthRequestToken - token: ${token}, tokenSecret: ${tokenSecret}, resultes ${JSON.stringify(results)}, error: ${JSON.stringify(error)}`);
+        oauth_secrets[token] = tokenSecret;
+        responseMessage = `${authorizeURL}?oauth_token=${token}&name=${appName}`;
+        bot.reply(message, responseMessage);
+      });
+    //insertIntoSlackToTrello(slackUsername, trelloUserName);
+    }
+}); 
 // Helper functions
 
 function buildDropdownLists(actionCallbackId){
@@ -813,10 +864,65 @@ function findAttachment(message, actionCallbackId) {
 
 // Start the built-in HTTP server
 const port = 4390;
-slackMessages.start(port).then(() => {
- console.log(`server listening on port ${port}`);
+// slackMessages.start(port).then(() => {
+//  console.log(`server listening on port ${port}`);
+// });
+var server = app.listen(4390, function () {
+    console.log('Server up and running...🏃🏃🏻');
+    console.log("Listening on port %s", server.address().port);
 });
+app.get("/callback", function (request, response) {
+    console.log(`GET '/callback' 🤠 ${Date()}`);
+    callback(request, response);
+});
+const oauth_secrets = {};
+var oauth;
+var callback = function(request, response) {
+    const query = url.parse(request.url, true).query;
+    const token = query.oauth_token;
+    const tokenSecret = oauth_secrets[token];
+    const verifier = query.oauth_verifier;
+    oauth.getOAuthAccessToken(token, tokenSecret, verifier, function(error, accessToken, accessTokenSecret, results){
+      // In a real app, the accessToken and accessTokenSecret should be stored
+      console.log(`in getOAuthAccessToken - accessToken: ${accessToken}, accessTokenSecret: ${accessTokenSecret}, error: ${error}`);
+      oauth.getProtectedResource("https://api.trello.com/1/members/me", "GET", 
+      accessToken, accessTokenSecret, function(error, data, res){
+        // Now we can respond with data to show that we have access to your Trello account via OAuth
+        console.log(`in getProtectedResource - accessToken: ${accessToken}, accessTokenSecret: ${accessTokenSecret}`);
+        console.log(JSON.parse(data).username);
+        trelloDB.insertIntoSlackToTrello(slackUsername, JSON.parse(data).username);
+        response.send(data);
+      });
+    });
+   };
 
+   // This route handles get request to a /oauth endpoint. We'll use this endpoint for handling the logic of the Slack oAuth process behind our app.
+app.get('/oauth', function(req, res) {
+    // When a user authorizes an app, a code query parameter is passed on the oAuth endpoint. If that code is not there, we respond with an error message
+    if (!req.query.code) {
+        res.status(500);
+        res.send({"Error": "Looks like we're not getting code."});
+        console.log("Looks like we're not getting code.");
+    } else {
+        // If it's there...
+        console.log("oatuh code: "+req.query.code);
+        // We'll do a GET call to Slack's `oauth.access` endpoint, passing our app's client ID, client secret, and the code we just got as query parameters.
+        request({
+            url: 'https://slack.com/api/oauth.access', //URL to hit
+            qs: {code: req.query.code, client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET}, //Query string data
+            method: 'GET', //Specify the method
+
+        }, function (error, response, body) {
+            if (error) {
+                console.log(error);
+            } else {
+                res.json(body);
+                console.log("Response Oauth: "+response.body);
+                //trelloDB.insertSlackToken(userId, slackBotToken);
+            }
+        })
+    }
+});
 
 controller.hears('set due date',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
@@ -842,6 +948,7 @@ controller.hears('set due date',['mention', 'direct_mention','direct_message'], 
     });
   }
 });
+
 controller.hears('archive card',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
   console.log(message);
@@ -907,32 +1014,4 @@ controller.hears('label',['mention', 'direct_mention','direct_message'], functio
 }
 bot.reply(message,mg);
 });
-
-// // This route handles get request to a /oauth endpoint. We'll use this endpoint for handling the logic of the Slack oAuth process behind our app.
-// app.get('/oauth', function(req, res) {
-//     // When a user authorizes an app, a code query parameter is passed on the oAuth endpoint. If that code is not there, we respond with an error message
-//     if (!req.query.code) {
-//         res.status(500);
-//         res.send({"Error": "Looks like we're not getting code."});
-//         console.log("Looks like we're not getting code.");
-//     } else {
-//         // If it's there...
-//         console.log("oatuh code: "+req.query.code);
-//         // We'll do a GET call to Slack's `oauth.access` endpoint, passing our app's client ID, client secret, and the code we just got as query parameters.
-//         request({
-//             url: 'https://slack.com/api/oauth.access', //URL to hit
-//             qs: {code: req.query.code, client_id: clientId, client_secret: clientSecret}, //Query string data
-//             method: 'GET', //Specify the method
-
-//         }, function (error, response, body) {
-//             if (error) {
-//                 console.log(error);
-//             } else {
-//                 res.json(body);
-
-//             }
-//         })
-//     }
-// });
-
 
