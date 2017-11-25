@@ -34,7 +34,7 @@ const slackMessages = createMessageAdapter(process.env.SLACK_VERIFICATION_TOKEN)
 // Instantiates Express and assigns our app variable to it
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
-app.use('slack/actions',slackMessages.expressMiddleware());
+app.use('/slack/actions',slackMessages.expressMiddleware());
 
 
 

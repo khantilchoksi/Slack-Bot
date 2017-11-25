@@ -34,13 +34,13 @@ function trialDatabaseConnection()
    // client.query("INSERT INTO emps(firstname, lastname) values($1, $2)", ['Mayor', 'McCheese']);
    
    var query = client.query("SELECT * FROM slacktotrello");
-   query.on("row", function (row, result) {
-	   result.addRow(row);
-   });
-   query.on("end", function (result) {
-	   console.log(JSON.stringify(result.rows, null, "    "));
-	   client.end();
-   });
+//    query.on("row", function (row, result) {
+// 	   result.addRow(row);
+//    });
+//    query.on("end", function (result) {
+// 	   console.log(JSON.stringify(result.rows, null, "    "));
+// 	   client.end();
+//    });
 }
 
 
