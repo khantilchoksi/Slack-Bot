@@ -725,6 +725,8 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
   //var trelloUserName = trelloDB.getTrelloUsername(slackUsername);
   //TODO database class and call insert function from there
   var trelloUserName = -1;
+  trelloDB.insertIntoSlackToTrello("Hello", "Hello");
+  /*
   if(trelloUserName == -1){
     const requestURL = "https://trello.com/1/OAuthGetRequestToken";
     const accessURL = "https://trello.com/1/OAuthGetAccessToken";
@@ -737,7 +739,7 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
     const secret = process.env.TRELLO_OAUTH_SECRET;
     
     // Trello redirects the user here after authentication
-    const loginCallback = "http://522c18c4.ngrok.io/callback";
+    const loginCallback = "http://657c5372.ngrok.io/callback";
     
     // You should have {"token": "tokenSecret"} pairs in a real application
     // Storage should be more permanent (redis would be a good choice)
@@ -754,6 +756,9 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
       });
     //insertIntoSlackToTrello(slackUsername, trelloUserName);
     }
+    else {
+        console.log("Entry already in database");
+    }*/
 }); 
 // Helper functions
 
@@ -863,11 +868,11 @@ function findAttachment(message, actionCallbackId) {
   }
 
 // Start the built-in HTTP server
-const port = 80;
+const port = 4390;
 // slackMessages.start(port).then(() => {
 //  console.log(`server listening on port ${port}`);
 // });
-var server = app.listen(80, function () {
+var server = app.listen(4390, function () {
     console.log('Server up and running...🏃🏃🏻');
     console.log("Listening on port %s", server.address().port);
 });
