@@ -6,6 +6,7 @@ var Trello = require("node-trello");
 var pgUrl = require('pg-database-url')
 var pg = require('pg');
 
+
    // Example config 
    // This may already be available from your database configuration or environment variables 
    var dbConfig = {
@@ -18,52 +19,67 @@ var pg = require('pg');
    
   var connString = pgUrl(dbConfig)
   var client = new pg.Client(connString);
-  var pool = new pg.Pool()
+  
 
+  client.connect();
   //client.connect();
 function insertIntoSlackToTrello(slackidInput, trelloidInput) 
 {
+  console.log("CLient ");
   console.log("Came inside insertIntoSlack with" + slackidInput);
-   // client.query("CREATE TABLE IF NOT EXISTS emps(firstname varchar(64), lastname varchar(64))");
-   client.query("INSERT INTO slacktotrello(slackid, trelloid) values($1, $2)", [slackidInput, trelloidInput]);
-   // client.query("INSERT INTO emps(firstname, lastname) values($1, $2)", ['Mayor', 'McCheese']);
    
+  client.query("INSERT INTO slacktotrello(slackid, trelloid) values($1, $2)", [slackidInput, trelloidInput]);
+ // client.end();
+   /*
    var query = client.query("SELECT * FROM slacktotrello");
-   /*query.on("row", function (row, result) {
+   query.on("row", function (row, result) {
 	   result.addRow(row);
    });
    query.on("end", function (result) {
+     console.log("Came inside end");
 	   console.log(JSON.stringify(result.rows, null, "    "));
-	   client.end();
-   });*/
+	   
+   });
+   */
+   
 }
 
 function getTrelloUsername(slackidInput) 
 {
-   /*
-   console.log("Slack id input recvd: "+ slackidInput);
-   client.query(("SELECT * FROM slacktotrello WHERE values($1)", slackidInput), function(err, result){
+  var id;
+  console.log("Came inside getTrelloUserName");
+  /*
   
+   var query = client.query("SELECT * FROM slacktotrello WHERE values($1)", ["user4"]);
+   query.on("row", function (row, result) {
+	   result.addRow(row);
+   });
+
+   query.on("error", function(res) {
+     console.log(res)
+   });
+   query.on("end", function (result) {
+       if((result.rows).length == 0)
+            return -1;
+      
+       console.log(JSON.stringify(result.rows, null, "    "));
+       id = result.rows[0].trelloid;
+       //client.end();
    });
    */
-  pool.connect(connString, function (err, client, done) {
+  
+  var text= 'SELECT * FROM slacktotrello where slackid=$1'
+  var values = [slackidInput]
+  
+  client.query(text, values, (err, res) => {
     if (err) {
-      // pass the error to the express error handler
-      return next(err)
+      console.log(err.stack)
+    } else {
+      console.log("All good")
+      console.log(res.rows[0].trelloid)
     }
-    client.query("SELECT * FROM slacktotrello WHERE values($1)", slackidInput, function (err, result) {
-      
-
-      if (err) {
-        // pass the error to the express error handler
-        return next(err)
-      }
-      var firstRow = result.rows[0];
-      return firstRow.trelloid;
-      done()
-      
-    });
-  });
+  })
+   //return id;
 }
 
 exports.insertIntoSlackToTrello = insertIntoSlackToTrello;

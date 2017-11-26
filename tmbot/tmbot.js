@@ -724,8 +724,9 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
   // getTrelloToken (Also need to modify all functions to take in key and token as params)
   //var trelloUserName = trelloDB.getTrelloUsername(slackUsername);
   //TODO database class and call insert function from there
-  var trelloUserName = -1;
-  trelloDB.insertIntoSlackToTrello("Hello", "Hello");
+  //var trelloUserName = -1;
+  //trelloDB.insertIntoSlackToTrello("user4", "user4");
+  trelloDB.getTrelloUsername("user3");
   /*
   if(trelloUserName == -1){
     const requestURL = "https://trello.com/1/OAuthGetRequestToken";

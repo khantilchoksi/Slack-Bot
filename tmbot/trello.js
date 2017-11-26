@@ -11,7 +11,7 @@ var token = process.env.TRELLO_TOKEN;
 var urlRoot = "https://api.trello.com";
 var key = process.env.TRELLO_KEY;
 var t = new Trello(key, token);
-
+/*
 function trialDatabaseConnection() 
 {
 	
@@ -42,6 +42,7 @@ function trialDatabaseConnection()
 // 	   client.end();
 //    });
 }
+*/
 
 
 function createNewStoryBoard(boardName)
@@ -75,7 +76,7 @@ function createNewList(new_list)
 		});
 	});
 }
-trialDatabaseConnection();
+
 function createNewCard(card_name, listId)
 {
 
