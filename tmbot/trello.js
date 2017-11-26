@@ -7,11 +7,13 @@ var pgUrl = require('pg-database-url')
 var pg = require('pg');
 
 require('dotenv').config();
-var token = process.env.TRELLO_TOKEN;
+//var token = process.env.TRELLO_TOKEN;
 var urlRoot = "https://api.trello.com";
 var key = process.env.TRELLO_KEY;
-var t = new Trello(key, token);
+var t ;
 /*
+
+
 function trialDatabaseConnection() 
 {
 	
@@ -45,12 +47,12 @@ function trialDatabaseConnection()
 */
 
 
-function createNewStoryBoard(boardName)
+function createNewStoryBoard(boardName, trelloToken)
 {
 
 	return new Promise(function (resolve, reject) 
 	{
-
+		t = new Trello(key, trelloToken);
 		t.post("/1/boards/", {
 			"name" : boardName,
 			"defaultLists" : false 
@@ -63,11 +65,11 @@ function createNewStoryBoard(boardName)
 	});
 }
 
-function createNewList(new_list)
+function createNewList(new_list,  trelloToken)
 {
 	return new Promise(function (resolve, reject) 
 	{
-
+		t = new Trello(key, trelloToken);
 		t.post("/1/lists", new_list, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Inside trello.js! KHANTIL NEW LISTTTT API CALL");
@@ -77,9 +79,9 @@ function createNewList(new_list)
 	});
 }
 
-function createNewCard(card_name, listId)
+function createNewCard(card_name, listId,  trelloToken)
 {
-
+	t = new Trello(key, trelloToken);
 	return new Promise(function (resolve, reject) 
 	{
 		t.post("/1/cards/", {
@@ -96,8 +98,9 @@ function createNewCard(card_name, listId)
 	});
 }
 
-function retrieveLists(boardId)
+function retrieveLists(boardId,  trelloToken)
 {
+	t = new Trello(key, trelloToken);
 	
     return new Promise(function (resolve, reject) 
     {
@@ -110,11 +113,12 @@ function retrieveLists(boardId)
         });
     });
 }
-function retrieveCards(listId)
+function retrieveCards(listId,  trelloToken)
 {
 	
 	return new Promise(function (resolve, reject) 
 	{
+		t = new Trello(key, trelloToken);
 
 		t.get("/1/lists/"+ listId+"/cards", function (error, response) {
             if (error) throw new Error(error);
@@ -126,10 +130,11 @@ function retrieveCards(listId)
 	});
 }
 
-function retrieveBoards()
+function retrieveBoards( trelloToken)
 {
     return new Promise(function (resolve, reject) 
     {
+		t = new Trello(key, trelloToken);
     	t.get("/1/members/" + process.env.TRELLO_MEMBERID+ "/boards", function (error, body) {
             if (error) throw new Error(error);
             resolve(body);
@@ -138,8 +143,9 @@ function retrieveBoards()
 }
 
 
-function addAttachment(cardId, url)
+function addAttachment(cardId, url,  trelloToken)
 {
+	t = new Trello(key, trelloToken);
 	var new_attachment = {
 		"url" : url
 	  };
@@ -164,11 +170,12 @@ function addAttachment(cardId, url)
     });
 }
 
-function addDueDate(cardId, dueDate)
+function addDueDate(cardId, dueDate,  trelloToken)
 {
 	
 	return new Promise(function (resolve, reject) 
     {
+		t = new Trello(key, trelloToken);
     	console.log("Incoming due date : "+ dueDate);
     	t.put("/1/cards/" + cardId, {"due": dueDate},function (error, body) {
             if (error) throw new Error(error);
@@ -178,11 +185,12 @@ function addDueDate(cardId, dueDate)
     });
 }
 
-function addLabel(cardId, color, labelName)
+function addLabel(cardId, color, labelName,  trelloToken)
 {
 	
 	return new Promise(function (resolve, reject) 
     {
+		t = new Trello(key, trelloToken);
     	console.log("Incoming color : "+ color);
     	t.post("/1/cards/"+cardId+"/labels", {"color": color, "name": labelName},function (error, body) {
             if (error) throw new Error(error);
@@ -192,11 +200,12 @@ function addLabel(cardId, color, labelName)
     });
 }
 
-function archiveCard(cardId)
+function archiveCard(cardId, trelloToken)
 {
 	
 	return new Promise(function (resolve, reject) 
     {
+		t = new Trello(key, trelloToken);
     	
     	t.put("/1/cards/"+cardId, {"closed": true},function (error, body) {
             if (error) throw new Error(error);

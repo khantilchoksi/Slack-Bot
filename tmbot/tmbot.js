@@ -22,6 +22,8 @@ var persistStoryboardID;
 var persistCardID;
 var newCardName;
 var newStoryBoardName;
+var trelloToken;
+var trelloUserName;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
 
@@ -90,7 +92,7 @@ slackMessages.action('button_tutorial', (payload,bot) => {
         bot.reply(message,responseMessage);
   }else{
       
-    main.addLabel(persistCardID, color, labelName ).then(function(results){
+    main.addLabel(persistCardID, color, labelName, trelloToken).then(function(results){
         responseMessage = "Priority set on this card "+ results;
         //bot.reply(message,responseMessage);
         ackText = responseMessage;
@@ -129,7 +131,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
-    main.getNewStoryBoard(selected_options.value, newStoryBoardName)
+    main.getNewStoryBoard(selected_options.value, newStoryBoardName, trelloToken)
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       var storyboardlink = response[0].url;
@@ -143,7 +145,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
         return persistStoryboardID;
         //return ackText;
     }).then((persistStoryboardID) => {
-        main.getListsInBoard(persistStoryboardID)
+        main.getListsInBoard(persistStoryboardID, trelloToken)
         .then((responseLists) => {
             console.log(" LINE 96");
             createdListsNames = responseLists.values();
@@ -168,7 +170,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
 
             responseLists.forEach(function(value, key){
 
-              var cards = main.getCardsInList(key).then(function(cardsMap) {
+              var cards = main.getCardsInList(key, trelloToken).then(function(cardsMap) {
                   //cardsArray = JSON.parse(cardsArray);
                   console.log("\n ## CARDS ARRAY for this list: ");
                   var cardNames = [];
@@ -233,7 +235,7 @@ slackMessages.action('boards_lists_callback', (payload,bot) => {
         'boards_lists_callback', 
         payload.actions[0].selected_options[0].value);
     // Start an order, and when that completes, send another message to the user.
-    main.copyListsToBoard(selected_options.value, persistStoryboardID)
+    main.copyListsToBoard(selected_options.value, persistStoryboardID, trelloToken)
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       
@@ -297,7 +299,7 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
 
-    main.getNewCard(newCardName, selected_options.value)
+    main.getNewCard(newCardName, selected_options.value, trelloToken)
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       
@@ -495,7 +497,7 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
               text: 'Please enter the name of the list!'
                }, function(res, convo) {
                  
-                 main.getNewList(res.text, persistStoryboardID).then((response)=>{
+                 main.getNewList(res.text, persistStoryboardID, trelloToken).then((response)=>{
                     convo.say(`\`${res.text}\`` + ' list has been created to your linked board!'); 
                     convo.next();  
                  });
@@ -612,7 +614,7 @@ controller.hears('manage tasks',['mention', 'direct_mention','direct_message'], 
 });
 
 controller.hears('Copy lists',['mention', 'direct_mention','direct_message'], function(bot,message){
-    listMap = main.getBoardsOfMember().then(function(listMap){
+    listMap = main.getBoardsOfMember(trelloToken).then(function(listMap){
       var options = [];
       console.log(listMap);
       listMap.forEach(function(value, key) {
@@ -643,7 +645,7 @@ controller.hears('Copy lists',['mention', 'direct_mention','direct_message'], fu
 });
 
 controller.hears('Link existing board',['mention', 'direct_mention','direct_message'], function(bot,message){
-    listMap = main.getBoardsOfMember().then(function(listMap){
+    listMap = main.getBoardsOfMember(trelloToken).then(function(listMap){
       var options = [];
       console.log(listMap);
       listMap.forEach(function(value, key) {
@@ -681,7 +683,7 @@ controller.hears('URL',['mention', 'direct_mention','direct_message'], function(
       
       var card_attachment = {url: String(url[0])};
       
-      main.addAttachment(persistCardID, card_attachment)
+      main.addAttachment(persistCardID, card_attachment, trelloToken)
       .then((urlreceived) => {
         var replyMessage = "Sorry did not understand your URL";
         if(String(url[0])){
@@ -722,17 +724,20 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
   var responseMessage;
   // Check if entry already there in slack to trello database, 
   // getTrelloToken (Also need to modify all functions to take in key and token as params)
-  //var trelloUserName = trelloDB.getTrelloUsername(slackUsername);
-  //TODO database class and call insert function from there
-  //var trelloUserName = -1;
-  //trelloDB.insertIntoSlackToTrello("user4", "user4");
-  trelloDB.getTrelloUsername("user3");
-  /*
-  if(trelloUserName == -1){
+  
+  trelloDB.getTrelloUsername(slackUsername.toLowerCase())
+  .then((response) => {
+   trelloUserName  = response
+   console.log("Got value of trelloUserName here "+ trelloUserName);
+  
+ 
+  console.log("The value for trelloUserName "+ trelloUserName);
+  if( typeof trelloUserName === 'undefined'){
     const requestURL = "https://trello.com/1/OAuthGetRequestToken";
     const accessURL = "https://trello.com/1/OAuthGetAccessToken";
     const authorizeURL = "https://trello.com/1/OAuthAuthorizeToken";
     const appName = "Taskbot App";
+    console.log("New site");
     
     // Be sure to include your key and secret in 🗝.env ↖️ over there.
     // You can get your key and secret from Trello at: https://trello.com/app-key
@@ -740,7 +745,7 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
     const secret = process.env.TRELLO_OAUTH_SECRET;
     
     // Trello redirects the user here after authentication
-    const loginCallback = "http://657c5372.ngrok.io/callback";
+    const loginCallback = "http://ca09f120.ngrok.io/callback";
     
     // You should have {"token": "tokenSecret"} pairs in a real application
     // Storage should be more permanent (redis would be a good choice)
@@ -748,18 +753,28 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
     
     oauth = new OAuth(requestURL, accessURL, key, secret, "1.0A", loginCallback, "HMAC-SHA1")
     
-    trelloUserName =  //call the oauth method to get the user related trelloname, toke
+   // trelloUserName =  //call the oauth method to get the user related trelloname, toke
     oauth.getOAuthRequestToken(function(error, token, tokenSecret, results){
         console.log(`in getOAuthRequestToken - token: ${token}, tokenSecret: ${tokenSecret}, resultes ${JSON.stringify(results)}, error: ${JSON.stringify(error)}`);
         oauth_secrets[token] = tokenSecret;
         responseMessage = `${authorizeURL}?oauth_token=${token}&name=${appName}`;
+        console.log(responseMessage);
         bot.reply(message, responseMessage);
+        
       });
-    //insertIntoSlackToTrello(slackUsername, trelloUserName);
+    
+    //trelloDB.insertIntoSlackToTrello(slackUsername, trelloUserName);
     }
     else {
+        // get the trello token
+        trelloDB.getTrelloToken(trelloUserName)
+        .then((response) => {
+         trelloToken  = response
+         console.log("Got value of trelloToken here "+ trelloToken);
         console.log("Entry already in database");
-    }*/
+    });
+}
+});
 }); 
 // Helper functions
 
@@ -768,7 +783,7 @@ function buildDropdownLists(actionCallbackId){
 
     //console.log("\n\n BEFORE :: BEFORE :: JSON OBJECT BUILT: "+JSON.stringify(jsonobj));
     return new Promise( function(resolve, reject){
-        main.getListsInBoard(persistStoryboardID)
+        main.getListsInBoard(persistStoryboardID, trelloToken)
         .then((responseLists) => {
             var jsonobj = {
                 "text": "First we will link your task which you want to manage: ",
@@ -896,7 +911,12 @@ var callback = function(request, response) {
         // Now we can respond with data to show that we have access to your Trello account via OAuth
         console.log(`in getProtectedResource - accessToken: ${accessToken}, accessTokenSecret: ${accessTokenSecret}`);
         console.log(JSON.parse(data).username);
-        trelloDB.insertIntoSlackToTrello(slackUsername, JSON.parse(data).username);
+        trelloUserName = JSON.parse(data).username
+        
+        trelloDB.insertIntoSlackToTrello(slackUsername.toLowerCase(), trelloUserName );
+        trelloDB.insertIntoTrelloInfo(trelloUserName, accessToken);
+        trelloToken= accessToken;
+        
         response.send(data);
       });
     });
@@ -948,7 +968,7 @@ controller.hears('set due date',['mention', 'direct_mention','direct_message'], 
         bot.reply(message,responseMessage);
   }else{
       
-    main.addDueDate(persistCardID, card_due ).then(function(results){
+    main.addDueDate(persistCardID, card_due, trelloToken).then(function(results){
         responseMessage = "Due date set on this card: "+results;
         bot.reply(message,responseMessage);
     });
@@ -971,7 +991,7 @@ controller.hears('archive card',['mention', 'direct_mention','direct_message'], 
         bot.reply(message,responseMessage);
   }else{
       
-    main.archiveCard(persistCardID).then(function(results){
+    main.archiveCard(persistCardID, trelloToken).then(function(results){
         responseMessage = "This card is now archived: "+results;
         bot.reply(message,responseMessage);
     });
