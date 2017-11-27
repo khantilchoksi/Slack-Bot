@@ -131,6 +131,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
+    console.log("Trello token in tmbot new board "+ trelloToken);
     main.getNewStoryBoard(selected_options.value, newStoryBoardName, trelloToken)
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
@@ -757,7 +758,7 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
     oauth.getOAuthRequestToken(function(error, token, tokenSecret, results){
         console.log(`in getOAuthRequestToken - token: ${token}, tokenSecret: ${tokenSecret}, resultes ${JSON.stringify(results)}, error: ${JSON.stringify(error)}`);
         oauth_secrets[token] = tokenSecret;
-        responseMessage = `${authorizeURL}?oauth_token=${token}&name=${appName}`;
+        responseMessage = `${authorizeURL}?oauth_token=${token}&scope=read,write&name=${appName}`;
         console.log(responseMessage);
         bot.reply(message, responseMessage);
         
@@ -938,7 +939,7 @@ app.get('/oauth', function(req, res) {
         // We'll do a GET call to Slack's `oauth.access` endpoint, passing our app's client ID, client secret, and the code we just got as query parameters.
         request({
             url: 'https://slack.com/api/oauth.access', //URL to hit
-            qs: {code: req.query.code, client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET}, //Query string data
+            qs: {code: req.query.code, client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET, scope: read,write}, //Query string data
             method: 'GET', //Specify the method
 
         }, function (error, response, body) {

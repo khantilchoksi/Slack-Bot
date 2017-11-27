@@ -50,12 +50,14 @@ function trialDatabaseConnection()
 function createNewStoryBoard(boardName, trelloToken)
 {
 	console.log("Token recvd in create new storyboard :"+ trelloToken + " key: "+ key );
+	
 	return new Promise(function (resolve, reject) 
 	{
 		t = new Trello(key, trelloToken);
 		t.post("/1/boards/", {
 			"name" : boardName,
-			"defaultLists" : false 
+			"defaultLists" : false,
+			"prefs_permissionLevel" : "public" 
 		}, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Inside trello.js! KHANTIL NEW BOARD API CALL");
