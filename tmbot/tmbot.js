@@ -614,6 +614,8 @@ controller.hears('manage tasks',['mention', 'direct_mention','direct_message'], 
 });
 
 controller.hears('Copy lists',['mention', 'direct_mention','direct_message'], function(bot,message){
+
+
     listMap = main.getBoardsOfMember(trelloToken).then(function(listMap){
       var options = [];
       console.log(listMap);
@@ -702,15 +704,13 @@ controller.hears('URL',['mention', 'direct_mention','direct_message'], function(
 
 controller.hears('Hello',['mention', 'direct_mention','direct_message'], function(bot,message){
     console.log("Message: "+ message);
-
       bot.reply(message,{
         "text": "Hey there, I am taskbot :robot_face:. I am here to help you initialize your task management process faster. ",
         "attachments": [
             {
                 "title": "Hint:",
                 "text": "You can ask me to create storyboard from predefined templates! "
-            }
-            
+            }  
         ]
     });
     
@@ -728,11 +728,11 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
   trelloDB.getTrelloUsername(slackUsername.toLowerCase())
   .then((response) => {
    trelloUserName  = response
-   console.log("Got value of trelloUserName here "+ trelloUserName);
+   console.log("Got value of trelloUserName here "+ response + " type :" + typeof response);
   
  
   console.log("The value for trelloUserName "+ trelloUserName);
-  if( typeof trelloUserName === 'undefined'){
+  if( trelloUserName === -1){
     const requestURL = "https://trello.com/1/OAuthGetRequestToken";
     const accessURL = "https://trello.com/1/OAuthGetAccessToken";
     const authorizeURL = "https://trello.com/1/OAuthAuthorizeToken";
@@ -745,7 +745,7 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
     const secret = process.env.TRELLO_OAUTH_SECRET;
     
     // Trello redirects the user here after authentication
-    const loginCallback = "http://ca09f120.ngrok.io/callback";
+    const loginCallback = "http://78a566f6.ngrok.io/callback";
     
     // You should have {"token": "tokenSecret"} pairs in a real application
     // Storage should be more permanent (redis would be a good choice)
@@ -767,11 +767,14 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
     }
     else {
         // get the trello token
+
         trelloDB.getTrelloToken(trelloUserName)
         .then((response) => {
          trelloToken  = response
          console.log("Got value of trelloToken here "+ trelloToken);
-        console.log("Entry already in database");
+         console.log("Entry already in database");
+         responseMessage = "Trello account already linked"
+         bot.reply(message, responseMessage);
     });
 }
 });

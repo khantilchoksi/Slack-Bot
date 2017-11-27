@@ -49,7 +49,7 @@ function trialDatabaseConnection()
 
 function createNewStoryBoard(boardName, trelloToken)
 {
-
+	console.log("Token recvd in create new storyboard :"+ trelloToken + " key: "+ key );
 	return new Promise(function (resolve, reject) 
 	{
 		t = new Trello(key, trelloToken);

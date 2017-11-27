@@ -50,7 +50,7 @@ function insertIntoTrelloInfo(trelloidInput, token)
   
   console.log("Came inside insertIntoTrelloInfo with token" + token);
    
-  client.query("INSERT INTO trelloinfo(trelloid, token, key) values($1, $2)", [trelloidInput, token]);
+  client.query("INSERT INTO trelloinfo(trelloid, token) values($1, $2)", [trelloidInput, token]);
    
 }
 
@@ -64,9 +64,23 @@ function getTrelloUsername(slackidInput)
   var text= 'SELECT * FROM slacktotrello where slackid=$1'
   var value = "'"+slackidInput+"'"
   console.log("What is the input "+ value);
-  var values = [value]
+  var values = [slackidInput]
+  client.query(text, values,(err, res) => {
+    if (err) {
+      console.log(err.stack)
+    } else {
+      if(res.rows.length == 0){
+        resolve(-1);
+      }
+      else {
+        console.log("Came into client query result :" +res.rows[0])
+        resolve(res.rows[0].trelloid);
+      }
+    }
+  });
   
-  client.query(text, values, (err, res) => {
+  /*
+  client.query(text, (err, res) => {
     if( typeof res !== 'undefined'){
       console.log("Returning -1");
       id="stale";
@@ -81,9 +95,12 @@ function getTrelloUsername(slackidInput)
       }
     }
   });
+  
   console.log("Reached till the end");
   resolve(id);
   });
+  */
+});
 }
 
 
@@ -97,24 +114,24 @@ function getTrelloToken(trelloidInput)
   var text= 'SELECT * FROM trelloinfo where trelloid=$1'
   var value = "'"+trelloidInput+"'"
   console.log("What is the input "+ value);
-  var values = [value]
+  var values = [trelloidInput]
   client.query(text, values, (err, res) => {
-    if( typeof res.rows !== 'undefined'){
-      console.log("Returning -1");
-      id="stale";
-    }
-    else {
       if (err) {
         console.log(err.stack)
       } else {
         console.log("All good")
-        console.log(res.rows[0].token)
-        trelloToken = res.rows[0].token;
+        console.log(res.rows.length)
+        if(res.rows.length == 0){
+          resolve(-1);
+        }
+        else {
+          trelloToken = res.rows[0].token;
+          resolve(trelloToken);
+        }
       }
-    }
   });
   console.log("Reached till the end");
-  resolve(trelloToken);
+  
   });
 }
 
