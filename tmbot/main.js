@@ -75,6 +75,7 @@ var current_boardId;
 
 function getNewStoryBoard(template_type, boardName)
 {
+	
 	console.log(" TEMPLATE TYPE OF SWATI : "+template_type+" BOARD NAME: "+boardName);
 	var listArray = menu.listOfScrumLists();
 	if(template_type == "Scrum") {
