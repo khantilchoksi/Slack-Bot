@@ -83,6 +83,7 @@ function createNewList(new_list,  trelloToken)
 
 function createNewCard(card_name, listId,  trelloToken)
 {
+	console.log("In createNewCard card_name, list_id, trelloToken "+ card_name + " "+ listId + " "+ trelloToken);
 	t = new Trello(key, trelloToken);
 	return new Promise(function (resolve, reject) 
 	{

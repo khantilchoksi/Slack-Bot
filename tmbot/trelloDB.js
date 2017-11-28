@@ -135,10 +135,41 @@ function getTrelloToken(trelloidInput)
   });
 }
 
+function getTrelloTokenFromSlackId(slackidInput) 
+{
+  console.log("Came inside getTrelloTokenFromSlackId "+ slackidInput); 
+  return new Promise(function (resolve, reject)
+  {
+  
+  var trelloToken;
+  var text= 'SELECT * FROM trelloinfo T, slacktotrello S where S.slackid=$1 AND S.trelloid=T.trelloid '
+
+  var values = [slackidInput]
+  client.query(text, values, (err, res) => {
+      if (err) {
+        console.log(err.stack)
+      } else {
+        console.log("All good")
+        console.log(res.rows.length)
+        if(res.rows.length == 0){
+          resolve(-1);
+        }
+        else {
+          trelloToken = res.rows[0].token;
+          resolve(trelloToken);
+        }
+      }
+  });
+  console.log("Reached till the end");
+  
+  });
+}
+
 exports.insertIntoSlackToTrello = insertIntoSlackToTrello;
 exports.getTrelloUsername = getTrelloUsername;
 exports.getTrelloToken = getTrelloToken;
 exports.insertIntoTrelloInfo = insertIntoTrelloInfo;
+exports.getTrelloTokenFromSlackId = getTrelloTokenFromSlackId;
 /*
    var query = client.query("SELECT * FROM slacktotrello WHERE values($1)", ["user4"]);
    query.on("row", function (row, result) {
