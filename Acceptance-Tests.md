@@ -1,6 +1,6 @@
 ## Acceptance Tests
 
-Purpose of bot: Purpose of bot is to ....
+Purpose of bot: Purpose of bot is to create a Slack based interactive conversational bot which simplifies our job of managing the Slack channel and Trello board for a single project management.
 
 We have deployed the chat bot to general slack channel https://se-projectworkspace.slack.com/messages/C73HN2DL0/   
 
