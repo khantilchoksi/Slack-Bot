@@ -12,8 +12,8 @@ We have made 1 dummy user :
 ## General Instructions before making the meeting
 
 1. Authorize Trello account with the help of below commands,
- • @taskbot Hello bot
- • @taskbot Link my Trello
+ *• @taskbot Hello bot
+ *• @taskbot Link my Trello
 
 
 ## USE CASE 1: Instructions to create a new story board 
@@ -43,17 +43,17 @@ Instructions:
 
 ### USE CASE 3: Instruction for Managing tasks
 
-• Say, ‘@taskbot I want to manage tasks’. Taskbot will then let you select the list and then provide you with the tasks associated to that list.   
-• When you select a list, taskbot will let you know about the possible actions you can perform for managing your tasks.    
-• Some possible actions you can perform are: Attach a URL to the card, Set a due date for that task, Add a label to the card or Archive the card if you do not need it.   
+*• Say, ‘@taskbot I want to manage tasks’. Taskbot will then let you select the list and then provide you with the tasks associated to that list.   
+*• When you select a list, taskbot will let you know about the possible actions you can perform for managing your tasks.    
+*• Some possible actions you can perform are: Attach a URL to the card, Set a due date for that task, Add a label to the card or Archive the card if you do not need it.   
 
-1. Setting a due date for a task   
+* 1. Setting a due date for a task   
   a. Say, ‘@taskbot I want to set due date mm/dd/yyyy for this task’   
-2. Add a URL to a card   
+* 2. Add a URL to a card   
   a. Say, ‘@taskbot URL <Enter//the url here>’   
-3. Set label to a card   
+* 3. Set label to a card   
   a. Say, ‘@taskbot I want to set label to this task’   
   b. Taskbot will let you select the label you want by clicking on the buttons   
-4. Archive the card   
+* 4. Archive the card   
   a. Say, ‘@taskbot I want to archive card’   
 
