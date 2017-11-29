@@ -64,4 +64,4 @@ C. Some possible actions you can perform are: Attach a URL to the card, Set a du
 
 [Link to Code repo](https://github.ncsu.edu/asoni3/CSC510-Project/tree/milestone_deployment)
 
-[Link to screen-cast] ()
+[Link to screen-cast](https://youtu.be/QOSo87upimw)
