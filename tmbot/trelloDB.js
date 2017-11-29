@@ -13,7 +13,7 @@ var pg = require('pg');
     host: 'localhost',
     port: 5432,
     database: 'TaskBotDB',
-    username: 'postgres',
+    username: 'TaskUser',
     password: 'taskbot'
   }
    
