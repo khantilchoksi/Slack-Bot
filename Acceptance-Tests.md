@@ -11,8 +11,8 @@ We have made 1 dummy user :
 
 ## General Instructions before making the meeting
 
-1. Authorize Trello account with the help of below commands,
- • @taskbot Hello bot
+1. Authorize Trello account with the help of below commands,   
+ • @taskbot Hello bot   
  • @taskbot Link my Trello
 
 
