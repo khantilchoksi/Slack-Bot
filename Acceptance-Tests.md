@@ -2,7 +2,7 @@
 
 Purpose of bot: Purpose of bot is to ....
 
-We have deployed the chat bot to general slack channel
+We have deployed the chat bot to general slack channel https://se-projectworkspace.slack.com/messages/C73HN2DL0/
 We have made 1 dummy user :
 
       UserID: taskbot.testing.ta@gmail.com
@@ -19,8 +19,8 @@ We have made 1 dummy user :
 
 Instructions:
 
-  o Say ‘@taskbot I want to create a new board in my trello’. It will prompt you to enter the name of the board.  
-  o Once you enter the name of the board, you can choose any of the default templates of the storyboards provided in the options. Example: scrum board, waterfall board etc.
+  o Say ‘@taskbot I want to create a new board in my trello’. It will prompt you to enter the name of the board.   
+  o Once you enter the name of the board, you can choose any of the default templates of the storyboards provided in the options. Example: scrum board, waterfall board etc.   
   o On selecting one of the available options, the taskbot will provide you the link of the board it just created in trello. Since, we already provide you the templates of the board containing some lists, it will tell you what all lists the bot created on its own. Along with that, it will also inform you which default cards are added to which lists.</br>
 • Link a pre-existing Story Board
   o	To link an already existing board to the slack channel, say ‘@taskbot I want to link existing board here’.
@@ -32,18 +32,18 @@ Instructions:
 
 ### USE CASE 2: Instructions to create a new list and creating card 
 
-• Create a new list to your linked board
-  o Say, ‘@taskbot I want to create new list to my linked board’. Taskbot will then prompt you to enter the name of the list you want to create.</br>
-• Create a new card
-  o Say, ‘@taskbot I want to create new card’. Taskbot will then prompt you to enter the name of the card you want to create.
-  o Taskbot doesn’t know where do you want to add that card to. It will prompt you the lists in your board and you will then have to choose a list where you want to create a new card.
+• Create a new list to your linked board   
+  o Say, ‘@taskbot I want to create new list to my linked board’. Taskbot will then prompt you to enter the name of the list you want to create.   
+• Create a new card   
+  o Say, ‘@taskbot I want to create new card’. Taskbot will then prompt you to enter the name of the card you want to create.   
+  o Taskbot doesn’t know where do you want to add that card to. It will prompt you the lists in your board and you will then have to choose a list where you want to create a new card.   
 
 
 ### USE CASE 3: Instruction for Managing tasks
 
-• Say, ‘@taskbot I want to manage tasks’. Taskbot will then let you select the list and then provide you with the tasks associated to that list.
-• When you select a list, taskbot will let you know about the possible actions you can perform for managing your tasks. 
-• Some possible actions you can perform are: Attach a URL to the card, Set a due date for that task, Add a label to the card or Archive the card if you do not need it.</br>
+• Say, ‘@taskbot I want to manage tasks’. Taskbot will then let you select the list and then provide you with the tasks associated to that list.   
+• When you select a list, taskbot will let you know about the possible actions you can perform for managing your tasks.    
+• Some possible actions you can perform are: Attach a URL to the card, Set a due date for that task, Add a label to the card or Archive the card if you do not need it.   
 
 1. Setting a due date for a task
   a. Say, ‘@taskbot I want to set due date mm/dd/yyyy for this task’
