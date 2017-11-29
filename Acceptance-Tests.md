@@ -53,7 +53,7 @@ C. Some possible actions you can perform are: Attach a URL to the card, Set a du
 1. Setting a due date for a task   
   a. Say, ‘@taskbot I want to set due date mm/dd/yyyy for this task’   
 2. Add a URL to a card   
-  a. Say, ‘@taskbot URL <Enter//the url here>’   
+  a. Say, ‘@taskbot URL <https://www.google.com/>’   
 3. Set label to a card   
   a. Say, ‘@taskbot I want to set label to this task’   
   b. Taskbot will let you select the label you want by clicking on the buttons   
