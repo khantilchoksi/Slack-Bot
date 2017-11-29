@@ -7,8 +7,12 @@ var main = require('./main.js');
 var chai = require("chai");
 var expect = chai.expect;
 var HashMap = require('hashmap');
+var OAuth = require('oauth').OAuth
+var url = require('url')
 require('dotenv').config();
 var trello = require('./trello.js');
+var trelloDB = require('./trelloDB.js');
+var bodyParser = require('body-parser');
 // Store our app's ID and Secret. These we got from Step 1.
 // For this tutorial, we'll keep your API credentials right here. But for an actual app, you'll want to  store them securely in environment variables.
 var clientid = process.env.CLIENT_ID;
@@ -18,11 +22,23 @@ var persistStoryboardID;
 var persistCardID;
 var newCardName;
 var newStoryBoardName;
+var trelloToken;
+var trelloUserName;
 
 const { createMessageAdapter } = require('@slack/interactive-messages');
 
 // Initialize adapter using slack verification token from environment variables
 const slackMessages = createMessageAdapter(process.env.SLACK_VERIFICATION_TOKEN);
+
+
+//new setup using express middleware
+
+// Instantiates Express and assigns our app variable to it
+var app = express();
+app.use(bodyParser.urlencoded({extended: false}));
+app.use('/slack/actions',slackMessages.expressMiddleware());
+
+
 
 var fetch = require('isomorphic-fetch');
 
@@ -55,7 +71,7 @@ function delegateMessage(json){
 slackMessages.action('button_tutorial', (payload,bot) => {
  // `payload` is JSON that describes an interaction with a message.
  console.log(`The user ${payload.user.name} in team ${payload.team.domain} pressed the welcome button`);
-
+ var slackUserID = (payload.user.id).toLowerCase();
  console.log('******* PAYLOAD : ', payload);
  // The `actions` array contains details about the specific action (button press, menu selection, etc.)
  const action = payload.actions[0];
@@ -76,7 +92,7 @@ slackMessages.action('button_tutorial', (payload,bot) => {
         bot.reply(message,responseMessage);
   }else{
       
-    main.addLabel(persistCardID, color, labelName ).then(function(results){
+    main.addLabel(persistCardID, color, labelName, slackUserID).then(function(results){
         responseMessage = "Priority set on this card "+ results;
         //bot.reply(message,responseMessage);
         ackText = responseMessage;
@@ -94,11 +110,12 @@ slackMessages.action('button_tutorial', (payload,bot) => {
 slackMessages.action('template_selection_callback', (payload,bot) => {
     // `payload` is JSON that describes an interaction with a message.
     console.log(`The user ${payload.user.name} in team ${payload.team.domain} pressed the welcome button`);
-
+    var slackUserID = (payload.user.id).toLowerCase();
     console.log('******* Template PAYLOAD : ', payload);
     // The `actions` array contains details about the specific action (button press, menu selection, etc.)
     const action = payload.actions[0];
-
+    var slackUserID = (payload.user.id).toLowerCase();
+    console.log("Slack user id received " + slackUserID);
 
     // You should return a JSON object which describes a message to replace the original.
     // Note that the payload contains a copy of the original message (`payload.original_message`).
@@ -115,7 +132,8 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
-    main.getNewStoryBoard(selected_options.value, newStoryBoardName)
+    console.log("Trello token in tmbot new board "+ trelloToken);
+    main.getNewStoryBoard(selected_options.value, newStoryBoardName, slackUserID)
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       var storyboardlink = response[0].url;
@@ -129,7 +147,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
         return persistStoryboardID;
         //return ackText;
     }).then((persistStoryboardID) => {
-        main.getListsInBoard(persistStoryboardID)
+        main.getListsInBoard(persistStoryboardID, slackUserID)
         .then((responseLists) => {
             console.log(" LINE 96");
             createdListsNames = responseLists.values();
@@ -154,7 +172,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
 
             responseLists.forEach(function(value, key){
 
-              var cards = main.getCardsInList(key).then(function(cardsMap) {
+              var cards = main.getCardsInList(key, slackUserID).then(function(cardsMap) {
                   //cardsArray = JSON.parse(cardsArray);
                   console.log("\n ## CARDS ARRAY for this list: ");
                   var cardNames = [];
@@ -202,7 +220,7 @@ slackMessages.action('template_selection_callback', (payload,bot) => {
 slackMessages.action('boards_lists_callback', (payload,bot) => {
     // `payload` is JSON that describes an interaction with a message.
     //console.log(`The user ${payload.user.name} in team ${payload.team.domain} pressed the welcome button`);
-   
+    var slackUserID = (payload.user.id).toLowerCase();
     //console.log('******* LIST PAYLOAD : ', payload);
     // The `actions` array contains details about the specific action (button press, menu selection, etc.)
     const action = payload.actions[0];
@@ -219,7 +237,7 @@ slackMessages.action('boards_lists_callback', (payload,bot) => {
         'boards_lists_callback', 
         payload.actions[0].selected_options[0].value);
     // Start an order, and when that completes, send another message to the user.
-    main.copyListsToBoard(selected_options.value, persistStoryboardID)
+    main.copyListsToBoard(selected_options.value, persistStoryboardID, slackUserID)
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       
@@ -241,7 +259,7 @@ slackMessages.action('boards_lists_callback', (payload,bot) => {
 slackMessages.action('link_boards_lists_callback', (payload,bot) => {
     // `payload` is JSON that describes an interaction with a message.
     //console.log(`The user ${payload.user.name} in team ${payload.team.domain} pressed the welcome button`);
-   
+    var slackUserID = (payload.user.id).toLowerCase();
     //console.log('******* LIST PAYLOAD : ', payload);
     // The `actions` array contains details about the specific action (button press, menu selection, etc.)
     const action = payload.actions[0];
@@ -269,7 +287,7 @@ slackMessages.action('link_boards_lists_callback', (payload,bot) => {
 slackMessages.action('list_selection_callback', (payload,bot) => {
     // `payload` is JSON that describes an interaction with a message.
     console.log(`The user ${payload.user.name} in team ${payload.team.domain} pressed the welcome button`);
-   
+    var slackUserID = (payload.user.id).toLowerCase();
     console.log('******* LIST PAYLOAD : ', payload);
     // The `actions` array contains details about the specific action (button press, menu selection, etc.)
     const action = payload.actions[0];
@@ -282,8 +300,12 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
     //attachment.text =`Welcome ${payload.user.name}`;
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
-
-    main.getNewCard(newCardName, selected_options.value)
+    
+	return trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+    main.getNewCard(newCardName, selected_options.value, trelloToken)
     .then((response) => {
       // Keep the context from the updated message but use the new text and attachment
       
@@ -301,10 +323,11 @@ slackMessages.action('list_selection_callback', (payload,bot) => {
 
     return replacement;
    });
+});
 
 slackMessages.action('cards_under_list_callback', (payload,bot) => {
     // `payload` is JSON that describes an interaction with a message.
-
+    var slackUserID = (payload.user.id).toLowerCase();
     console.log('******* Template Cards under List PAYLOAD : ', payload);
     // The `actions` array contains details about the specific action (button press, menu selection, etc.)
     const action = payload.actions[0];
@@ -321,8 +344,14 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
 
     var createdListsNames;
     // Start an order, and when that completes, send another message to the user.
-
-    trello.retrieveCards(listId)
+    var trelloToken;
+    
+    trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+});
+    trello.retrieveCards(listId, trelloToken)
     .then((cards) => {
 
           var cardsAttach = {
@@ -364,7 +393,7 @@ slackMessages.action('cards_under_list_callback', (payload,bot) => {
 
 slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
     // `payload` is JSON that describes an interaction with a message.
-    
+    var slackUserID = (payload.user.id).toLowerCase();
     console.log('*******  Cards Attach PAYLOAD : ', payload);
     const action = payload.actions[0];
     var cardId = action.selected_options[0].value;
@@ -392,7 +421,7 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
 
    slackMessages.action('manage_tasks_callback', (payload,bot) => {
     // `payload` is JSON that describes an interaction with a message.
-    
+    var slackUserID = (payload.user.id).toLowerCase();
     console.log('*******  manage_tasks PAYLOAD : ', payload);
     const action = payload.actions[0];
     console.log("Selected options: ",JSON.stringify(action.selected_options[0]));
@@ -404,8 +433,6 @@ slackMessages.action('card_selected_attachment_callback', (payload,bot) => {
     return replacement;
    });
 
-// Instantiates Express and assigns our app variable to it
-var app = express();
 
 var controller = Botkit.slackbot({
     debug: true
@@ -429,8 +456,9 @@ controller.spawn({
 controller.hears('new card',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
   console.log(message);
+  var slackUserID = (message.user).toLowerCase();
+  console.log("Found the slackuser id in new card func "+ slackUserID);
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
-
   //check first whether user has created board or not
   var responseMessage;
   if(persistStoryboardID == undefined){
@@ -438,7 +466,7 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
         "text": "Please create a storyboard first or link your existing story board of trello."};
         bot.reply(message,responseMessage);
   }else{
-      console.log("\n 166: "+buildDropdownLists());
+     // console.log("\n 166: "+buildDropdownLists());
       const actionCallbackID = 'list_selection_callback';
 
       bot.startConversation({
@@ -451,7 +479,8 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
           text: 'Please enter the name of the card!'
            }, function(res, convo) {
             newCardName = res.text;
-            buildDropdownLists(actionCallbackID).then(function(results){
+            console.log("Inside builDropdownlists, value of slackUserID "+ slackUserID);
+            buildDropdownLists(actionCallbackID, slackUserID).then(function(results){
                 responseMessage = results;
                 convo.next();
                 bot.reply(message,responseMessage);
@@ -469,6 +498,8 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
   {
     console.log("!@#$%^&* create new list: "+message);
     var responseMessage;
+    var slackUserID = (message.user).toLowerCase();
+
     if(persistStoryboardID == undefined){
       responseMessage = {
           "text": "Please link your existing story board of trello or create a new storyboard first."};
@@ -484,7 +515,7 @@ controller.hears('new card',['mention', 'direct_mention','direct_message'], func
               text: 'Please enter the name of the list!'
                }, function(res, convo) {
                  
-                 main.getNewList(res.text, persistStoryboardID).then((response)=>{
+                 main.getNewList(res.text, persistStoryboardID, slackUserID).then((response)=>{
                     convo.say(`\`${res.text}\`` + ' list has been created to your linked board!'); 
                     convo.next();  
                  });
@@ -514,7 +545,7 @@ controller.hears('new board',['mention', 'direct_mention','direct_message'], fun
   // .then(json => delegateMessage(json))
   // .then(msg => console.log(msg));
   console.log("RECEIVED MESSAGE: "+message.text);
-
+  var slackUsername = (message.user).toLowerCase();
     bot.startConversation({
     user: message.user,
     channel: message.channel,
@@ -570,7 +601,14 @@ controller.hears('new board',['mention', 'direct_mention','direct_message'], fun
 
 
 controller.hears('manage tasks',['mention', 'direct_mention','direct_message'], function(bot,message){
-      lists = trello.retrieveLists(persistStoryboardID).then(function(lists){
+    var slackUserID = (message.user).toLowerCase();
+    var trelloToken;
+    trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+
+      lists = trello.retrieveLists(persistStoryboardID, trelloToken).then(function(lists){
         var options = [];
         console.log(lists);
         lists.forEach(function(list) {
@@ -597,11 +635,15 @@ controller.hears('manage tasks',['mention', 'direct_mention','direct_message'], 
         ]
         });
       });
+    });
       
 });
 
 controller.hears('Copy lists',['mention', 'direct_mention','direct_message'], function(bot,message){
-    listMap = main.getBoardsOfMember().then(function(listMap){
+
+    var slackUserID = (message.user).toLowerCase();
+
+    listMap = main.getBoardsOfMember(slackUserID).then(function(listMap){
       var options = [];
       console.log(listMap);
       listMap.forEach(function(value, key) {
@@ -632,7 +674,8 @@ controller.hears('Copy lists',['mention', 'direct_mention','direct_message'], fu
 });
 
 controller.hears('Link existing board',['mention', 'direct_mention','direct_message'], function(bot,message){
-    listMap = main.getBoardsOfMember().then(function(listMap){
+    var slackUserID = (message.user).toLowerCase();
+    listMap = main.getBoardsOfMember(slackUserID).then(function(listMap){
       var options = [];
       console.log(listMap);
       listMap.forEach(function(value, key) {
@@ -664,13 +707,13 @@ controller.hears('Link existing board',['mention', 'direct_mention','direct_mess
 
 controller.hears('URL',['mention', 'direct_mention','direct_message'], function(bot,message){
       console.log("Message: "+ message);
-      
+      var slackUserID = (message.user).toLowerCase();
       var regexpURL = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm
       url = regexpURL.exec(message.text);
       
       var card_attachment = {url: String(url[0])};
       
-      main.addAttachment(persistCardID, card_attachment)
+      main.addAttachment(persistCardID, card_attachment, slackUserID)
       .then((urlreceived) => {
         var replyMessage = "Sorry did not understand your URL";
         if(String(url[0])){
@@ -689,29 +732,90 @@ controller.hears('URL',['mention', 'direct_mention','direct_message'], function(
 
 controller.hears('Hello',['mention', 'direct_mention','direct_message'], function(bot,message){
     console.log("Message: "+ message);
-
+    var slackUsername = (message.user).toLowerCase();
       bot.reply(message,{
-        "text": "Hey there, I am taskbot :robot_face:. I am here to help you initialize your task management process faster. ",
+        "text": "Hey there, I am task management bot :robot_face:. I am here to help you initialize your task management process faster. ",
         "attachments": [
             {
                 "title": "Hint:",
                 "text": "You can ask me to create storyboard from predefined templates! "
-            }
-            
+            }  
         ]
     });
     
     
 });
+var slackUsername;
+controller.hears('Link my trello',['mention', 'direct_mention','direct_message'], function(bot,message)
+{
+  console.log(message);
+  slackUsername = message.user;
+  var responseMessage;
+  // Check if entry already there in slack to trello database, 
+  // getTrelloToken (Also need to modify all functions to take in key and token as params)
+  
+  trelloDB.getTrelloUsername(slackUsername.toLowerCase())
+  .then((response) => {
+   trelloUserName  = response
+   console.log("Got value of trelloUserName here "+ response + " type :" + typeof response);
+  
+ 
+  console.log("The value for trelloUserName "+ trelloUserName);
+  if( trelloUserName === -1){
+    const requestURL = "https://trello.com/1/OAuthGetRequestToken";
+    const accessURL = "https://trello.com/1/OAuthGetAccessToken";
+    const authorizeURL = "https://trello.com/1/OAuthAuthorizeToken";
+    const appName = "Taskbot App";
+    console.log("New site");
+    
+    // Be sure to include your key and secret in 🗝.env ↖️ over there.
+    // You can get your key and secret from Trello at: https://trello.com/app-key
+    const key = process.env.TRELLO_KEY;
+    const secret = process.env.TRELLO_OAUTH_SECRET;
+    
+    // Trello redirects the user here after authentication
+    const loginCallback = "http://ec2-18-217-81-155.us-east-2.compute.amazonaws.com/callback";
+    
+    // You should have {"token": "tokenSecret"} pairs in a real application
+    // Storage should be more permanent (redis would be a good choice)
+    //const oauth_secrets = {};
+    
+    oauth = new OAuth(requestURL, accessURL, key, secret, "1.0A", loginCallback, "HMAC-SHA1")
+    
+   // trelloUserName =  //call the oauth method to get the user related trelloname, toke
+    oauth.getOAuthRequestToken(function(error, token, tokenSecret, results){
+        console.log(`in getOAuthRequestToken - token: ${token}, tokenSecret: ${tokenSecret}, resultes ${JSON.stringify(results)}, error: ${JSON.stringify(error)}`);
+        oauth_secrets[token] = tokenSecret;
+        responseMessage = `${authorizeURL}?oauth_token=${token}&scope=read,write&name=${appName}`;
+        console.log(responseMessage);
+        bot.reply(message, responseMessage);
+        
+      });
+    
+    //trelloDB.insertIntoSlackToTrello(slackUsername, trelloUserName);
+    }
+    else {
+        // get the trello token
 
+        trelloDB.getTrelloToken(trelloUserName)
+        .then((response) => {
+         trelloToken  = response
+         console.log("Got value of trelloToken here "+ trelloToken);
+         console.log("Entry already in database");
+         responseMessage = "Trello account already linked"
+         bot.reply(message, responseMessage);
+    });
+}
+});
+}); 
 // Helper functions
 
-function buildDropdownLists(actionCallbackId){
+function buildDropdownLists(actionCallbackId, slackUser){
 
-
+   console.log("slackuser id in builDropdown list "+ slackUser);
     //console.log("\n\n BEFORE :: BEFORE :: JSON OBJECT BUILT: "+JSON.stringify(jsonobj));
     return new Promise( function(resolve, reject){
-        main.getListsInBoard(persistStoryboardID)
+        main.getListsInBoard(persistStoryboardID, slackUser)
         .then((responseLists) => {
             var jsonobj = {
                 "text": "First we will link your task which you want to manage: ",
@@ -812,16 +916,78 @@ function findAttachment(message, actionCallbackId) {
   }
 
 // Start the built-in HTTP server
-const port = 4390;
-slackMessages.start(port).then(() => {
- console.log(`server listening on port ${port}`);
+//const port = 4390;
+// slackMessages.start(port).then(() => {
+//  console.log(`server listening on port ${port}`);
+// });
+var server = app.listen(process.env.PORT, function () {
+    console.log('Server up and running...🏃🏃🏻');
+    console.log("Listening on port %s", server.address().port);
+});
+app.get("/callback", function (request, response) {
+    console.log(`GET '/callback' 🤠 ${Date()}`);
+    callback(request, response);
+});
+const oauth_secrets = {};
+var oauth;
+var callback = function(request, response) {
+    const query = url.parse(request.url, true).query;
+    const token = query.oauth_token;
+    const tokenSecret = oauth_secrets[token];
+    const verifier = query.oauth_verifier;
+    oauth.getOAuthAccessToken(token, tokenSecret, verifier, function(error, accessToken, accessTokenSecret, results){
+      // In a real app, the accessToken and accessTokenSecret should be stored
+      console.log(`in getOAuthAccessToken - accessToken: ${accessToken}, accessTokenSecret: ${accessTokenSecret}, error: ${error}`);
+      oauth.getProtectedResource("https://api.trello.com/1/members/me", "GET", 
+      accessToken, accessTokenSecret, function(error, data, res){
+        // Now we can respond with data to show that we have access to your Trello account via OAuth
+        console.log(`in getProtectedResource - accessToken: ${accessToken}, accessTokenSecret: ${accessTokenSecret}`);
+        console.log(JSON.parse(data).username);
+        trelloUserName = JSON.parse(data).username
+        
+        trelloDB.insertIntoSlackToTrello(slackUsername.toLowerCase(), trelloUserName );
+        trelloDB.insertIntoTrelloInfo(trelloUserName, accessToken);
+        trelloToken= accessToken;
+        
+        response.send(data);
+      });
+    });
+   };
+
+   // This route handles get request to a /oauth endpoint. We'll use this endpoint for handling the logic of the Slack oAuth process behind our app.
+app.get('/oauth', function(req, res) {
+    // When a user authorizes an app, a code query parameter is passed on the oAuth endpoint. If that code is not there, we respond with an error message
+    if (!req.query.code) {
+        res.status(500);
+        res.send({"Error": "Looks like we're not getting code."});
+        console.log("Looks like we're not getting code.");
+    } else {
+        // If it's there...
+        console.log("oatuh code: "+req.query.code);
+        // We'll do a GET call to Slack's `oauth.access` endpoint, passing our app's client ID, client secret, and the code we just got as query parameters.
+        request({
+            url: 'https://slack.com/api/oauth.access', //URL to hit
+            qs: {code: req.query.code, client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET}, //Query string data
+            method: 'GET', //Specify the method
+
+        }, function (error, response, body) {
+            if (error) {
+                console.log(error);
+            } else {
+                res.json(body);
+                console.log("Response Oauth: "+response.body);
+                //trelloDB.insertSlackToken(userId, slackBotToken);
+            }
+        })
+    }
 });
 
 controller.hears('set due date',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
   console.log(message);
+  var slackUserID = (message.user).toLowerCase();
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
-
+   var slackUserID = (message.user).toLowerCase();
   //check first whether user has created board or not
   var responseMessage;
   var regexpDueDate = /(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d/
@@ -835,17 +1001,19 @@ controller.hears('set due date',['mention', 'direct_mention','direct_message'], 
         bot.reply(message,responseMessage);
   }else{
       
-    main.addDueDate(persistCardID, card_due ).then(function(results){
+    main.addDueDate(persistCardID, card_due, slackUserID).then(function(results){
         responseMessage = "Due date set on this card: "+results;
         bot.reply(message,responseMessage);
     });
   }
 });
+
 controller.hears('archive card',['mention', 'direct_mention','direct_message'], function(bot,message)
 {
   console.log(message);
+  var slackUserID = (message.user).toLowerCase();
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
-
+  var slackUserID = (message.user).toLowerCase();
   //check first whether user has created board or not
   var responseMessage;
  
@@ -857,7 +1025,7 @@ controller.hears('archive card',['mention', 'direct_mention','direct_message'], 
         bot.reply(message,responseMessage);
   }else{
       
-    main.archiveCard(persistCardID).then(function(results){
+    main.archiveCard(persistCardID, slackUserID).then(function(results){
         responseMessage = "This card is now archived: "+results;
         bot.reply(message,responseMessage);
     });
@@ -868,7 +1036,7 @@ controller.hears('label',['mention', 'direct_mention','direct_message'], functio
 {
   console.log(message);
   //bot.reply(message,"Wow! You want to work on Task management with me. Awesome!");
-
+  var slackUserID = (message.user).toLowerCase();
   var mg = {
     "text": "You can assign the priority of the task now.",
     "attachments": [
@@ -906,5 +1074,4 @@ controller.hears('label',['mention', 'direct_mention','direct_message'], functio
 }
 bot.reply(message,mg);
 });
-
 

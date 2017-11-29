@@ -3,22 +3,61 @@ var _ = require("underscore");
 var request = require("request");
 var querystring = require('querystring');
 var Trello = require("node-trello");
+var pgUrl = require('pg-database-url')
+var pg = require('pg');
 
 require('dotenv').config();
-var token = process.env.TRELLO_TOKEN;
+//var token = process.env.TRELLO_TOKEN;
 var urlRoot = "https://api.trello.com";
 var key = process.env.TRELLO_KEY;
-var t = new Trello(key, token);
+var t ;
+/*
 
-function createNewStoryBoard(boardName)
+
+function trialDatabaseConnection() 
 {
+	
+   // Example config 
+   // This may already be available from your database configuration or environment variables 
+   var dbConfig = {
+	 host: 'localhost',
+	 port: 5432,
+	 database: 'TaskBotDB',
+	 username: 'postgres',
+	 password: 'taskbot'
+   }
+	
+   var connString = pgUrl(dbConfig)
+   var client = new pg.Client(connString);
+   client.connect();
+   
+   // client.query("CREATE TABLE IF NOT EXISTS emps(firstname varchar(64), lastname varchar(64))");
+   client.query("INSERT INTO slacktotrello(slackid, trelloid) values($1, $2)", ['swatijh', 'swati378']);
+   // client.query("INSERT INTO emps(firstname, lastname) values($1, $2)", ['Mayor', 'McCheese']);
+   
+   var query = client.query("SELECT * FROM slacktotrello");
+//    query.on("row", function (row, result) {
+// 	   result.addRow(row);
+//    });
+//    query.on("end", function (result) {
+// 	   console.log(JSON.stringify(result.rows, null, "    "));
+// 	   client.end();
+//    });
+}
+*/
 
+
+function createNewStoryBoard(boardName, trelloToken)
+{
+	console.log("Token recvd in create new storyboard :"+ trelloToken + " key: "+ key );
+	
 	return new Promise(function (resolve, reject) 
 	{
-
+		t = new Trello(key, trelloToken);
 		t.post("/1/boards/", {
 			"name" : boardName,
-			"defaultLists" : false 
+			"defaultLists" : false,
+			"prefs_permissionLevel" : "public" 
 		}, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Inside trello.js! KHANTIL NEW BOARD API CALL");
@@ -28,11 +67,11 @@ function createNewStoryBoard(boardName)
 	});
 }
 
-function createNewList(new_list)
+function createNewList(new_list,  trelloToken)
 {
 	return new Promise(function (resolve, reject) 
 	{
-
+		t = new Trello(key, trelloToken);
 		t.post("/1/lists", new_list, function (error, response) {
 			if (error) throw new Error(error);
             console.log("Inside trello.js! KHANTIL NEW LISTTTT API CALL");
@@ -42,9 +81,10 @@ function createNewList(new_list)
 	});
 }
 
-function createNewCard(card_name, listId)
+function createNewCard(card_name, listId,  trelloToken)
 {
-
+	console.log("In createNewCard card_name, list_id, trelloToken "+ card_name + " "+ listId + " "+ trelloToken);
+	t = new Trello(key, trelloToken);
 	return new Promise(function (resolve, reject) 
 	{
 		t.post("/1/cards/", {
@@ -61,8 +101,9 @@ function createNewCard(card_name, listId)
 	});
 }
 
-function retrieveLists(boardId)
+function retrieveLists(boardId,  trelloToken)
 {
+	t = new Trello(key, trelloToken);
 	
     return new Promise(function (resolve, reject) 
     {
@@ -75,11 +116,12 @@ function retrieveLists(boardId)
         });
     });
 }
-function retrieveCards(listId)
+function retrieveCards(listId,  trelloToken)
 {
 	
 	return new Promise(function (resolve, reject) 
 	{
+		t = new Trello(key, trelloToken);
 
 		t.get("/1/lists/"+ listId+"/cards", function (error, response) {
             if (error) throw new Error(error);
@@ -91,10 +133,11 @@ function retrieveCards(listId)
 	});
 }
 
-function retrieveBoards()
+function retrieveBoards( trelloToken)
 {
     return new Promise(function (resolve, reject) 
     {
+		t = new Trello(key, trelloToken);
     	t.get("/1/members/" + process.env.TRELLO_MEMBERID+ "/boards", function (error, body) {
             if (error) throw new Error(error);
             resolve(body);
@@ -103,21 +146,14 @@ function retrieveBoards()
 }
 
 
-function addAttachment(cardId, url)
+function addAttachment(cardId, url,  trelloToken)
 {
+	t = new Trello(key, trelloToken);
 	var new_attachment = {
 		"url" : url
 	  };
 
-	var options = {
-        url: urlRoot + "/1/cards/" + cardId + "/attachments",
-		method: 'POST',
-		json: new_attachment,
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
+	
 	return new Promise(function (resolve, reject) 
     {
     	console.log("URL: " + url + " type: " + typeof url);
@@ -129,11 +165,12 @@ function addAttachment(cardId, url)
     });
 }
 
-function addDueDate(cardId, dueDate)
+function addDueDate(cardId, dueDate,  trelloToken)
 {
 	
 	return new Promise(function (resolve, reject) 
     {
+		t = new Trello(key, trelloToken);
     	console.log("Incoming due date : "+ dueDate);
     	t.put("/1/cards/" + cardId, {"due": dueDate},function (error, body) {
             if (error) throw new Error(error);
@@ -143,11 +180,12 @@ function addDueDate(cardId, dueDate)
     });
 }
 
-function addLabel(cardId, color, labelName)
+function addLabel(cardId, color, labelName,  trelloToken)
 {
 	
 	return new Promise(function (resolve, reject) 
     {
+		t = new Trello(key, trelloToken);
     	console.log("Incoming color : "+ color);
     	t.post("/1/cards/"+cardId+"/labels", {"color": color, "name": labelName},function (error, body) {
             if (error) throw new Error(error);
@@ -157,11 +195,12 @@ function addLabel(cardId, color, labelName)
     });
 }
 
-function archiveCard(cardId)
+function archiveCard(cardId, trelloToken)
 {
 	
 	return new Promise(function (resolve, reject) 
     {
+		t = new Trello(key, trelloToken);
     	
     	t.put("/1/cards/"+cardId, {"closed": true},function (error, body) {
             if (error) throw new Error(error);
