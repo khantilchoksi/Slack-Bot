@@ -34,10 +34,10 @@ C. Copy lists from another pre-existing story board to the current board linked 
 
 ### USE CASE 2: Instructions to create a new list and creating card 
 
-A Create a new list to your linked board   
+A. Create a new list to your linked board   
    1. Say, ‘@taskbot I want to create new list to my linked board’. Taskbot will then prompt you to enter the name of the list you want to create.   
 
-B Create a new card   
+B. Create a new card   
    1. Say, ‘@taskbot I want to create new card’. Taskbot will then prompt you to enter the name of the card you want to create.   
    2. Taskbot doesn’t know where do you want to add that card to. It will prompt you the lists in your board and you will then have to choose a list where you want to create a new card.   
 
