@@ -5,7 +5,8 @@ Purpose of bot: Purpose of bot is to ....
 We have deployed the chat bot to slack channel- add channel ...
 We have made 1 dummy user :
 
-      1.UserID: taskbot.testing.ta@gmail.com Password: ****  ta_test123
+      1.UserID: taskbot.testing.ta@gmail.com</br>
+      Password: ta_test123
 
 ## General Instructions before making the meeting
 
