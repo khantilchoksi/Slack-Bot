@@ -12,6 +12,8 @@ var getCards_data = require("./cardsInList.json");
 const menu = require("./lib/menu.js");
 var HashMap = require('hashmap');
 var cardAttachment_data = require('./card_attachment.json')
+var trelloDB = require('./trelloDB.js');
+var trelloToken;
 
 // var new_storyboard = {
 // 	"name" : "Swati2",
@@ -73,8 +75,16 @@ var waterfall_lists = ['Requirements', 'Design', 'Implementation', 'Verification
 
 var current_boardId;
 
-function getNewStoryBoard(template_type, boardName, trelloToken)
+function getNewStoryBoard(template_type, boardName, slackUserID)
 {
+	console.log("Came in getNewStoryBoard of main.js with slackUserID "+ slackUserID);
+	
+	return trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+
+	console.log("Trello token inside main getNewStoryBoard"+ trelloToken)
 	console.log(" TEMPLATE TYPE OF SWATI : "+template_type+" BOARD NAME: "+boardName);
 	var listArray = menu.listOfScrumLists();
 	if(template_type == "Scrum") {
@@ -104,7 +114,7 @@ function getNewStoryBoard(template_type, boardName, trelloToken)
 	return promise1.then(function(result){
 		
 		listArray.forEach(function(listName) {
-			var promise = createNewListWithTemplateCards(listName.name);
+			var promise = createNewListWithTemplateCards(listName.name, trelloToken);
 			list_promises.push(promise);
 		});
 		return Promise.all(list_promises);
@@ -118,11 +128,17 @@ function getNewStoryBoard(template_type, boardName, trelloToken)
 	*/
 	console.log(" MAIN JS 86 Did you come here");
 	
-
+	});
 }
 
-function getNewList(listName, storyBoardId, trelloToken)
+function getNewList(listName, storyBoardId, slackUserID)
 {
+	
+	return trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+
     return new Promise(function (resolve, reject) 
 	{
 		// mock data needs .
@@ -141,12 +157,16 @@ function getNewList(listName, storyBoardId, trelloToken)
 			resolve(created_list);
 		});
 	});
+});
 }
 
 function createNewListWithTemplateCards(listName, trelloToken)
 {
+	
+	
 		// mock data needs .
-		//console.log(" This is my story board id: "+current_boardId);
+		console.log("Trello token received in here : "+ trelloToken);
+		console.log(" This is my story board id: "+current_boardId);
 		console.log("\n MAIN JS: createNewListWithTemplateCards FUNCITON CALL");
 		var new_list = {
 			"name" : listName,
@@ -202,16 +222,18 @@ function createNewListWithTemplateCards(listName, trelloToken)
 		
 		cardsArray.forEach(function(cardName) {
 			console.log("cardNAME: "+cardName.name);
-			var promise = getNewCard(cardName.name, generatedListID);
+			var promise = getNewCard(cardName.name, generatedListID, trelloToken);
 			list_promises2.push(promise);
 		});
 		return Promise.all(list_promises2);
 	});
-	
+
 
 }
 
 function getNewCard(card_name, listId, trelloToken) {
+	
+	console.log("MAIN.JS In getNewCard card_name, list_id, trelloToken "+ card_name + " "+ listId + " "+ trelloToken);
 	return new Promise(function (resolve, reject) 
 	{
 		trello.createNewCard(card_name, listId, trelloToken).then(function (created_card) 
@@ -222,9 +244,16 @@ function getNewCard(card_name, listId, trelloToken) {
 		});
 	});
 
+
 }
 
-function addAttachment(cardId,new_attachment, trelloToken) {
+function addAttachment(cardId,new_attachment, slackUserID) {
+	
+	trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+});
 	return new Promise(function (resolve, reject)
 	{
 		trello.addAttachment(cardId, new_attachment.url, trelloToken).then(function (posted_attachment) 
@@ -235,7 +264,13 @@ function addAttachment(cardId,new_attachment, trelloToken) {
 	});
 }
 
-function addDueDate(cardId,dueDate, trelloToken) {
+function addDueDate(cardId,dueDate, slackUserID) {
+	
+	trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+});
 	return new Promise(function (resolve, reject)
 	{
 		trello.addDueDate(cardId, dueDate, trelloToken).then(function (updated_card) 
@@ -246,7 +281,13 @@ function addDueDate(cardId,dueDate, trelloToken) {
 	});
 }
 
-function addLabel(cardId, color, labelName, trelloToken) {
+function addLabel(cardId, color, labelName, slackUserID) {
+	
+	trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+});
 	return new Promise(function (resolve, reject)
 	{
 		trello.addLabel(cardId, color, labelName, trelloToken).then(function (updated_card) 
@@ -256,7 +297,13 @@ function addLabel(cardId, color, labelName, trelloToken) {
 	});
 }
 
-function archiveCard(cardId, trelloToken) {
+function archiveCard(cardId, slackUserID) {
+	
+	trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+});
 	return new Promise(function (resolve, reject)
 	{
 		trello.archiveCard(cardId, trelloToken).then(function (updated_card) 
@@ -265,7 +312,13 @@ function archiveCard(cardId, trelloToken) {
 		});
 	});
 }
-function getListsInBoard(boardId, trelloToken) {
+function getListsInBoard(boardId, slackUserID) {
+	
+	return trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+
 	var listMap =  new HashMap();
 	return new Promise(function (resolve, reject) 
 	{
@@ -282,10 +335,15 @@ function getListsInBoard(boardId, trelloToken) {
 			resolve(listMap);
 		});
 	});
-
+});
 }
 
-function getBoardsOfMember(trelloToken) {
+function getBoardsOfMember(slackUserID) {
+	
+	return trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
 	var listMap =  new HashMap();
 	return new Promise(function (resolve, reject) 
 	{
@@ -301,10 +359,17 @@ function getBoardsOfMember(trelloToken) {
 			resolve(listMap);
 		});
 	});
+});
 
 }
 
-function getCardsInList(listId,trelloToken){
+function getCardsInList(listId,slackUserID){
+	
+	return trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+
 	console.log("getCardsInList entered");
 	var Cards = new HashMap();
 	return new Promise(function (resolve, reject) 
@@ -324,11 +389,18 @@ function getCardsInList(listId,trelloToken){
 			resolve(Cards);
 		});
 	});
+});
 }
 
 
-function copyListsToBoard(fromBoardId, toBoardId, trelloToken)
+function copyListsToBoard(fromBoardId, toBoardId, slackUserID)
 {
+	
+	trelloDB.getTrelloTokenFromSlackId(slackUserID)
+	.then((response) => {
+	 trelloToken  = response
+	 console.log("Got value of trelloToken here "+ trelloToken);
+});
 	return new Promise(function (resolve, reject) 
 	{
 		trello.retrieveLists(fromBoardId, trelloToken).then(function(listsArray){
