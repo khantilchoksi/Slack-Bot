@@ -2,8 +2,9 @@
 
 Purpose of bot: Purpose of bot is to ....
 
-We have deployed the chat bot to general slack channel https://se-projectworkspace.slack.com/messages/C73HN2DL0/
-We have made 1 dummy user :
+We have deployed the chat bot to general slack channel https://se-projectworkspace.slack.com/messages/C73HN2DL0/   
+
+We have made 1 dummy user :   
 
       UserID: taskbot.testing.ta@gmail.com
       Password: ta_test123
