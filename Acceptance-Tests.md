@@ -20,16 +20,16 @@ We have made 1 dummy user :
 
 Instructions:
 
-   • Say ‘@taskbot I want to create a new board in my trello’. It will prompt you to enter the name of the board.   
+   • Say ‘@taskbot I want to create a new board in my trello’. It will prompt you to enter the name of the board.      
    • Once you enter the name of the board, you can choose any of the default templates of the storyboards provided in the options. Example: scrum board, waterfall board etc.   
-   • On selecting one of the available options, the taskbot will provide you the link of the board it just created in trello. Since, we already provide you the templates of the board containing some lists, it will tell you what all lists the bot created on its own. Along with that, it will also inform you which default cards are added to which lists.</br>
-• Link a pre-existing Story Board
-   •	To link an already existing board to the slack channel, say ‘@taskbot I want to link existing board here’.
-   •	Bot will fetch all the existing boards in your trello account and will let you choose any one of the boards from the drop-down menu.</br>
-• Copy lists from another pre-existing story board to the current board linked to slack channel
-   •	Say, ‘@taskbot I want to copy lists from my pre-existing board ‘
-   •	The bot will provide a dropdown list of all the existing boards and you can choose any one of the boards. Let’s assume the board you selected is X.
-   • 	The bot will then add the lists from X (excluding the cards in each lists) into the board linked to your slack channel currently.
+   • On selecting one of the available options, the taskbot will provide you the link of the board it just created in trello. Since, we already provide you the templates of the board containing some lists, it will tell you what all lists the bot created on its own. Along with that, it will also inform you which default cards are added to which lists.   
+• Link a pre-existing Story Board   
+   •	To link an already existing board to the slack channel, say ‘@taskbot I want to link existing board here’.   
+   •	Bot will fetch all the existing boards in your trello account and will let you choose any one of the boards from the drop-down menu.   
+• Copy lists from another pre-existing story board to the current board linked to slack channel   
+   •	Say, ‘@taskbot I want to copy lists from my pre-existing board'   
+   •	The bot will provide a dropdown list of all the existing boards and you can choose any one of the boards. Let’s assume the board you selected is X.   
+   • 	The bot will then add the lists from X (excluding the cards in each lists) into the board linked to your slack channel currently.   
 
 ### USE CASE 2: Instructions to create a new list and creating card 
 
