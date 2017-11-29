@@ -774,7 +774,7 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
     const secret = process.env.TRELLO_OAUTH_SECRET;
     
     // Trello redirects the user here after authentication
-    const loginCallback = "http://18b34665.ngrok.io/callback";
+    const loginCallback = "http://ec2-18-217-81-155.us-east-2.compute.amazonaws.com/callback";
     
     // You should have {"token": "tokenSecret"} pairs in a real application
     // Storage should be more permanent (redis would be a good choice)
@@ -916,11 +916,11 @@ function findAttachment(message, actionCallbackId) {
   }
 
 // Start the built-in HTTP server
-const port = 4390;
+//const port = 4390;
 // slackMessages.start(port).then(() => {
 //  console.log(`server listening on port ${port}`);
 // });
-var server = app.listen(4390, function () {
+var server = app.listen(process.env.PORT, function () {
     console.log('Server up and running...🏃🏃🏻');
     console.log("Listening on port %s", server.address().port);
 });
