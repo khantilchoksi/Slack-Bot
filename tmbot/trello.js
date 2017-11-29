@@ -153,15 +153,7 @@ function addAttachment(cardId, url,  trelloToken)
 		"url" : url
 	  };
 
-	var options = {
-        url: urlRoot + "/1/cards/" + cardId + "/attachments",
-		method: 'POST',
-		json: new_attachment,
-		headers: {
-			"content-type": "application/json",
-			"Authorization": token
-		}
-	};
+	
 	return new Promise(function (resolve, reject) 
     {
     	console.log("URL: " + url + " type: " + typeof url);

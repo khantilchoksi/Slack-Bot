@@ -734,7 +734,7 @@ controller.hears('Hello',['mention', 'direct_mention','direct_message'], functio
     console.log("Message: "+ message);
     var slackUsername = (message.user).toLowerCase();
       bot.reply(message,{
-        "text": "Hey there, I am taskbot :robot_face:. I am here to help you initialize your task management process faster. ",
+        "text": "Hey there, I am task management bot :robot_face:. I am here to help you initialize your task management process faster. ",
         "attachments": [
             {
                 "title": "Hint:",
@@ -967,7 +967,7 @@ app.get('/oauth', function(req, res) {
         // We'll do a GET call to Slack's `oauth.access` endpoint, passing our app's client ID, client secret, and the code we just got as query parameters.
         request({
             url: 'https://slack.com/api/oauth.access', //URL to hit
-            qs: {code: req.query.code, client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET, scope: read,write}, //Query string data
+            qs: {code: req.query.code, client_id: process.env.CLIENT_ID, client_secret: process.env.CLIENT_SECRET}, //Query string data
             method: 'GET', //Specify the method
 
         }, function (error, response, body) {
