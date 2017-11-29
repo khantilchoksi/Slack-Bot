@@ -12,32 +12,33 @@ We have made 1 dummy user :
 ## General Instructions before making the meeting
 
 1. Authorize Trello account with the help of below commands,
- - @taskbot Hello bot
- - @taskbot Link my Trello
+ • @taskbot Hello bot
+ • @taskbot Link my Trello
 
 
 ## USE CASE 1: Instructions to create a new story board 
 
 Instructions:
 
-   - Say ‘@taskbot I want to create a new board in my trello’. It will prompt you to enter the name of the board.   
-   - Once you enter the name of the board, you can choose any of the default templates of the storyboards provided in the options. Example: scrum board, waterfall board etc.   
-   - On selecting one of the available options, the taskbot will provide you the link of the board it just created in trello. Since, we already provide you the templates of the board containing some lists, it will tell you what all lists the bot created on its own. Along with that, it will also inform you which default cards are added to which lists.</br>
+   • Say ‘@taskbot I want to create a new board in my trello’. It will prompt you to enter the name of the board.   
+   • Once you enter the name of the board, you can choose any of the default templates of the storyboards provided in the options. Example: scrum board, waterfall board etc.   
+   • On selecting one of the available options, the taskbot will provide you the link of the board it just created in trello. Since, we already provide you the templates of the board containing some lists, it will tell you what all lists the bot created on its own. Along with that, it will also inform you which default cards are added to which lists.</br>
 • Link a pre-existing Story Board
-   -	To link an already existing board to the slack channel, say ‘@taskbot I want to link existing board here’.
-   -	Bot will fetch all the existing boards in your trello account and will let you choose any one of the boards from the drop-down menu.</br>
+   •	To link an already existing board to the slack channel, say ‘@taskbot I want to link existing board here’.
+   •	Bot will fetch all the existing boards in your trello account and will let you choose any one of the boards from the drop-down menu.</br>
 • Copy lists from another pre-existing story board to the current board linked to slack channel
-   -	Say, ‘@taskbot I want to copy lists from my pre-existing board ‘
-   -	The bot will provide a dropdown list of all the existing boards and you can choose any one of the boards. Let’s assume the board you selected is X.
-   - 	The bot will then add the lists from X (excluding the cards in each lists) into the board linked to your slack channel currently.
+   •	Say, ‘@taskbot I want to copy lists from my pre-existing board ‘
+   •	The bot will provide a dropdown list of all the existing boards and you can choose any one of the boards. Let’s assume the board you selected is X.
+   • 	The bot will then add the lists from X (excluding the cards in each lists) into the board linked to your slack channel currently.
 
 ### USE CASE 2: Instructions to create a new list and creating card 
 
 • Create a new list to your linked board   
-   - Say, ‘@taskbot I want to create new list to my linked board’. Taskbot will then prompt you to enter the name of the list you want to create.   
+   • Say, ‘@taskbot I want to create new list to my linked board’. Taskbot will then prompt you to enter the name of the list you want to create.   
+
 • Create a new card   
-   - Say, ‘@taskbot I want to create new card’. Taskbot will then prompt you to enter the name of the card you want to create.   
-   - Taskbot doesn’t know where do you want to add that card to. It will prompt you the lists in your board and you will then have to choose a list where you want to create a new card.   
+   • Say, ‘@taskbot I want to create new card’. Taskbot will then prompt you to enter the name of the card you want to create.   
+   • Taskbot doesn’t know where do you want to add that card to. It will prompt you the lists in your board and you will then have to choose a list where you want to create a new card.   
 
 
 ### USE CASE 3: Instruction for Managing tasks
