@@ -46,13 +46,13 @@ Instructions:
 • When you select a list, taskbot will let you know about the possible actions you can perform for managing your tasks.    
 • Some possible actions you can perform are: Attach a URL to the card, Set a due date for that task, Add a label to the card or Archive the card if you do not need it.   
 
-1. Setting a due date for a task
-  a. Say, ‘@taskbot I want to set due date mm/dd/yyyy for this task’
-2. Add a URL to a card
-  a. Say, ‘@taskbot URL <Enter//the url here>’
-3. Set label to a card
-  a. Say, ‘@taskbot I want to set label to this task’
-  b. Taskbot will let you select the label you want by clicking on the buttons
-4. Archive the card
-  a. Say, ‘@taskbot I want to archive card’
+1. Setting a due date for a task   
+  a. Say, ‘@taskbot I want to set due date mm/dd/yyyy for this task’   
+2. Add a URL to a card   
+  a. Say, ‘@taskbot URL <Enter//the url here>’   
+3. Set label to a card   
+  a. Say, ‘@taskbot I want to set label to this task’   
+  b. Taskbot will let you select the label you want by clicking on the buttons   
+4. Archive the card   
+  a. Say, ‘@taskbot I want to archive card’   
 
