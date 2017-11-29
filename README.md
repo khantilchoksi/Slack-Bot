@@ -4,6 +4,7 @@
 ## [Revised Design](./Design_1.2.md)
 ## [Milestone : BOT](./BOT.md)
 ## [Milestone : SERVICE](https://github.ncsu.edu/asoni3/CSC510-Project/blob/milestone_service/SERVICE.md)
+## [Milestone : Deployment]()
 ## Team Name : Task Management Bot
 
 #### Team members
