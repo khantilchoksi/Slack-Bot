@@ -774,7 +774,7 @@ controller.hears('Link my trello',['mention', 'direct_mention','direct_message']
     const secret = process.env.TRELLO_OAUTH_SECRET;
     
     // Trello redirects the user here after authentication
-    const loginCallback = "http://18b34665.ngrok.io/callback";
+    const loginCallback = "ec2-18-217-81-155.us-east-2.compute.amazonaws.com/callback";
     
     // You should have {"token": "tokenSecret"} pairs in a real application
     // Storage should be more permanent (redis would be a good choice)
