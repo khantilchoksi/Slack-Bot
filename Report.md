@@ -18,7 +18,6 @@
 * Milestone 4: [DEPLOY] (https://github.ncsu.edu/asoni3/CSC510-Project/tree/milestone_deployment/tmbot) 
 * Milestone 5: [REPORT]  
 
-</br>
 ### Project Presentation
 [Screencast] (https://youtu.be/UhBqV_MlJSo)
 
