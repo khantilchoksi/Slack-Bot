@@ -64,9 +64,13 @@ During this phase of the milestone, we understood various aspects about the init
 
 For milestone-2 bot, we came up with the implementation logic for bot where we used Nodejs for writing the business logic of the application and created mock json file to render mock data consisting of calendar data to slack bot. To smoothen the development process, we used trello cards to track and manage tasks assigned to each person.
 
-In milestone-3 Services, we implemented the service part of bot that is creating new story board, linking the existing ones, creating new labels, adding links to the tasks in story board, setting priority to the existing tasks. Most challangeing part during this milestone was to comeup with a logic to authorize a user and keep a track of all user tokens for that user. We decided to comeup with a database that can store all user tokens in the Trello, which can be later fetched fo rperforming actions.
+In milestone-3 Services, we implemented the service part of bot that is creating new story board, linking the existing ones, creating new labels, adding links to the tasks in story board, setting priority to the existing tasks. Most challangeing part during this milestone was to comeup with a logic to authorize a user and keep a track of all user tokens for that user. We decided to comeup with a database that can store all user tokens of the Trello, which can be later fetched for performing actions. ... (need to write here)
 
+In milestone-4 Deploy,  ... (need to write here)
 
+Overall, it was been a great journey with lot of learning during each of the milestones of project. Throughout this project, we made use of agile methodology which was quite helpful to understand the requirement at early stages and frequent meetings helped us in reducing the errors and defects which might’ve impacted the project milestones at later stages. Apart from that, we used pair programming during the coding phase of our project which was a successful experiment since it helped us in improving the quality of the code and eleiminating the bugs/defects which might have got neglected had there been only one developer working on that task. It also helped us in identifying the strong and weak points of the team members that made us easy to rotate the work after every milestone.
+
+In contrast to the projects we did in our respective companies, which had hierarchical structure where mostly the team lead decides and others follow, we felt that each member in this project had flexibility of putting their idea upfront and taking the lead to make it work. We had opportunity to rotate roles and experience a developments process in every perspective.
 
 ## 4.  Limitations and future work
 
