@@ -20,8 +20,7 @@
 
 </br>
 ### Project Presentation
-* [Screencast] (https://youtu.be/UhBqV_MlJSo)
-
+[Screencast] (https://youtu.be/UhBqV_MlJSo)
 
 # REPORT
 
@@ -29,7 +28,7 @@
 
 Slack is one of the most popular team collaboration tools. Most of the leading companies are now using Slack for better communication within the team. Trello is a web application that helps with project management in the sense of giving a visual overview of tasks that need to be managed in the team. While teams communicate on Slack, and then go on to Trello to manage their task activities, we thought that bridging the gap between these two applications would make project management handy by providing Trello related functionalities right there in Slack. There could be times when task specific details are needed at some spontaneous time (during team meeting). Imagine the swiftness and control one experiences, when team member receives the relevant information like getting the due date of a task there itself in Slack. Thus, managing tasks in Trello can now be done without having to move away from Slack. We plan to solve this problem using a Task Management bot.
 
-## 2. How does bot solve the problem?
+## How does bot solve the problem?
 The bot provides the user various alternatives to start their new board with templates related to different software development lifecycles. Moreover, the user can also do modifications/personalization they require at the time of creating the new board from Slack itself. So, the user doesn’t have to create individual lists for the storyboard, every time they create a new one in Trello. This way bot saves the Software Engineer the time for initial setup process and helps them to increase the productivity of the software. 
 The manager and team members can easily look for their backlogs, on-going tasks and tasks which will have the deadline soon, just by asking a simple question to the bot in the Slack for their specific requests. The user or team lead can also assign the task to other team members while also assigning a deadline to the same. In addition to this, the software engineer can also look for the highly prioritized tasks which he/she needs to complete with highest priority. This way, the manager and other members also get updated about the task activity of team members.
 When the user has completed the task and they want to show their completed work, they can simply attach the link (drive link/ GitHub link) by telling the bot that they have completed with this reference. This way team lead / other team-mates can look for it to track the record when required in an organized way.
@@ -42,15 +41,15 @@ The bot has three main features:
 2. Creating / Managing Tasks in the story board. 
 3. Attachment to the tasks inside the story board.
 
-## screenshots.
+## Screenshots
 
-## Screenshot-1
+# Screenshot-1
 ![Alt text](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Screen%20Shot%202.png?raw=true "Optional Title")
 
-## Screenshot-2
+# Screenshot-2
 ![Alt text](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Screen%20Shot%203.png?raw=true "Optional Title")
 
-## Screenshot-3
+# Screenshot-3
 ![Alt text](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Screen%20Shot4.png?raw=true "Optional Title")
 
 ## 3. Our reflection on the bot development process 
