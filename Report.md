@@ -16,7 +16,7 @@
 * Milestone 2: [BOT](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/BOT.md) 
 * Milestone 3: [SERVICE](https://github.ncsu.edu/asoni3/CSC510-Project/blob/milestone_service/SERVICE.md) 
 * Milestone 4: [DEPLOY](https://github.ncsu.edu/asoni3/CSC510-Project/tree/milestone_deployment/tmbot) 
-* Milestone 5: [REPORT] 
+* Milestone 5: [REPORT](https://github.ncsu.edu/asoni3/CSC510-Project/blob/milestone_report/Report.md)
 
 ### Project Presentation
 [Screencast](https://youtu.be/UhBqV_MlJSo)
