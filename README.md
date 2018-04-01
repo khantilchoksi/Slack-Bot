@@ -9,114 +9,47 @@
   
 --------------------------------------------------------------------------------------
 
-## Bot Description:  
-  * The task management bot is a Slack based interactive conversational bot which simplifies our job of managing the Slack channel and Trello board for a single project management.  
-  * The bot provides the user various alternatives to start their new board with templates related to different software development lifecycles.  
-  Moreover, the user can also do modifications/personalization they require at the time of creating the new board 
-  from Slack itself. So, the user doesn’t have to create individual lists for the storyboard, every time they create a new one in Trello. This way bot saves the Software Engineer the time for initial setup process and helps them to increase the productivity of the software. 
-  * The manager and team members can easily look for their backlogs, on-going tasks and tasks which will have the deadline soon, 
-  just by asking a simple question to the bot in the Slack for their specific requests. The user or team lead can also assign the task to other team members while also assigning a deadline to the same.
-  In addition to this, the software engineer can also look for the highly prioritized tasks which he/she needs to complete with 
-  highest priority. This way, the manager and other members also get updated about the task activity of team members.
-  * Now, when the user has completed the task and they want to show their completed work,  they can simply attach the link (drive link/ github link) by telling the bot that they have completed with this reference. This way team lead / other team-mates can look for it to track the record when required in an organized way.  
-### Bot's Design Pattern: Conversationists Bot  
-  * Our bot will converse with the user and keep the conversational state intact. Since the Bot will learn from what the user wishes to do and react accordingly, we will follow the Conversationist Bot pattern.The Bot will have to remember the knowledge of the conversation in terms of what has been said from the previous conversation, in order to carry out some subtasks in some use cases.
+## The problem our bot solved:
 
--------------------------------------------------------------------------------------------------------------
-## Use Cases:  
-### Use Case I : Creating story board from a template
-  **(i) Preconditions:**  
-   User must have a team created on the Trello and should have invited the bot into the channel for their Trello team.  
+Slack is one of the most popular team collaboration tools. Most of the leading companies are now using Slack for better communication within the team. Trello is a web application that helps with project management in the sense of giving a visual overview of tasks that need to be managed in the team. While teams communicate on Slack, and then go on to Trello to manage their task activities, we thought that bridging the gap between these two applications would make project management handy by providing Trello related functionalities right there in Slack. There could be times when task specific details are needed at some spontaneous time (during team meeting). Imagine the swiftness and control one experiences, when team member receives the relevant information like getting the due date of a task there itself in Slack. Thus, managing tasks in Trello can now be done without having to move away from Slack. We plan to solve this problem using a Task Management bot.
+
+## How does bot solve this problem?
+The bot provides the user various alternatives to start their new board with templates related to different software development lifecycles. Moreover, the user can also do modifications/personalization they require at the time of creating the new board from Slack itself. So, the user doesn’t have to create individual lists for the storyboard, every time they create a new one in Trello. This way bot saves the Software Engineer the time for initial setup process and helps them to increase the productivity of the software. 
+The manager and team members can easily look for their backlogs, on-going tasks and tasks which will have the deadline soon, just by asking a simple question to the bot in the Slack for their specific requests. The user or team lead can also assign the task to other team members while also assigning a deadline to the same. In addition to this, the software engineer can also look for the highly prioritized tasks which he/she needs to complete with highest priority. This way, the manager and other members also get updated about the task activity of team members.
+When the user has completed the task and they want to show their completed work, they can simply attach the link (drive link/ GitHub link) by telling the bot that they have completed with this reference. This way team lead / other team-mates can look for it to track the record when required in an organized way.
   
-  **(ii) Main Flow:**  
- * User will request to create a storyboard[S1].  
- * Bot will provide list of different templates for the storyboards[S2].  
- * User selects the template for the board from the list provided earlier.[S3]  
- * After the template is chosen by the user, bot creates the template board and provides the trello lists created in the board. [S4]  
- * Bot also provides default template cards(i.e. tasks) inside each list in the template.[S5]  
-  * If the user provides already created storyboard id, then the newly created storyboard will contain all the lists duplicated from the previous storyboard. [S6]   
- * Bot further asks for the modifications required in the template [S7].   
-
-
-**(iii) Subflows**  
-* [S1] User writes that "Hey @bot, can you please create a storyboard”.  
-* [S2] Bot provides a list of options for the templates in the form of drop-down list having Scrum-board, Waterfall-board, …, Blank-board.  
-* [S3] User can pick any one of them by selecting the list from drop-down list.  
-* [S4] Bot will provide all the lists created by default (e.g. Resources, Sprint Planning, Current Sprint,... ) in the template selected by the user.  
-* [S5] Bot will provide cards added by default in each list to the user e.g. Acceptance Testing, Integration Testing in QA list.  
-* [S6] Do you want to create storyboard from the previously created storyboard?  
-     * Bot: (Displays users’ all storyboards)  
-     * User: (Can select anyone of their previously selected storyboard)  
-     * Bot: I have duplicated all the lists from your previous storyboard in your new storyboard.  
-* [S7] Bot will further ask if user wants to do any of the following actions: 
-    * Modify the name of the list
-        * Bot: (Displays all Trello Storyboard lists in dropdown list)
-        * User: (Can click on any one of them)
-        * Bot: What is the new name that you want to keep for this list?
-        * User: <X> is the new name for this list.  
-        * Bot : List name has been modified.
-   * Delete a list
-        * Bot: (Displays all Trello Storyboard lists in dropdown list)  
-        * User: (Clicks on any one of them)  
-        * Bot: List has been deleted.  
-   * Add a new list with some name
-        * Bot: (Will show pop up with a text box.)
-        * User: Gives list name.
-        * Bot: Successful added list.  
-   * Add text to colors for labels (for ex: User can add “High Priority” to color red and this label can be added to the cards.  
-       * Bot: (Shows a popup window to give name to a colored label.)
-       * User: Will type in the name of the label for each color. 
-   * Add more members to the storyboard
-      * Bot: (Shows a popup window to insert email ids of trello users to invite in board.)
-      * User: Will type in the email address of the users they want to invite.
-      * Bot: Invitations successfully sent.  
-
-
-   
- **(iv) Alternative Flows:**  
-   * [E1] User doesn't want to do any modifications in the given template.  
-  
-### Use Case II : Creating / Managing Tasks  
- **(i) Preconditions:**  
-  User should have already linked slack channel with the storyboard which they want to work on.
+ ---------------------------------------------------------------------  
  
- **(ii) Main Flow:**  
-  * Bot will provide the possible list of actions user can do after having created the storyboard [S1]
-  * User will request to show their or others tasks according to different parameters like priority, deadline, back-logs.[S2] 
-  * Set/update the labels of the tasks.[S3]
-  
- **(iii) Sub Flows:**  
-  * [S1] Bot will respond with “You have successfully setup your personalized board! Here is what you can do next: ” (Below options will come in a dropdown menu)  
-     * Add a new task to a list
-       * Bot: (Shows all lists in dropdown menu)
-       * User: Selects one list from the dropdown and gives a name to new task.  
-    * Add a due date to a task
-      * Bot: (Shows all lists in dropdown menu)
-      * User: Select a list from dropdown.
-      * Bot: (Shows all tasks in selected list)
-      * User: Select a task and sets the deadline for that task.
-    * Add members to a task
-      * Bot: (Shows all lists in dropdown menu)
-      * User: Select a list from dropdown.
-      * Bot: (Shows all tasks in selected list)
-      * User: Select a task and gives name of the members.  
-  * [S2] User requests that "Which tasks are due tomorrow?", "Which tasks @user1 completed today?", "Task XYZ is assigned to which team-mates?", "Which tasks are running in backlog and 
-  * [S3] User requests that "I want to set RED label to task XYZ."  
- 
-### Use Case III : Attachment to the tasks 
- **(i) Preconditions:**  
-   User should have already created a card and always have to refer the cards to insert, remove or comment on the link.  
+ ## Screenshots
 
- **(ii) Main Flow:**  
-  * User can add the links which they have referred to accomplish the task.[S1]    
-  * User can change the status of the task to completed by providing the commit link on GitHub or related links to show the completion of the task.[S2]
-  * User can fetch all the links and comments on the particular links.[S3]  
-  
- **(iii) Sub Flows:**  
-  * [S1] User can log that “I have used https://abc.xyz link to solve my bug while working on task ABC.”  
-  * [S2] User can say that "I have completed task XYZ and here is my commit id: 8c897ffs897"  
-  * [S3] User requests that "Which links @user1 had referred to complete the task?”, “Which link @user2 had given while completing the task XYZ?”.  
-  
+# Screenshot-1
+![Alt text](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Screen%20Shot%202.png?raw=true "Optional Title")
+
+# Screenshot-2
+![Alt text](./master/Screen%20Shot%203.png?raw=true "Optional Title")
+
+# Screenshot-3
+![Alt text](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Screen%20Shot4.png?raw=true "Optional Title")
+
+## 3. Our reflection on the bot development process 
+
+As part of course requirement for Software Engineering, we needed to build a slack bot to address any software engineering issue. It is always good to work on new technologies and tools. Slack is one such tool which is gaining tremendous popularity among tech companies. Clearly developing a slack bot became our preferred choice. We started our project journey with milestone design where we need to come up with one software engineering problem and the possible solution by developing a slack bot application.
+After initially brainstorming sessions and discussions with professor we decided to build Slack based interactive conversational bot which simplifies our job of managing the Slack channel and Trello board for a single project management.
+
+For milestone-1 design, we described the problem statement for a bot along with the architecture design that we were planning to use for the development process. It was a challenging task to decide what kind of design pattern can be utilized for this project since our future strategy was dependent on it. We moved forward with Pipe and Filter Architecture pattern for our bot. Since, our data flows from Slack to Trello through different components in between and simulates stream processing of data, we believe Pipe and Filter architecture will be the most suitable pattern for our bot. Also, we had to decide the technology stack which was one of the important part of project.
+
+During this phase of the milestone, we understood various aspects about the initial part for the project i.e. requirement gathering for designing a bot, understanding the problem statement and coming up with design patterns for the development of the bot etc.
+
+For milestone-2 bot, we came up with the implementation logic for bot where we used Nodejs for writing the business logic of the application and created mock json file to render mock data consisting of calendar data to slack bot. To smoothen the development process, we used trello cards to track and manage tasks assigned to each person.
+
+In milestone-3 Services, we implemented the service part of bot that is creating new story board, linking the existing ones, creating new labels, adding links to the tasks in story board, setting priority to the existing tasks. Most challangeing part during this milestone was to comeup with a logic to authorize a user and keep a track of all user tokens for that user. We decided to comeup with a database that can store all user tokens of the Trello, which can be later fetched for performing actions. ... (need to write here)
+
+In milestone-4 Deployment, using Ansible script we deployed the backend of our bot to AWS EC2 console and also put the bot on slack apps. So anyone can intergrate our bot easily.
+
+Overall, it was been a great journey with lot of learning during each of the milestones of project. Throughout this project, we made use of agile methodology which was quite helpful to understand the requirement at early stages and frequent meetings helped us in reducing the errors and defects which might’ve impacted the project milestones at later stages. Apart from that, we used pair programming during the coding phase of our project which was a successful experiment since it helped us in improving the quality of the code and eleiminating the bugs/defects which might have got neglected had there been only one developer working on that task. It also helped us in identifying the strong and weak points of the team members that made us easy to rotate the work after every milestone.
+
+In contrast to the projects we did in our respective companies, which had hierarchical structure where mostly the team lead decides and others follow, we felt that each member in this project had flexibility of putting their idea upfront and taking the lead to make it work. We had opportunity to rotate roles and experience a developments process in every perspective.
+ 
  ---------------------------------------------------------------------
  
 ## Design Sketches:   
@@ -148,33 +81,16 @@ Wit is a semantic analysis tool. In our use case, when user enters a sentence (s
  * **Trello :**   
 Trello API will then perform the required actions and send the feedback/response to application and it is then forwarded to Slack UI via API calls.  
    
+---------------------------------------------------  
 
-### Constraints:  
-  * **Slack:**  
-  At any point of time, there can be only one Trello board connected to Slack channel.
-   So, if we want to manage different boards simultaneously, we should set the particular board apriori through the bot.  
-     
-    To add a member in a task, that member should be a Slack member of the team also.
-   * **Trello:** There should be a team already created in Trello.
-   
-   
-### Design Pattern:    
-**(i) Observer**  
- * The most relevant design pattern would be “Observer” pattern. The project consists of different components whose properties are interrelated with each other. Change in one object’s state would have a direct impact on another, and hence the observer pattern would be the most appropriate.  
-  
- * Ex: If a ticket’s status is changed from In Progress to Completed, correspondingly the items in both the list objects (In Progress, Completed) containing the tickets need to be modified.
+## Future work
 
- **(ii) Mediator**  
- * A mediator object that defines how other objects interact could also be useful.  
-   
- * Ex: The object responsible for parsing the input sentence(wit.ai), need not have any	 direct interaction with the object creating trello cards. Thus there needs to be a mediator that acts as a central interface between different objects/modules in the bot.  
-   
- **(iii) Factory**  
- 
-* When the user requests a certain change in the project management board, the user/client need not be exposed to the underlying objects responsible for different functionalities. Thus abstractions that are offered by the Factory pattern may also apply for our bot.
-
-## Additional Patterns:
- * We will be using the Pipe and Filter Architecture pattern for our bot. Since, our data flows from Slack to Trello through different components in between and simulates stream processing of data, we believe Pipe and Filter architecture will be the most suitable pattern for our bot.
+1. Currently, the bot is supported for one slack team only. In future, using the “add to slack” button or by distributing the slack app to Slack store public distribution.
+2. We believe that the implementation for managing tasks can be further optimized. By storing the context for each user team, we can fetch the most recent linked card and perform the actions on that. 
+3. We can also set the card creator or manager can only change the priority or deadline for a given task by providing the role(manager, employee)  to each user.
+4. For the template creation, right now only 2 types of templates are supported (Scrum and Waterfall board). But, in future we can expand our bot to support other software engineering boards. Furthermore, we can give certain privileges only to the employees like changing label to completed or achieving the card.
+5. Rightnow, the slack channel team is not linked with the organization created on Trello for smooth interaction in a team. We can create a new database table to map the slack channel id with the Trello organization and boards inside an organization.
+6. Currently, the user messages are extracted using the regular expressions and then the necessary actions are decided. In future, we can integrate the natural language processing apis like Wit.ai to make our bot more robust.
 
 
    
