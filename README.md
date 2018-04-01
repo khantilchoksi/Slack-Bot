@@ -23,13 +23,13 @@ When the user has completed the task and they want to show their completed work,
  ## Screenshots
 
 # Screenshot-1
-![Alt text](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Screen%20Shot%202.png?raw=true "Optional Title")
+![Alt text](./Screen%20Shot%202.png?raw=true "Optional Title")
 
 # Screenshot-2
 ![Alt text](./master/Screen%20Shot%203.png?raw=true "Optional Title")
 
 # Screenshot-3
-![Alt text](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Screen%20Shot4.png?raw=true "Optional Title")
+![Alt text](./Screen%20Shot4.png?raw=true "Optional Title")
 
 ## 3. Our reflection on the bot development process 
 
