@@ -178,5 +178,5 @@ Trello API will then perform the required actions and send the feedback/response
 
 
    
-## [Team Information] 
+## Team Information
 Team information can be found [here!](./Teaminfo.md)
