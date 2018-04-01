@@ -1,0 +1,85 @@
+---
+- hosts: nodes
+  sudo: yes
+
+  vars:
+    - homeDir: /home/ubuntu
+    - appDir: tmbot
+    - packages:
+        - nodejs
+        - nodejs-legacy
+        - git-core
+        - postgresql
+  tasks:
+   - name: Install NodeJs
+     apt: pkg=nodejs state=present update_cache=yes cache_valid_time=20000
+     become: yes
+     
+   - name: Install git
+     apt: pkg=git state=present update_cache=yes cache_valid_time=20000
+     become: yes
+     
+   - name: Install Postgres
+     apt: name={{ item }} update_cache=yes cache_valid_time=3600 state=present
+     sudo: yes
+     with_items:
+     - postgresql
+     - postgresql-contrib
+     - libpq-dev
+     - python-psycopg2
+     
+   - name: Create TaskBotDB database
+     sudo_user: postgres
+     postgresql_db: name=TaskBotDB encoding='UTF-8' lc_collate='en_US.UTF-8' lc_ctype='en_US.UTF-8' state=present
+     
+   - name: Create TaskBotDB role for database
+     sudo_user: postgres
+     postgresql_user: db=TaskBotDB user=TaskUser password=taskbot priv=ALL state=present
+     
+   - name: Start the Postgresql service
+     sudo: yes
+     service:
+       name: postgresql
+       state: started
+       enabled: true
+       
+   - name: Importing lexiiodb data
+     sudo_user: postgres
+     shell: pg_restore -U postgres -d TaskBotDB < TaskBotDB_backup
+     
+   - name: Install forever
+     npm: name=forever global=yes state=present
+     
+   - name: Running npm install
+     npm: path = {{homeDir}}/{{appDir}}/backened global=yes
+
+   - name: "Check if any nodejs apps are running"
+     command: forever list
+     register: forever_list  
+     changed_when: false
+     
+   - name: Clone repo
+     git:
+      repo: git@github.ncsu.edu:asoni3/CSC510-Project.git
+      version: deployment_database
+      key_file: /home/ubuntu/.ssh/id_rsa
+      dest: slackapp
+      accept_hostkey: yes
+      
+     
+   - name: Starting application
+     command: forever start {{homeDir}}/slackapp/{{appDir}}/tmbot.js
+     when: "forever_list.stdout.find('/home/vagrant/App/main.js') == -1"  
+     
+     
+     # emit a debug message with each package
+   - debug:
+       msg: "{{ item }}"
+     with_items: "{{packages}}"
+     
+#When running again perform following commands:
+# sudo rm /usr/bin/node
+# cd
+# sudo rm -rf App
+# sudo apt-get remove nodejs     
+#Combine two commands to install a list of packages
