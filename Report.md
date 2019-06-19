@@ -42,14 +42,11 @@ The bot has three main features:
 
 ## Screenshots
 
-# Screenshot-1
-![Alt text](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Screen%20Shot%202.png?raw=true "Optional Title")
+# Architecture Design
+![Alt text](TaskSlackBot_ArchitectureDesign.jpg "Optional Title")
 
-# Screenshot-2
-![Alt text](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Screen%20Shot%203.png?raw=true "Optional Title")
-
-# Screenshot-3
-![Alt text](https://github.ncsu.edu/asoni3/CSC510-Project/blob/master/Screen%20Shot4.png?raw=true "Optional Title")
+# Story Board Use Case
+![Alt text](StoryBoard.PNG "Optional Title")
 
 ## 3. Our reflection on the bot development process 
 
